@@ -4,9 +4,11 @@
 
 -- 这是一个-号注释
 # 这是#注释
-heLLo
+heLLo l_ima
 
 --------------------------------------------------------------------------------|||
 (source_file
     (comment)
-    (comment))
+    (comment)
+    (hello)
+    (identifier))

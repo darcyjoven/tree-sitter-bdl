@@ -14,8 +14,15 @@ export default grammar({
 
   rules: {
     // TODO: add the actual grammar rules
-    source_file: ($) => kw("hello"),
+    source_file: ($) =>
+      seq(alias(kw("hello"), $.hello), field("hello_var", $.identifier)),
 
+    //============================================================
+    //
+    //
+    //============================================================
+    // 以下是常用的定义，不在主结构中
+    //
     // 注释
     comment: (_) =>
       token(

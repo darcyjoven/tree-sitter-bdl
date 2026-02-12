@@ -3,8 +3,26 @@
   "name": "bdl",
   "rules": {
     "source_file": {
-      "type": "PATTERN",
-      "value": "[hH][eE][lL][lL][oO]"
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "PATTERN",
+            "value": "[hH][eE][lL][lL][oO]"
+          },
+          "named": true,
+          "value": "hello"
+        },
+        {
+          "type": "FIELD",
+          "name": "hello_var",
+          "content": {
+            "type": "SYMBOL",
+            "name": "identifier"
+          }
+        }
+      ]
     },
     "comment": {
       "type": "TOKEN",
