@@ -1,0 +1,38 @@
+================================================================================|||
+Option 选项
+================================================================================|||
+
+
+-- 这是一个-号注释
+OPTIONS MENU LINE 23
+OPTIONS PROMPT LINE 22
+OPTIONS INPUT
+ ATTRIBUTES (FORM)
+
+OPTIONS INPUT WRAP
+
+# OPTIONS FIELD ORDER CONSTRAINED
+
+OPTIONS ON TERMINATE SIGNAL CALL func1
+
+OPTIONS ON CLOSE APPLICATION CALL
+func2
+
+OPTIONS HELP FILE w2133 OPTIONS DELETE key crontrol-k
+OPTIONS RUN IN FORM MODE
+OPTIONS SQL INTERRUPT OFF
+
+--------------------------------------------------------------------------------|||
+(source_file
+    (comment)
+    (compiler_options)
+    (compiler_options)
+    (compiler_options)
+    (compiler_options)
+    (comment)
+    (compiler_options)
+    (compiler_options)
+    (compiler_options)
+    (compiler_options)
+    (compiler_options)
+    (compiler_options))

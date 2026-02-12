@@ -13,13 +13,121 @@ export default grammar({
   extras: ($) => [$.comment, /\s/],
 
   rules: {
-    // TODO: add the actual grammar rules
+    //============================================================
+    // 指令(directive) -> 声明(declaration) -> 函数（function）
     source_file: ($) =>
-      seq(alias(kw("hello"), $.hello), field("hello_var", $.identifier)),
+      seq(
+        repeat($._directive),
+        optional($._declaration),
+        optional($._function),
+      ),
 
     //============================================================
-    //
-    //
+    // 指令(Directive)
+    // compiler import schema
+    _directive: ($) =>
+      choice($.compiler_options, $.import_statement, $.schema_statement),
+
+    // option
+    compiler_options: ($) =>
+      seq(
+        kw("OPTIONS"),
+        choice(
+          // Controlling semantics of AND / OR operators
+          kw("SHORT CIRCUIT"),
+          // Defining the position of reserved lines
+          // OPTIONS { MENU LINE line-value| MESSAGE LINE line-value| COMMENT LINE {OFF|line-value}| PROMPT LINE line-value| ERROR LINE line-value| FORM LINE line-value}
+          choice(
+            seq(kw("MENU LINE"), $._natural_number),
+            seq(kw("MESSAGE LINE"), $._natural_number),
+            seq(kw("COMMENT LINE"), choice(kw("OFF"), $._natural_number)),
+            seq(kw("PROMPT LINE"), $._natural_number),
+            seq(kw("ERROR LINE"), $._natural_number),
+            seq(kw("FORM LINE"), $._natural_number),
+          ),
+          // Defining default TTY attributes
+          // OPTIONS { INPUT | DISPLAY } ATTRIBUTES ({FORM|WINDOW|attributes)
+          seq(
+            choice(kw("INPUT"), kw("DISPLAY")),
+            kw("ATTRIBUTES "),
+            "(",
+            choice(
+              kw("FORM"),
+              kw("WINDOW"),
+              choice(
+                kw("BLACK"),
+                kw("BLUE"),
+                kw("CYAN"),
+                kw("GREEN"),
+                kw("MAGENTA"),
+                kw("RED"),
+                kw("WHITE"),
+                kw("YELLO"),
+                kw("BOLD"),
+                kw("DIM"),
+                kw("INVISIBLE"),
+                kw("NORMAL"),
+                kw("REVERSE"),
+                kw("BLINK"),
+                kw("UNDERLINE"),
+              ),
+            ),
+            ")",
+          ),
+          // Defining the field input loop
+          // OPTIONS INPUT [NO] WRAP
+          seq(kw("INPUT"), optional(kw("NO")), kw("WRAP")),
+          // Defining field tabbing order
+          // FIELD ORDER { CONSTRAINED | UNCONSTRAINED | FORM }
+          seq(
+            kw("FIELD ORDER"),
+            choice(kw("CONSTRAINED"), kw("UNCONSTRAINED"), kw("FORM")),
+          ),
+          // Application termination
+          // ON TERMINATE SIGNAL CALL function
+          seq(kw("ON TERMINATE SIGNAL CALL"), alias($.identifier, "func_name")),
+          // Front-end termination
+          // ON CLOSE APPLICATION CALL function
+          seq(
+            kw("ON CLOSE APPLICATION CALL"),
+            alias($.identifier, "func_name"),
+          ),
+          // Defining the message file
+          // HELP FILE filename
+          seq(kw("HELP FILE"), alias($._file_name, "file_name")),
+          // Defining control keys
+          seq(
+            choice(
+              kw("INSERT"),
+              kw("DELETE"),
+              kw("NEXT"),
+              kw("PREVIOUS"),
+              kw("ACCEPT"),
+              kw("HELP"),
+            ),
+            kw("KEY"),
+            alias($._key_name, "key_name"),
+          ),
+          // Setting default screen modes for sub-programs
+          // RUN IN {FORM|LINE} MODE
+          seq(kw("RUN IN"), choice(kw("FORM"), kw("LINE")), kw("MODE")),
+          // Enabling/disabling SQL interruption
+          // SQL INTERRUPT { ON | OFF }
+          seq(kw("SQL INTERRUPT"), choice(kw("ON"), kw("OFF"))),
+        ),
+      ),
+
+    import_statement: ($) => "import_statement",
+    schema_statement: ($) => "schema_statement",
+
+    //============================================================
+    // 声明(declaration)
+    // globals constant type variable
+    _declaration: ($) => "__declaration__",
+    //============================================================
+    // 函数（function）
+    // main function report dialog
+    _function: ($) => "__function__",
     //============================================================
     // 以下是常用的定义，不在主结构中
     //
@@ -32,8 +140,14 @@ export default grammar({
           seq("{", /[^}]*/, "}"), // { } 块注释
         ),
       ),
+    // 文件名
+    _file_name: (_) => /[a-zA-Z_][a-zA-Z0-9_]*/,
+    // 快捷键名称
+    _key_name: (_) => /[a-zA-Z_][a-zA-Z0-9_\-]*/,
     // 标识符
     identifier: (_) => /[_\p{XID_Start}][_\p{XID_Continue}]*/u,
+    // 整数
+    _natural_number: (_) => /\d+/,
   },
 });
 

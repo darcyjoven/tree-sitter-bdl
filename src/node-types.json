@@ -1,30 +1,48 @@
 [
   {
+    "type": "compiler_options",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "source_file",
     "named": true,
     "root": true,
-    "fields": {
-      "hello_var": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      }
-    },
+    "fields": {},
     "children": {
-      "multiple": false,
-      "required": true,
+      "multiple": true,
+      "required": false,
       "types": [
         {
-          "type": "hello",
+          "type": "compiler_options",
+          "named": true
+        },
+        {
+          "type": "import_statement",
+          "named": true
+        },
+        {
+          "type": "schema_statement",
           "named": true
         }
       ]
     }
+  },
+  {
+    "type": "(",
+    "named": false
+  },
+  {
+    "type": ")",
+    "named": false
+  },
+  {
+    "type": "__declaration__",
+    "named": false
+  },
+  {
+    "type": "__function__",
+    "named": false
   },
   {
     "type": "comment",
@@ -32,11 +50,23 @@
     "extra": true
   },
   {
-    "type": "hello",
+    "type": "file_name",
+    "named": false
+  },
+  {
+    "type": "func_name",
+    "named": false
+  },
+  {
+    "type": "import_statement",
     "named": true
   },
   {
-    "type": "identifier",
+    "type": "key_name",
+    "named": false
+  },
+  {
+    "type": "schema_statement",
     "named": true
   }
 ]
