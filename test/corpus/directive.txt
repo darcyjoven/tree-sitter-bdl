@@ -36,3 +36,22 @@ OPTIONS SQL INTERRUPT OFF
     (compiler_options)
     (compiler_options)
     (compiler_options))
+
+================================================================================|||
+Import 导入外部文件
+================================================================================|||
+
+-- 导入外部文件
+import libso
+import fgl asoidaj.4gl
+import JAVA
+com.darcy.www.UTIL
+
+--------------------------------------------------------------------------------|||
+
+(source_file
+    (comment)
+    (import_statement)
+    (import_statement)
+    (import_statement)
+    )

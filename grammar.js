@@ -94,7 +94,7 @@ export default grammar({
           ),
           // Defining the message file
           // HELP FILE filename
-          seq(kw("HELP FILE"), alias($._file_name, "file_name")),
+          seq(kw("HELP FILE"), alias($._unquoted_string, "file_name")),
           // Defining control keys
           seq(
             choice(
@@ -106,7 +106,7 @@ export default grammar({
               kw("HELP"),
             ),
             kw("KEY"),
-            alias($._key_name, "key_name"),
+            alias($._unquoted_string, "key_name"),
           ),
           // Setting default screen modes for sub-programs
           // RUN IN {FORM|LINE} MODE
@@ -117,7 +117,12 @@ export default grammar({
         ),
       ),
 
-    import_statement: ($) => "import_statement",
+    import_statement: ($) =>
+      seq(
+        kw("IMPORT"),
+        optional(choice(kw("FGL"), kw("JAVA"))),
+        choice(alias($._unquoted_string, "file_name")),
+      ),
     schema_statement: ($) => "schema_statement",
 
     //============================================================
@@ -140,10 +145,8 @@ export default grammar({
           seq("{", /[^}]*/, "}"), // { } 块注释
         ),
       ),
-    // 文件名
-    _file_name: (_) => /[a-zA-Z_][a-zA-Z0-9_]*/,
-    // 快捷键名称
-    _key_name: (_) => /[a-zA-Z_][a-zA-Z0-9_\-]*/,
+    // 空白符结束的字符串
+    _unquoted_string: (_) => /[^\s]+/,
     // 标识符
     identifier: (_) => /[_\p{XID_Start}][_\p{XID_Continue}]*/u,
     // 整数

@@ -5,6 +5,11 @@
     "fields": {}
   },
   {
+    "type": "import_statement",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "source_file",
     "named": true,
     "root": true,
@@ -56,10 +61,6 @@
   {
     "type": "func_name",
     "named": false
-  },
-  {
-    "type": "import_statement",
-    "named": true
   },
   {
     "type": "key_name",

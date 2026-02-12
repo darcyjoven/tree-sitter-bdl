@@ -555,7 +555,7 @@
                   "type": "ALIAS",
                   "content": {
                     "type": "SYMBOL",
-                    "name": "_file_name"
+                    "name": "_unquoted_string"
                   },
                   "named": false,
                   "value": "file_name"
@@ -602,7 +602,7 @@
                   "type": "ALIAS",
                   "content": {
                     "type": "SYMBOL",
-                    "name": "_key_name"
+                    "name": "_unquoted_string"
                   },
                   "named": false,
                   "value": "key_name"
@@ -688,8 +688,48 @@
       ]
     },
     "import_statement": {
-      "type": "STRING",
-      "value": "import_statement"
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "PATTERN",
+          "value": "[iI][mM][pP][oO][rR][tT]"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "PATTERN",
+                  "value": "[fF][gG][lL]"
+                },
+                {
+                  "type": "PATTERN",
+                  "value": "[jJ][aA][vV][aA]"
+                }
+              ]
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "ALIAS",
+              "content": {
+                "type": "SYMBOL",
+                "name": "_unquoted_string"
+              },
+              "named": false,
+              "value": "file_name"
+            }
+          ]
+        }
+      ]
     },
     "schema_statement": {
       "type": "STRING",
@@ -754,13 +794,9 @@
         ]
       }
     },
-    "_file_name": {
+    "_unquoted_string": {
       "type": "PATTERN",
-      "value": "[a-zA-Z_][a-zA-Z0-9_]*"
-    },
-    "_key_name": {
-      "type": "PATTERN",
-      "value": "[a-zA-Z_][a-zA-Z0-9_\\-]*"
+      "value": "[^\\s]+"
     },
     "identifier": {
       "type": "PATTERN",
