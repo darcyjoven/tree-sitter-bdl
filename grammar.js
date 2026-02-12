@@ -123,7 +123,35 @@ export default grammar({
         optional(choice(kw("FGL"), kw("JAVA"))),
         choice(alias($._unquoted_string, "file_name")),
       ),
-    schema_statement: ($) => "schema_statement",
+    schema_statement: ($) =>
+      choice(
+        // "CONNECT TO dbspec [USER username USING password]",
+        seq(
+          kw("CONNECT TO"),
+          alias($._unquoted_string, "dbname"),
+          optional(
+            seq(
+              kw("USER"),
+              alias($._unquoted_string, "username"),
+              kw("USING"),
+              alias($._unquoted_string, "password"),
+            ),
+          ),
+        ),
+        // "DATABASE { dbname[@dbserver] | variable | string } [EXCLUSIVE]",
+        seq(
+          optional(kw("DESCRIBE")),
+          kw("DATABASE"),
+          seq(
+            alias($.identifier, "dnname"),
+            optional(seq("@", alias($.identifier, "dbserver"))),
+          ),
+          // alias($.string_interval, "dbname"), // TODO 字符串 字面值
+          optional(kw("EXCLUSIVE")),
+        ),
+        // "SCHEMA  dbname",
+        seq(kw("SCHEMA "), alias($.identifier, "dnname")),
+      ),
 
     //============================================================
     // 声明(declaration)
@@ -151,6 +179,10 @@ export default grammar({
     identifier: (_) => /[_\p{XID_Start}][_\p{XID_Continue}]*/u,
     // 整数
     _natural_number: (_) => /\d+/,
+    // 字面值
+    interval: ($) => choice($.string_interval, $.number_interval),
+    string_interval: ($) => /\s+/,
+    number_interval: ($) => /\s+/,
   },
 });
 

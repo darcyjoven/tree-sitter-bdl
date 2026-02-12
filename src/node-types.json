@@ -10,6 +10,11 @@
     "fields": {}
   },
   {
+    "type": "schema_statement",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "source_file",
     "named": true,
     "root": true,
@@ -42,6 +47,10 @@
     "named": false
   },
   {
+    "type": "@",
+    "named": false
+  },
+  {
     "type": "__declaration__",
     "named": false
   },
@@ -53,6 +62,18 @@
     "type": "comment",
     "named": true,
     "extra": true
+  },
+  {
+    "type": "dbname",
+    "named": false
+  },
+  {
+    "type": "dbserver",
+    "named": false
+  },
+  {
+    "type": "dnname",
+    "named": false
   },
   {
     "type": "file_name",
@@ -67,7 +88,11 @@
     "named": false
   },
   {
-    "type": "schema_statement",
-    "named": true
+    "type": "password",
+    "named": false
+  },
+  {
+    "type": "username",
+    "named": false
   }
 ]

@@ -55,3 +55,22 @@ com.darcy.www.UTIL
     (import_statement)
     (import_statement)
     )
+
+================================================================================|||
+数据库连接
+================================================================================|||
+
+CONNECT TO dbspec USER username USING password
+
+DESCRIBE DATABASE dbname@dbserver EXCLUSIVE
+
+schema dbname
+
+DATABASE dbname
+
+--------------------------------------------------------------------------------|||
+(source_file
+    (schema_statement)
+    (schema_statement)
+    (schema_statement)
+    (schema_statement))
