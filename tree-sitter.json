@@ -1,0 +1,42 @@
+{
+  "$schema": "https://tree-sitter.github.io/tree-sitter/assets/schemas/config.schema.json",
+  "grammars": [
+    {
+      "name": "bdl",
+      "camelcase": "BDL",
+      "title": "Genero Business Development Language",
+      "scope": "source.4gl",
+      "file-types": [
+        "4gl"
+      ],
+      "injection-regex": "^bdl$",
+      "class-name": "TreeSitterBdl"
+    }
+  ],
+  "metadata": {
+    "version": "0.1.0",
+    "license": "MIT",
+    "description": "Genero Business Development Language",
+    "authors": [
+      {
+        "name": "darcy",
+        "email": "darcy_joven@live.com",
+        "url": "github.com/darcyjoven"
+      }
+    ],
+    "links": {
+      "repository": "github.com/darcyjoven/tree-sitter-bdl",
+      "funding": ""
+    }
+  },
+  "bindings": {
+    "c": true,
+    "go": true,
+    "java": false,
+    "node": true,
+    "python": true,
+    "rust": true,
+    "swift": false,
+    "zig": false
+  }
+}
