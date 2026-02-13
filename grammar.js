@@ -23,15 +23,13 @@ export default grammar({
 
   extras: ($) => [$.comment, /\s/],
 
+  inline: ($) => [$.literal, $._constant_statement, $.scope],
+
   rules: {
     //============================================================
     // 指令(directive) -> 声明(declaration) -> 函数（function）
     source_file: ($) =>
-      seq(
-        repeat($._directive),
-        optional($._declaration),
-        optional($._function),
-      ),
+      seq(repeat($._directive), repeat($._declaration), repeat($._function)),
 
     //============================================================
     // 指令(Directive)
@@ -156,7 +154,7 @@ export default grammar({
               alias($.identifier, "dbname"),
               optional(seq("@", alias($.identifier, "dbserver"))),
             ),
-            alias($.string_literal, "dbname"), // TODO 字符串 字面值
+            alias($._string_literal, "dbname"), // TODO 字符串 字面值
           ),
           optional(kw("EXCLUSIVE")),
         ),
@@ -167,12 +165,54 @@ export default grammar({
     //============================================================
     // 声明(declaration)
     // globals constant type variable
-    _declaration: ($) => "__declaration__",
+    _declaration: ($) =>
+      choice(
+        $.globals_inclusion,
+        $.constant_definition,
+        $.user_type_definition,
+        $.variable_definition,
+      ),
+    // 全局
+    globals_inclusion: ($) =>
+      choice(
+        seq(
+          kw("GLOBALS"),
+          choice(
+            $.constant_definition,
+            $.user_type_definition,
+            $.variable_definition,
+          ),
+          kw("END GLOBALS"),
+        ),
+        seq(kw("GLOBALS"), alias($._string_literal, "filename")),
+      ),
+    // 常量
+    constant_definition: ($) =>
+      seq(optional($.scope), kw("CONSTANT"), commaSep1($._constant_statement)),
+    _constant_statement: ($) =>
+      seq(
+        alias($.identifier, "constant_identifier"),
+        optional($._data_type),
+        "=",
+        $.literal,
+      ),
+    // 类型定义
+    user_type_definition: ($) =>
+      seq(
+        optional($.scope),
+        kw("TYPE"),
+        commaSep1(seq(alias($.identifier, "type_name"), $._data_type)),
+      ),
+    // 变量定义
+    variable_definition: ($) =>
+      seq(
+        optional($.scope),
+        kw("DEFINE"),
+        commaSep1(seq(alias($.identifier, "type_name"), $._data_type)),
+      ),
 
-    globals_inclusion: ($) => "globals_inclusion",
-    constant_definition: ($) => "constant_definition",
-    ser_type_definition: ($) => "ser_type_definition",
-    variable_definition: ($) => "variable_definition",
+    // 数据类型
+    _data_type: ($) => "__data_type__",
     //============================================================
     // 函数（function）
     // main function report dialog
@@ -196,8 +236,8 @@ export default grammar({
     // 整数
     _natural_number: (_) => /\d+/,
     // 字面值
-    literal: ($) => choice($.string_literal, $.number_literal),
-    string_literal: (_) =>
+    literal: ($) => choice($._string_literal, $._number_literal),
+    _string_literal: (_) =>
       choice(
         seq(
           '"',
@@ -226,7 +266,9 @@ export default grammar({
           "'",
         ),
       ),
-    number_literal: (_) => choice(integerLiterals, decimalLiterals),
+    _number_literal: (_) => choice(integerLiterals, decimalLiterals),
+    // 作用域
+    scope: ($) => choice(kw("PRIVATE"), kw("PUBLIC")),
   },
 });
 

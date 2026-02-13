@@ -5,9 +5,42 @@
     "fields": {}
   },
   {
+    "type": "constant_definition",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "dbname",
     "named": false,
     "fields": {}
+  },
+  {
+    "type": "filename",
+    "named": false,
+    "fields": {}
+  },
+  {
+    "type": "globals_inclusion",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "constant_definition",
+          "named": true
+        },
+        {
+          "type": "user_type_definition",
+          "named": true
+        },
+        {
+          "type": "variable_definition",
+          "named": true
+        }
+      ]
+    }
   },
   {
     "type": "import_statement",
@@ -33,15 +66,41 @@
           "named": true
         },
         {
+          "type": "constant_definition",
+          "named": true
+        },
+        {
+          "type": "globals_inclusion",
+          "named": true
+        },
+        {
           "type": "import_statement",
           "named": true
         },
         {
           "type": "schema_statement",
           "named": true
+        },
+        {
+          "type": "user_type_definition",
+          "named": true
+        },
+        {
+          "type": "variable_definition",
+          "named": true
         }
       ]
     }
+  },
+  {
+    "type": "user_type_definition",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "variable_definition",
+    "named": true,
+    "fields": {}
   },
   {
     "type": "\"",
@@ -60,11 +119,35 @@
     "named": false
   },
   {
+    "type": "+",
+    "named": false
+  },
+  {
+    "type": ",",
+    "named": false
+  },
+  {
+    "type": "-",
+    "named": false
+  },
+  {
+    "type": ".",
+    "named": false
+  },
+  {
+    "type": "=",
+    "named": false
+  },
+  {
     "type": "@",
     "named": false
   },
   {
-    "type": "__declaration__",
+    "type": "E",
+    "named": false
+  },
+  {
+    "type": "__data_type__",
     "named": false
   },
   {
@@ -77,11 +160,19 @@
     "extra": true
   },
   {
+    "type": "constant_identifier",
+    "named": false
+  },
+  {
     "type": "dbname",
     "named": false
   },
   {
     "type": "dbserver",
+    "named": false
+  },
+  {
+    "type": "e",
     "named": false
   },
   {
@@ -102,6 +193,10 @@
   },
   {
     "type": "string_content",
+    "named": false
+  },
+  {
+    "type": "type_name",
     "named": false
   },
   {

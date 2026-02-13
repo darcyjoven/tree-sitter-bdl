@@ -1,0 +1,41 @@
+================================================================================|||
+常量定义
+================================================================================|||
+
+constant l_i __data_type__ = 'ok'
+
+constant l_i = 'ok'
+
+private constant l_i = 'ok',l_j=123
+public constant l_i = 'ok'
+,l_j=123
+
+--------------------------------------------------------------------------------|||
+
+(source_file
+    (constant_definition)
+    (constant_definition)
+    (constant_definition)
+    (constant_definition))
+
+================================================================================|||
+类型变量定义
+================================================================================|||
+
+type omb __data_type__,oma __data_type__
+type omb __data_type__,
+     oma __data_type__
+
+private
+type omb __data_type__,oma __data_type__
+
+private
+define omb __data_type__,oma __data_type__
+
+--------------------------------------------------------------------------------|||
+
+(source_file
+    (user_type_definition)
+    (user_type_definition)
+    (user_type_definition)
+    (variable_definition))
