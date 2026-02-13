@@ -62,7 +62,8 @@ com.darcy.www.UTIL
 
 CONNECT TO dbspec USER username USING password
 
-DESCRIBE DATABASE dbname@dbserver EXCLUSIVE
+DESCRIBE DATABASE
+dbname@dbserver EXCLUSIVE
 
 schema dbname
 
@@ -70,6 +71,27 @@ DATABASE dbname
 
 --------------------------------------------------------------------------------|||
 (source_file
+    (schema_statement)
+    (schema_statement)
+    (schema_statement)
+    (schema_statement))
+
+================================================================================|||
+测试字符串字面值
+================================================================================|||
+
+DATABASE "dbname"
+DATABASE "dbname"" "
+DATABASE "dbname\ "
+DATABASE "dbname
+"
+DATABASE "dbname'"
+DATABASE 'dbname"'
+
+--------------------------------------------------------------------------------|||
+(source_file
+    (schema_statement)
+    (schema_statement)
     (schema_statement)
     (schema_statement)
     (schema_statement)

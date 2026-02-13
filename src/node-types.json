@@ -5,6 +5,11 @@
     "fields": {}
   },
   {
+    "type": "dbname",
+    "named": false,
+    "fields": {}
+  },
+  {
     "type": "import_statement",
     "named": true,
     "fields": {}
@@ -37,6 +42,14 @@
         }
       ]
     }
+  },
+  {
+    "type": "\"",
+    "named": false
+  },
+  {
+    "type": "'",
+    "named": false
   },
   {
     "type": "(",
@@ -72,10 +85,6 @@
     "named": false
   },
   {
-    "type": "dnname",
-    "named": false
-  },
-  {
     "type": "file_name",
     "named": false
   },
@@ -89,6 +98,10 @@
   },
   {
     "type": "password",
+    "named": false
+  },
+  {
+    "type": "string_content",
     "named": false
   },
   {

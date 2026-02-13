@@ -7,6 +7,17 @@
 /// <reference types="tree-sitter-cli/dsl" />
 // @ts-check
 
+const digit = /[0-9]/;
+
+const integerLiterals = seq(optional(choice("+", "-")), repeat1(digit));
+const decimalLiterals = seq(
+  optional(choice("+", "-")),
+  repeat(digit),
+  ".",
+  repeat1(digit),
+  optional(seq(choice("e", "E"), choice("-", "+"), repeat1(digit))),
+);
+
 export default grammar({
   name: "bdl",
 
@@ -28,7 +39,6 @@ export default grammar({
     _directive: ($) =>
       choice($.compiler_options, $.import_statement, $.schema_statement),
 
-    // option
     compiler_options: ($) =>
       seq(
         kw("OPTIONS"),
@@ -116,7 +126,6 @@ export default grammar({
           seq(kw("SQL INTERRUPT"), choice(kw("ON"), kw("OFF"))),
         ),
       ),
-
     import_statement: ($) =>
       seq(
         kw("IMPORT"),
@@ -142,21 +151,28 @@ export default grammar({
         seq(
           optional(kw("DESCRIBE")),
           kw("DATABASE"),
-          seq(
-            alias($.identifier, "dnname"),
-            optional(seq("@", alias($.identifier, "dbserver"))),
+          choice(
+            seq(
+              alias($.identifier, "dbname"),
+              optional(seq("@", alias($.identifier, "dbserver"))),
+            ),
+            alias($.string_literal, "dbname"), // TODO 字符串 字面值
           ),
-          // alias($.string_interval, "dbname"), // TODO 字符串 字面值
           optional(kw("EXCLUSIVE")),
         ),
         // "SCHEMA  dbname",
-        seq(kw("SCHEMA "), alias($.identifier, "dnname")),
+        seq(kw("SCHEMA"), alias($.identifier, "dbname")),
       ),
 
     //============================================================
     // 声明(declaration)
     // globals constant type variable
     _declaration: ($) => "__declaration__",
+
+    globals_inclusion: ($) => "globals_inclusion",
+    constant_definition: ($) => "constant_definition",
+    ser_type_definition: ($) => "ser_type_definition",
+    variable_definition: ($) => "variable_definition",
     //============================================================
     // 函数（function）
     // main function report dialog
@@ -180,9 +196,37 @@ export default grammar({
     // 整数
     _natural_number: (_) => /\d+/,
     // 字面值
-    interval: ($) => choice($.string_interval, $.number_interval),
-    string_interval: ($) => /\s+/,
-    number_interval: ($) => /\s+/,
+    literal: ($) => choice($.string_literal, $.number_literal),
+    string_literal: (_) =>
+      choice(
+        seq(
+          '"',
+          repeat(
+            choice(
+              // 普通字符（不含 " 和 \）
+              alias(/[^"\\]/, "string_content"),
+              // 转义序列：\n, \", \\, \t 等
+              alias(/\\./, "string_content"),
+              alias('""', "string_content"),
+            ),
+          ),
+          '"',
+        ),
+        seq(
+          "'",
+          repeat(
+            choice(
+              // 普通字符（不含 " 和 \）
+              alias(/[^'\\]/, "string_content"),
+              // 转义序列：\n, \", \\, \t 等
+              alias(/\\./, "string_content"),
+              alias("''", "string_content"),
+            ),
+          ),
+          "'",
+        ),
+      ),
+    number_literal: (_) => choice(integerLiterals, decimalLiterals),
   },
 });
 
