@@ -8,9 +8,10 @@
 // @ts-check
 
 // const sqlStatement = require("./rules/sql")
-
-import { integerLiterals, decimalLiterals, datetimeQualifier, commaSep1, kw } from './rules/util.js'
+import { integerLiterals, decimalLiterals, datetimeQualifier, commaSep1, kw, commaSep } from './rules/util.js'
 import sqlStatement from './rules/sql.js'
+import fglStatement from './rules/fgl.js'
+
 
 export default grammar({
   name: "bdl",
@@ -380,13 +381,37 @@ export default grammar({
       $.report_block,
       $.dialog_block
     ),
-    main_block: ($) => '__main_block_',
-    function_block: ($) => '__function_block_',
+    main_block: ($) => seq(kw("MAIN"), seq(
+      repeat($._top_declarartion),
+      repeat($._statement),
+    ), kw('END MAIN')),
+    function_block: ($) => seq(
+      optional($.scope),
+      kw('FUNCTION'),
+      alias($.identifier, 'func_name'),
+      '(', commaSep(alias($.identifier, 'param_name')), ')',
+      seq(
+        repeat($._top_declarartion),
+        repeat($._statement),
+      ),
+      kw('END FUNCTION')
+    ),
     report_block: ($) => '__report_block_',
     dialog_block: ($) => '__dialog_block_',
+
+    _top_declarartion: ($) => choice(
+      $.constant_definition,
+      $.user_type_definition,
+      $.variable_definition
+    ),
+    _statement: ($) => choice(
+      $.fgl_statement,
+      $.sql_statement,
+    ),
+
     // ============================import========================
     ...sqlStatement,
-
+    ...fglStatement,
     //============================================================
     // 以下是常用的定义，不在主结构中
     //

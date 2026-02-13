@@ -1,3 +1,5 @@
+/// <reference types="tree-sitter-cli/dsl" />
+// @ts-check
 
 const digit = /[0-9]/;
 
