@@ -70,11 +70,27 @@
           "named": true
         },
         {
+          "type": "dialog_block",
+          "named": true
+        },
+        {
+          "type": "function_block",
+          "named": true
+        },
+        {
           "type": "globals_inclusion",
           "named": true
         },
         {
           "type": "import_statement",
+          "named": true
+        },
+        {
+          "type": "main_block",
+          "named": true
+        },
+        {
+          "type": "report_block",
           "named": true
         },
         {
@@ -163,10 +179,6 @@
     "named": false
   },
   {
-    "type": "__function__",
-    "named": false
-  },
-  {
     "type": "column_name",
     "named": false
   },
@@ -188,6 +200,10 @@
     "named": false
   },
   {
+    "type": "dialog_block",
+    "named": true
+  },
+  {
     "type": "e",
     "named": false
   },
@@ -198,6 +214,10 @@
   {
     "type": "func_name",
     "named": false
+  },
+  {
+    "type": "function_block",
+    "named": true
   },
   {
     "type": "java_type",
@@ -212,8 +232,16 @@
     "named": false
   },
   {
+    "type": "main_block",
+    "named": true
+  },
+  {
     "type": "password",
     "named": false
+  },
+  {
+    "type": "report_block",
+    "named": true
   },
   {
     "type": "string_content",

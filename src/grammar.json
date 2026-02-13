@@ -3229,8 +3229,88 @@
       ]
     },
     "_function": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "main_block"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "function_block"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "report_block"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "dialog_block"
+        }
+      ]
+    },
+    "main_block": {
       "type": "STRING",
-      "value": "__function__"
+      "value": "__main_block_"
+    },
+    "function_block": {
+      "type": "STRING",
+      "value": "__function_block_"
+    },
+    "report_block": {
+      "type": "STRING",
+      "value": "__report_block_"
+    },
+    "dialog_block": {
+      "type": "STRING",
+      "value": "__dialog_block_"
+    },
+    "sql_statement": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "select_statement"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "insert_statement"
+        }
+      ]
+    },
+    "select_statement": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "PATTERN",
+          "value": "[Ss][Ee][Ll][Ee][Cc][Tt]"
+        },
+        {
+          "type": "PATTERN",
+          "value": "[Ff][Rr][Oo][Mm]"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "identifier"
+        }
+      ]
+    },
+    "insert_statement": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "PATTERN",
+          "value": "[Ss][Ee][Ll][Ee][Cc][Tt]"
+        },
+        {
+          "type": "PATTERN",
+          "value": "[Ff][Rr][Oo][Mm]"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "identifier"
+        }
+      ]
     },
     "comment": {
       "type": "TOKEN",

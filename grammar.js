@@ -7,25 +7,10 @@
 /// <reference types="tree-sitter-cli/dsl" />
 // @ts-check
 
-const digit = /[0-9]/;
+// const sqlStatement = require("./rules/sql")
 
-const integerLiterals = seq(optional(choice("+", "-")), repeat1(digit));
-const decimalLiterals = seq(
-  optional(choice("+", "-")),
-  repeat(digit),
-  ".",
-  repeat1(digit),
-  optional(seq(choice("e", "E"), choice("-", "+"), repeat1(digit))),
-);
-const datetimeQualifier = choice(
-  kw("YEAR"),
-  kw("MONTH"),
-  kw("DAY"),
-  kw("HOUR"),
-  kw("MINUTE"),
-  kw("SECOND"),
-  seq(kw("FRACTION"), optional(seq("(", /[1-5]/, ")"))),
-);
+import { integerLiterals, decimalLiterals, datetimeQualifier, commaSep1, kw } from './rules/util.js'
+import sqlStatement from './rules/sql.js'
 
 export default grammar({
   name: "bdl",
@@ -163,7 +148,7 @@ export default grammar({
               alias($.identifier, "dbname"),
               optional(seq("@", alias($.identifier, "dbserver"))),
             ),
-            alias($._string_literal, "dbname"), // TODO 字符串 字面值
+            alias($._string_literal, "dbname"),
           ),
           optional(kw("EXCLUSIVE")),
         ),
@@ -389,7 +374,19 @@ export default grammar({
     //============================================================
     // 函数（function）
     // main function report dialog
-    _function: ($) => "__function__",
+    _function: ($) => choice(
+      $.main_block,
+      $.function_block,
+      $.report_block,
+      $.dialog_block
+    ),
+    main_block: ($) => '__main_block_',
+    function_block: ($) => '__function_block_',
+    report_block: ($) => '__report_block_',
+    dialog_block: ($) => '__dialog_block_',
+    // ============================import========================
+    ...sqlStatement,
+
     //============================================================
     // 以下是常用的定义，不在主结构中
     //
@@ -445,46 +442,3 @@ export default grammar({
     scope: ($) => choice(kw("PRIVATE"), kw("PUBLIC")),
   },
 });
-
-/**
- * Creates a rule to match one or more of the rules separated by a comma
- * 用逗号将1个或者多个规则拼接
- *
- * @param {Rule} rule
- *
- * @returns {SeqRule}
- */
-function commaSep1(rule) {
-  return seq(rule, repeat(seq(",", rule)));
-}
-
-/**
- * Creates a rule to optionally match one or more of the rules separated by a comma
- * 用逗号将0个或者多个规则拼接
- *
- * @param {Rule} rule
- *
- * @returns {ChoiceRule}
- */
-function commaSep(rule) {
-  return optional(commaSep1(rule));
-}
-/**
- * 将多词短语转为不区分大小写的 Tree-sitter 序列
- * @param {string} phrase - 例如 "end function"
- * @returns {Rule} Tree-sitter 规则序列
- */
-function kw(phrase) {
-  const words = phrase.split(/\s+/);
-
-  // 统一生成不区分大小写的 token
-  const makeToken = (/** @type {string} */ word) => token(prec(10, new RegExp(
-    word.split('').map(c => `[${c.toLowerCase()}${c.toUpperCase()}]`).join('')
-  )));
-
-  // 如果是多词短语如 "HELP FILE"，由 seq 拼接
-  if (words.length > 1) {
-    return seq(...words.map(w => makeToken(w)));
-  }
-  return makeToken(words[0]);
-}
