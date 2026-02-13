@@ -119,6 +119,10 @@
     "named": false
   },
   {
+    "type": "*",
+    "named": false
+  },
+  {
     "type": "+",
     "named": false
   },
@@ -135,6 +139,10 @@
     "named": false
   },
   {
+    "type": ":",
+    "named": false
+  },
+  {
     "type": "=",
     "named": false
   },
@@ -147,11 +155,19 @@
     "named": false
   },
   {
-    "type": "__data_type__",
+    "type": "[",
+    "named": false
+  },
+  {
+    "type": "]",
     "named": false
   },
   {
     "type": "__function__",
+    "named": false
+  },
+  {
+    "type": "column_name",
     "named": false
   },
   {
@@ -160,7 +176,7 @@
     "extra": true
   },
   {
-    "type": "constant_identifier",
+    "type": "constant_name",
     "named": false
   },
   {
@@ -184,7 +200,15 @@
     "named": false
   },
   {
+    "type": "java_type",
+    "named": false
+  },
+  {
     "type": "key_name",
+    "named": false
+  },
+  {
+    "type": "length",
     "named": false
   },
   {
@@ -196,11 +220,15 @@
     "named": false
   },
   {
-    "type": "type_name",
+    "type": "table_name",
     "named": false
   },
   {
     "type": "username",
+    "named": false
+  },
+  {
+    "type": "variable_name",
     "named": false
   }
 ]

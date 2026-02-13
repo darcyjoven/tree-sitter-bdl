@@ -17,6 +17,15 @@ const decimalLiterals = seq(
   repeat1(digit),
   optional(seq(choice("e", "E"), choice("-", "+"), repeat1(digit))),
 );
+const datetimeQualifier = choice(
+  kw("YEAR"),
+  kw("MONTH"),
+  kw("DAY"),
+  kw("HOUR"),
+  kw("MINUTE"),
+  kw("SECOND"),
+  seq(kw("FRACTION"), optional(seq("(", /[1-5]/, ")"))),
+);
 
 export default grammar({
   name: "bdl",
@@ -57,7 +66,7 @@ export default grammar({
           // OPTIONS { INPUT | DISPLAY } ATTRIBUTES ({FORM|WINDOW|attributes)
           seq(
             choice(kw("INPUT"), kw("DISPLAY")),
-            kw("ATTRIBUTES "),
+            kw("ATTRIBUTES"),
             "(",
             choice(
               kw("FORM"),
@@ -191,7 +200,7 @@ export default grammar({
       seq(optional($.scope), kw("CONSTANT"), commaSep1($._constant_statement)),
     _constant_statement: ($) =>
       seq(
-        alias($.identifier, "constant_identifier"),
+        alias($.identifier, "constant_name"),
         optional($._data_type),
         "=",
         $.literal,
@@ -201,18 +210,182 @@ export default grammar({
       seq(
         optional($.scope),
         kw("TYPE"),
-        commaSep1(seq(alias($.identifier, "type_name"), $._data_type)),
+        $._variable_list,
       ),
     // 变量定义
     variable_definition: ($) =>
       seq(
         optional($.scope),
         kw("DEFINE"),
-        commaSep1(seq(alias($.identifier, "type_name"), $._data_type)),
+        $._variable_list,
       ),
 
     // 数据类型
-    _data_type: ($) => "__data_type__",
+    _data_type: ($) =>
+      choice(
+        $._basic_data_type,
+        $._like_data_type,
+        $._record_data_type,
+        $._array_data_type,
+      ),
+    _basic_data_type: ($) =>
+      choice(
+        // CHAR
+        seq(
+          kw("CHAR"),
+          optional(
+            seq(
+              "(",
+              alias(choice($._natural_number, $.identifier), "length"),
+              ")",
+            ),
+          ),
+        ),
+        //CHARACTER
+        seq(
+          kw("CHARACTER"),
+          optional(
+            seq(
+              "(",
+              alias(choice($._natural_number, $.identifier), "length"),
+              ")",
+            ),
+          ),
+        ),
+        seq(
+          kw("VARCHAR"),
+          optional(
+            seq(
+              "(",
+              alias(choice($._natural_number, $.identifier), "length"),
+              optional(
+                seq(
+                  ",",
+                  alias(choice($._natural_number, $.identifier), "length"),
+                ),
+              ),
+              ")",
+            ),
+          ),
+        ),
+        kw("STRING"),
+        kw("BIGINT"),
+        kw("INTEGER"),
+        kw("SMALLINT"),
+        kw("TINYINT"),
+        kw("FLOAT"),
+        kw("SMALLFLOAT"),
+        //DECIMAL
+        seq(
+          kw("DECIMAL"),
+          optional(
+            seq(
+              "(",
+              alias(choice($._natural_number, $.identifier), "length"),
+              optional(
+                seq(
+                  ",",
+                  alias(choice($._natural_number, $.identifier), "length"),
+                ),
+              ),
+              ")",
+            ),
+          ),
+        ),
+        // MONEY
+        seq(
+          kw("MONEY"),
+          optional(
+            seq(
+              "(",
+              alias(choice($._natural_number, $.identifier), "length"),
+              optional(
+                seq(
+                  ",",
+                  alias(choice($._natural_number, $.identifier), "length"),
+                ),
+              ),
+              ")",
+            ),
+          ),
+        ),
+        kw("DATE"),
+        seq(kw("DATETIME"), datetimeQualifier, kw("TO"), datetimeQualifier),
+        seq(kw("INTERVAL"), datetimeQualifier, kw("TO"), datetimeQualifier),
+        kw("BYTE"),
+        kw("TEXT"),
+        kw("BOOLEAN"),
+      ),
+    _like_data_type: ($) =>
+      seq(
+        kw("LIKE"),
+        seq(
+          // [dbname:]
+          optional(seq(alias($.identifier, "dbname"), ":")),
+          // tabname
+          alias($.identifier, "table_name"),
+          // .colname
+          ".",
+          alias($.identifier, "column_name"),
+        ),
+      ),
+    _record_data_type: ($) =>
+      choice(
+        seq(
+          kw("RECORD"),
+          // commaSep1(seq(alias($.identifier, "prop_name"), $._data_type)),
+          $._record_list,
+          kw("END"), kw("RECORD"),
+        ),
+        seq(
+          kw("RECORD LIKE"),
+          optional(seq(alias($.identifier, "dbname"), ":")),
+          alias($.identifier, "table_name"),
+          ".",
+          "*",
+        ),
+      ),
+    _array_data_type: ($) =>
+      choice(
+        seq(
+          kw("ARRAY"),
+          "[",
+          commaSep1($._natural_number),
+          "]",
+          kw("OF"),
+          $._data_type,
+        ),
+        seq(
+          kw("DYNAMIC ARRAY"),
+          optional(seq(kw("WITH DIMENSION"), /[1-3]/)),
+          kw("OF"),
+          $._data_type,
+        ),
+        seq(kw("ARRAY"), "[", "]", kw("OF"), alias($.identifier, "java_type")),
+      ),
+    // 系列类型，用于type record define
+    _variable_list: ($) =>
+      // commaSep1(seq(alias($.identifier, 'variable_name'), $._data_type)),
+      choice(
+        prec(1, commaSep1(seq(alias($.identifier, 'variable_name'), $._data_type))),
+        seq(commaSep1(alias($.identifier, 'variable_name')), $._data_type)
+      ),
+    // record 因为有end record
+    _record_list: ($) =>
+      commaSep1(
+        seq(alias($.identifier, 'variable_name'), $._data_type)
+      ),
+    //choice(
+    // seq(
+    //   optional(repeat(seq(alias($.identifier, 'variable_name'), $._data_type, ',')),),
+    //   seq(seq(alias($.identifier, 'variable_name'), $._data_type)
+    //   ),
+    // ),
+    // seq(
+    //   repeat1(seq(alias($.identifier, 'variable_name'), ',')),
+    //   alias($.identifier, 'variable_name'),
+    //   $._data_type
+    // )), 
     //============================================================
     // 函数（function）
     // main function report dialog
@@ -266,7 +439,8 @@ export default grammar({
           "'",
         ),
       ),
-    _number_literal: (_) => choice(integerLiterals, decimalLiterals),
+    _number_literal: (_) =>
+      choice(integerLiterals, decimalLiterals, kw("TRUE"), kw("FALSE")),
     // 作用域
     scope: ($) => choice(kw("PRIVATE"), kw("PUBLIC")),
   },
@@ -298,33 +472,19 @@ function commaSep(rule) {
 /**
  * 将多词短语转为不区分大小写的 Tree-sitter 序列
  * @param {string} phrase - 例如 "end function"
- * @returns {Rule|RegExp} Tree-sitter 规则序列
+ * @returns {Rule} Tree-sitter 规则序列
  */
 function kw(phrase) {
-  // 1. 将单词按空格拆开
   const words = phrase.split(/\s+/);
 
-  // 2. 将每个单词转为不区分大小写的正则规则
-  const stickyRules = words.map((word) => {
-    return new RegExp(
-      word
-        .split("")
-        .map((char) => `[${char.toLowerCase()}${char.toUpperCase()}]`)
-        .join(""),
-    );
-  });
+  // 统一生成不区分大小写的 token
+  const makeToken = (/** @type {string} */ word) => token(prec(10, new RegExp(
+    word.split('').map(c => `[${c.toLowerCase()}${c.toUpperCase()}]`).join('')
+  )));
 
-  // 3. 使用 seq 将单词串联起来，中间插入至少一个空格的匹配
-  // 如果只有一个单词，直接返回该正则；如果有多个，中间插入 /\s+/
-  if (stickyRules.length === 1) return stickyRules[0];
-
-  const result = [];
-  for (let i = 0; i < stickyRules.length; i++) {
-    result.push(stickyRules[i]);
-    if (i < stickyRules.length - 1) {
-      result.push(/\s+/); // 在单词之间插入空格规则
-    }
+  // 如果是多词短语如 "HELP FILE"，由 seq 拼接
+  if (words.length > 1) {
+    return seq(...words.map(w => makeToken(w)));
   }
-
-  return seq(...result);
+  return makeToken(words[0]);
 }

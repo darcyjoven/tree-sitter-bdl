@@ -2,7 +2,7 @@
 常量定义
 ================================================================================|||
 
-constant l_i __data_type__ = 'ok'
+constant l_i string = 'ok'
 
 constant l_i = 'ok'
 
@@ -22,15 +22,15 @@ public constant l_i = 'ok'
 类型变量定义
 ================================================================================|||
 
-type omb __data_type__,oma __data_type__
-type omb __data_type__,
-     oma __data_type__
+type omb varchar(20),oma string
+type omb decimal(1,2),
+     oma integer
 
 private
-type omb __data_type__,oma __data_type__
+type omb datetime year to month,oma interval year to hour
 
 private
-define omb __data_type__,oma __data_type__
+define omb boolean,oma float
 
 --------------------------------------------------------------------------------|||
 
@@ -38,4 +38,62 @@ define omb __data_type__,oma __data_type__
     (user_type_definition)
     (user_type_definition)
     (user_type_definition)
+    (variable_definition))
+
+================================================================================|||
+LIKE 变量定义
+================================================================================|||
+
+define l_oha01 varchar(20),
+       l_oha02 string,
+       l_oha02 string
+
+define l_ima01 like ima_file.ima01,
+       l_ima02 like ima_file.ima02
+
+define l_ima01,l_ima02,ima03 string
+
+
+--------------------------------------------------------------------------------|||
+(source_file
+    (variable_definition)
+    (variable_definition)
+    (variable_definition))
+
+
+================================================================================|||
+基础类型结构体定义
+================================================================================|||
+
+define l_ima record
+        ima01 varchar(20),
+        ima02 string,
+        ima03 string
+    end record
+
+--------------------------------------------------------------------------------|||
+(source_file
+    (variable_definition))
+
+================================================================================|||
+结构体定义
+================================================================================|||
+
+DEFINE
+    tm  RECORD
+          part    LIKE ima_file.ima01,
+          ima910  LIKE ima_file.ima910,
+          qty     LIKE sfb_file.sfb08,
+          idate   LIKE type_file.dat,
+          img02   LIKE img_file.img02,
+          img03   LIKE img_file.img03,
+          img04   LIKE img_file.img04,
+          inb15   LIKE inb_file.inb15,
+          inb15_1 LIKE inb_file.inb15,
+          inb930  LIKE inb_file.inb930,
+          a       LIKE type_file.chr1
+        END RECORD
+
+--------------------------------------------------------------------------------|||
+(source_file
     (variable_definition))
