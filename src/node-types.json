@@ -20,6 +20,40 @@
     "fields": {}
   },
   {
+    "type": "exception_statement",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "fgl_statement",
+          "named": true
+        },
+        {
+          "type": "sql_statement",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "expression",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "variable",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "fgl_statement",
     "named": true,
     "fields": {},
@@ -32,11 +66,7 @@
           "named": true
         },
         {
-          "type": "exceptions_statement",
-          "named": true
-        },
-        {
-          "type": "expression_statement",
+          "type": "exception_statement",
           "named": true
         },
         {
@@ -45,10 +75,6 @@
         },
         {
           "type": "interface_statement",
-          "named": true
-        },
-        {
-          "type": "operator_statement",
           "named": true
         },
         {
@@ -273,9 +299,88 @@
     "fields": {}
   },
   {
+    "type": "variable",
+    "named": true,
+    "fields": {
+      "member": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "object": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": ",",
+            "named": false
+          },
+          {
+            "type": ".",
+            "named": false
+          },
+          {
+            "type": "[",
+            "named": false
+          },
+          {
+            "type": "]",
+            "named": false
+          },
+          {
+            "type": "expression",
+            "named": true
+          },
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "expression",
+          "named": true
+        },
+        {
+          "type": "identifier",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "variable_definition",
     "named": true,
     "fields": {}
+  },
+  {
+    "type": "variable_statement",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "variable",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "!=",
+    "named": false
   },
   {
     "type": "\"",
@@ -298,6 +403,10 @@
     "named": false
   },
   {
+    "type": "**",
+    "named": false
+  },
+  {
     "type": "+",
     "named": false
   },
@@ -314,7 +423,27 @@
     "named": false
   },
   {
+    "type": ".*",
+    "named": false
+  },
+  {
+    "type": "/",
+    "named": false
+  },
+  {
     "type": ":",
+    "named": false
+  },
+  {
+    "type": "<",
+    "named": false
+  },
+  {
+    "type": "<=",
+    "named": false
+  },
+  {
+    "type": "<>",
     "named": false
   },
   {
@@ -322,11 +451,35 @@
     "named": false
   },
   {
+    "type": "==",
+    "named": false
+  },
+  {
+    "type": ">",
+    "named": false
+  },
+  {
+    "type": ">=",
+    "named": false
+  },
+  {
     "type": "@",
     "named": false
   },
   {
+    "type": "CLIPPED",
+    "named": false
+  },
+  {
     "type": "E",
+    "named": false
+  },
+  {
+    "type": "SPACE",
+    "named": false
+  },
+  {
+    "type": "USING",
     "named": false
   },
   {
@@ -367,14 +520,6 @@
     "named": false
   },
   {
-    "type": "exceptions_statement",
-    "named": true
-  },
-  {
-    "type": "expression_statement",
-    "named": true
-  },
-  {
     "type": "file_name",
     "named": false
   },
@@ -403,12 +548,12 @@
     "named": false
   },
   {
-    "type": "length",
+    "type": "label_name",
     "named": false
   },
   {
-    "type": "operator_statement",
-    "named": true
+    "type": "length",
+    "named": false
   },
   {
     "type": "param_name",
@@ -443,7 +588,7 @@
     "named": false
   },
   {
-    "type": "variable_statement",
-    "named": true
+    "type": "||",
+    "named": false
   }
 ]

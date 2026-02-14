@@ -8,10 +8,16 @@
 // @ts-check
 
 // const sqlStatement = require("./rules/sql")
-import { integerLiterals, decimalLiterals, datetimeQualifier, commaSep1, kw, commaSep } from './rules/util.js'
-import sqlStatement from './rules/sql.js'
-import fglStatement from './rules/fgl.js'
-
+import {
+  integerLiterals,
+  decimalLiterals,
+  datetimeQualifier,
+  commaSep1,
+  kw,
+  commaSep,
+} from "./rules/util.js";
+import sqlStatement from "./rules/sql.js";
+import fglStatement from "./rules/fgl.js";
 
 export default grammar({
   name: "bdl",
@@ -193,18 +199,10 @@ export default grammar({
       ),
     // 类型定义
     user_type_definition: ($) =>
-      seq(
-        optional($.scope),
-        kw("TYPE"),
-        $._variable_list,
-      ),
+      seq(optional($.scope), kw("TYPE"), $._variable_list),
     // 变量定义
     variable_definition: ($) =>
-      seq(
-        optional($.scope),
-        kw("DEFINE"),
-        $._variable_list,
-      ),
+      seq(optional($.scope), kw("DEFINE"), $._variable_list),
 
     // 数据类型
     _data_type: ($) =>
@@ -321,7 +319,8 @@ export default grammar({
           kw("RECORD"),
           // commaSep1(seq(alias($.identifier, "prop_name"), $._data_type)),
           $._record_list,
-          kw("END"), kw("RECORD"),
+          kw("END"),
+          kw("RECORD"),
         ),
         seq(
           kw("RECORD LIKE"),
@@ -353,14 +352,15 @@ export default grammar({
     _variable_list: ($) =>
       // commaSep1(seq(alias($.identifier, 'variable_name'), $._data_type)),
       choice(
-        prec(1, commaSep1(seq(alias($.identifier, 'variable_name'), $._data_type))),
-        seq(commaSep1(alias($.identifier, 'variable_name')), $._data_type)
+        prec(
+          1,
+          commaSep1(seq(alias($.identifier, "variable_name"), $._data_type)),
+        ),
+        seq(commaSep1(alias($.identifier, "variable_name")), $._data_type),
       ),
     // record 因为有end record
     _record_list: ($) =>
-      commaSep1(
-        seq(alias($.identifier, 'variable_name'), $._data_type)
-      ),
+      commaSep1(seq(alias($.identifier, "variable_name"), $._data_type)),
     //choice(
     // seq(
     //   optional(repeat(seq(alias($.identifier, 'variable_name'), $._data_type, ',')),),
@@ -371,47 +371,43 @@ export default grammar({
     //   repeat1(seq(alias($.identifier, 'variable_name'), ',')),
     //   alias($.identifier, 'variable_name'),
     //   $._data_type
-    // )), 
+    // )),
     //============================================================
     // 函数（function）
     // main function report dialog
-    _function: ($) => choice(
-      $.main_block,
-      $.function_block,
-      $.report_block,
-      $.dialog_block
-    ),
-    main_block: ($) => seq(kw("MAIN"), seq(
-      repeat($._top_declarartion),
-      repeat($._statement),
-    ), kw('END MAIN')),
-    function_block: ($) => seq(
-      optional($.scope),
-      kw('FUNCTION'),
-      alias($.identifier, 'func_name'),
-      '(', commaSep(alias($.identifier, 'param_name')), ')',
+    _function: ($) =>
+      choice($.main_block, $.function_block, $.report_block, $.dialog_block),
+    main_block: ($) =>
       seq(
-        repeat($._top_declarartion),
-        repeat($._statement),
+        kw("MAIN"),
+        seq(repeat($._top_declarartion), repeat($._statement)),
+        kw("END MAIN"),
       ),
-      kw('END FUNCTION')
-    ),
-    report_block: ($) => '__report_block_',
-    dialog_block: ($) => '__dialog_block_',
+    function_block: ($) =>
+      seq(
+        optional($.scope),
+        kw("FUNCTION"),
+        alias($.identifier, "func_name"),
+        "(",
+        commaSep(alias($.identifier, "param_name")),
+        ")",
+        seq(repeat($._top_declarartion), repeat($._statement)),
+        kw("END FUNCTION"),
+      ),
+    report_block: ($) => "__report_block_",
+    dialog_block: ($) => "__dialog_block_",
 
-    _top_declarartion: ($) => choice(
-      $.constant_definition,
-      $.user_type_definition,
-      $.variable_definition
-    ),
-    _statement: ($) => choice(
-      $.fgl_statement,
-      $.sql_statement,
-    ),
+    _top_declarartion: ($) =>
+      choice(
+        $.constant_definition,
+        $.user_type_definition,
+        $.variable_definition,
+      ),
+    _statement: ($) => choice($.fgl_statement, $.sql_statement),
 
     // ============================import========================
-    ...sqlStatement,
     ...fglStatement,
+    ...sqlStatement,
     //============================================================
     // 以下是常用的定义，不在主结构中
     //
@@ -431,7 +427,7 @@ export default grammar({
     // 整数
     _natural_number: (_) => /\d+/,
     // 字面值
-    literal: ($) => choice($._string_literal, $._number_literal),
+    literal: ($) => choice($._string_literal, $._number_literal,$._datetime_literal),
     _string_literal: (_) =>
       choice(
         seq(
@@ -462,8 +458,32 @@ export default grammar({
         ),
       ),
     _number_literal: (_) =>
-      choice(integerLiterals, decimalLiterals, kw("TRUE"), kw("FALSE")),
+      choice(integerLiterals, decimalLiterals),
+    _datetime_literal: (_) => choice(
+      seq(kw("DATETIME"), datetimeQualifier, kw("TO"), datetimeQualifier),
+      seq(
+        kw("IINTERVAL"),
+        "(",
+        /[^)]+/,
+        ")",
+        datetimeQualifier,
+        kw("TO"),
+        datetimeQualifier,
+      )),
     // 作用域
     scope: ($) => choice(kw("PRIVATE"), kw("PUBLIC")),
+    // 变量/方法名
+    variable: ($) => $._variable,
+    _variable: ($) => choice($.identifier, $._member, $._array_item),
+    _member: ($) =>
+      prec.left(
+        1,
+        seq(field("object", $._variable), ".", field("member", $.identifier)),
+      ),
+    _array_item: ($) =>
+      prec.left(
+        2,
+        seq(field("object", $._variable), "[", commaSep1($.expression), "]"),
+      ),
   },
 });
