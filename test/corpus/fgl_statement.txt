@@ -1,0 +1,62 @@
+================================================================================|||
+变量/方法的定义
+================================================================================|||
+
+function func1()
+    define l_ima01 like ima_file.ima01
+    let l_ima01 = '123'
+end function
+
+--------------------------------------------------------------------------------|||
+
+(source_file
+    (function_block
+        (variable_definition
+            (variable_name)
+            (data_type))
+        (fgl_statement
+            (variable_statement
+                (variable)
+                (literal)))))
+
+================================================================================|||
+延迟语句
+================================================================================|||
+
+function main()
+    defer QUIT
+    defer INTERRUPT
+end function
+
+--------------------------------------------------------------------------------|||
+
+(source_file
+    (function_block
+        (fgl_statement
+            (defer_statement))
+        (fgl_statement
+            (defer_statement))))
+
+================================================================================|||
+Let 赋值语句
+================================================================================|||
+
+function main()
+    
+    let l_sql = "select"
+    let l_sql = 'select'
+
+end function
+
+--------------------------------------------------------------------------------|||
+
+(source_file
+    (function_block
+        (fgl_statement
+            (variable_statement
+                (variable)
+                (literal)))
+        (fgl_statement
+            (variable_statement
+                (variable)
+                (literal)))))

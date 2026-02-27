@@ -13,10 +13,23 @@ public constant l_i = 'ok'
 --------------------------------------------------------------------------------|||
 
 (source_file
-    (constant_definition)
-    (constant_definition)
-    (constant_definition)
-    (constant_definition))
+    (constant_definition
+        (constant_name)
+        (data_type)
+        (literal))
+    (constant_definition
+        (constant_name)
+        (literal))
+    (constant_definition 
+        (constant_name)
+        (literal)
+        (constant_name)
+        (literal))
+    (constant_definition
+        (constant_name)
+        (literal)
+        (constant_name)
+        (literal)))
 
 ================================================================================|||
 类型变量定义
@@ -35,10 +48,26 @@ define omb boolean,oma float
 --------------------------------------------------------------------------------|||
 
 (source_file
-    (user_type_definition)
-    (user_type_definition)
-    (user_type_definition)
-    (variable_definition))
+    (user_type_definition
+        (variable_name)
+        (data_type)
+        (variable_name)
+        (data_type))
+    (user_type_definition
+        (variable_name)
+        (data_type)
+        (variable_name)
+        (data_type))
+   (user_type_definition
+        (variable_name)
+        (data_type)
+        (variable_name)
+        (data_type))
+    (variable_definition
+        (variable_name)
+        (data_type)
+        (variable_name)
+        (data_type)))
 
 ================================================================================|||
 LIKE 变量定义
@@ -56,9 +85,23 @@ define l_ima01,l_ima02,ima03 string
 
 --------------------------------------------------------------------------------|||
 (source_file
-    (variable_definition)
-    (variable_definition)
-    (variable_definition))
+    (variable_definition
+        (variable_name)
+        (data_type)
+        (variable_name)
+        (data_type)
+        (variable_name)
+        (data_type))
+    (variable_definition
+        (variable_name)
+        (data_type)
+        (variable_name)
+        (data_type))
+    (variable_definition
+        (variable_name)
+        (variable_name)
+        (variable_name)
+        (data_type)))
 
 
 ================================================================================|||
@@ -73,7 +116,15 @@ define l_ima record
 
 --------------------------------------------------------------------------------|||
 (source_file
-    (variable_definition))
+    (variable_definition
+        (variable_name)
+        (data_type
+            (variable_name)
+            (data_type)
+            (variable_name)
+            (data_type)
+            (variable_name)
+            (data_type))))
 
 ================================================================================|||
 结构体定义
@@ -96,4 +147,28 @@ DEFINE
 
 --------------------------------------------------------------------------------|||
 (source_file
-    (variable_definition))
+    (variable_definition
+        (variable_name)
+        (data_type
+            (variable_name)
+            (data_type)
+            (variable_name)
+            (data_type)
+            (variable_name)
+            (data_type)
+            (variable_name)
+            (data_type)
+            (variable_name)
+            (data_type)
+            (variable_name)
+            (data_type)
+            (variable_name)
+            (data_type)
+            (variable_name)
+            (data_type)
+            (variable_name)
+            (data_type)
+            (variable_name)
+            (data_type)
+            (variable_name)
+            (data_type))))

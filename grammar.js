@@ -24,7 +24,7 @@ export default grammar({
 
   extras: ($) => [$.comment, /\s/],
 
-  inline: ($) => [$.literal, $._constant_statement, $.scope],
+  inline: ($) => [ $._constant_statement, $.scope],
 
   rules: {
     //============================================================
@@ -192,8 +192,8 @@ export default grammar({
       seq(optional($.scope), kw("CONSTANT"), commaSep1($._constant_statement)),
     _constant_statement: ($) =>
       seq(
-        alias($.identifier, "constant_name"),
-        optional($._data_type),
+        alias($.identifier, $.constant_name),
+        alias(optional($._data_type), $.data_type),
         "=",
         $.literal,
       ),
@@ -354,13 +354,13 @@ export default grammar({
       choice(
         prec(
           1,
-          commaSep1(seq(alias($.identifier, "variable_name"), $._data_type)),
+          commaSep1(seq(alias($.identifier, $.variable_name), alias($._data_type, $.data_type))),
         ),
-        seq(commaSep1(alias($.identifier, "variable_name")), $._data_type),
+        seq(commaSep1(alias($.identifier, $.variable_name)), alias($._data_type, $.data_type)),
       ),
     // record 因为有end record
     _record_list: ($) =>
-      commaSep1(seq(alias($.identifier, "variable_name"), $._data_type)),
+      commaSep1(seq(alias($.identifier, $.variable_name), alias($._data_type, $.data_type))),
     //choice(
     // seq(
     //   optional(repeat(seq(alias($.identifier, 'variable_name'), $._data_type, ',')),),
@@ -427,7 +427,7 @@ export default grammar({
     // 整数
     _natural_number: (_) => /\d+/,
     // 字面值
-    literal: ($) => choice($._string_literal, $._number_literal,$._datetime_literal),
+    literal: ($) => choice($._string_literal, $._number_literal, $._datetime_literal),
     _string_literal: (_) =>
       choice(
         seq(
@@ -474,7 +474,7 @@ export default grammar({
     scope: ($) => choice(kw("PRIVATE"), kw("PUBLIC")),
     // 变量/方法名
     variable: ($) => $._variable,
-    _variable: ($) => choice($.identifier, $._member, $._array_item),
+    _variable: ($) => choice(alias($.identifier,'identifier'), $._member, $._array_item),
     _member: ($) =>
       prec.left(
         1,

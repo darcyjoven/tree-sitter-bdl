@@ -7,7 +7,44 @@
   {
     "type": "constant_definition",
     "named": true,
-    "fields": {}
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "constant_name",
+          "named": true
+        },
+        {
+          "type": "data_type",
+          "named": true
+        },
+        {
+          "type": "literal",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "data_type",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "data_type",
+          "named": true
+        },
+        {
+          "type": "variable_name",
+          "named": true
+        }
+      ]
+    }
   },
   {
     "type": "dbname",
@@ -44,8 +81,12 @@
     "fields": {},
     "children": {
       "multiple": true,
-      "required": false,
+      "required": true,
       "types": [
+        {
+          "type": "literal",
+          "named": true
+        },
         {
           "type": "variable",
           "named": true
@@ -166,6 +207,11 @@
         }
       ]
     }
+  },
+  {
+    "type": "literal",
+    "named": true,
+    "fields": {}
   },
   {
     "type": "main_block",
@@ -296,7 +342,21 @@
   {
     "type": "user_type_definition",
     "named": true,
-    "fields": {}
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "data_type",
+          "named": true
+        },
+        {
+          "type": "variable_name",
+          "named": true
+        }
+      ]
+    }
   },
   {
     "type": "variable",
@@ -338,6 +398,10 @@
           },
           {
             "type": "identifier",
+            "named": false
+          },
+          {
+            "type": "identifier",
             "named": true
           }
         ]
@@ -350,10 +414,6 @@
         {
           "type": "expression",
           "named": true
-        },
-        {
-          "type": "identifier",
-          "named": true
         }
       ]
     }
@@ -361,7 +421,21 @@
   {
     "type": "variable_definition",
     "named": true,
-    "fields": {}
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "data_type",
+          "named": true
+        },
+        {
+          "type": "variable_name",
+          "named": true
+        }
+      ]
+    }
   },
   {
     "type": "variable_statement",
@@ -369,8 +443,12 @@
     "fields": {},
     "children": {
       "multiple": true,
-      "required": false,
+      "required": true,
       "types": [
+        {
+          "type": "literal",
+          "named": true
+        },
         {
           "type": "variable",
           "named": true
@@ -501,7 +579,7 @@
   },
   {
     "type": "constant_name",
-    "named": false
+    "named": true
   },
   {
     "type": "dbname",
@@ -529,6 +607,10 @@
   },
   {
     "type": "func_name",
+    "named": false
+  },
+  {
+    "type": "identifier",
     "named": false
   },
   {
@@ -585,7 +667,7 @@
   },
   {
     "type": "variable_name",
-    "named": false
+    "named": true
   },
   {
     "type": "||",
