@@ -26,6 +26,11 @@ export default grammar({
 
   inline: ($) => [$._constant_statement, $.scope],
 
+  conflicts: ($) => [
+    [$._case_flow, $._expression],
+    // [$.variable, $._expression]
+  ],
+
   rules: {
     //============================================================
     // 指令(directive) -> 声明(declaration) -> 函数（function）
@@ -440,7 +445,8 @@ export default grammar({
     // 整数
     _natural_number: (_) => /\d+/,
     // 字面值
-    literal: ($) =>
+    literal: ($) => $._literal,
+    _literal: ($) =>
       choice($._string_literal, $._number_literal, $._datetime_literal),
     _string_literal: (_) =>
       choice(

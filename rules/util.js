@@ -3,7 +3,7 @@
 
 const digit = /[0-9]/;
 
-const integerLiterals = seq(optional(choice("+", "-")), repeat1(digit));
+const integerLiterals = choice(seq(optional(choice("+", "-")), repeat1(digit)),kw('TRUE'),kw('FALSE'));
 const decimalLiterals = seq(
   optional(choice("+", "-")),
   repeat(digit),

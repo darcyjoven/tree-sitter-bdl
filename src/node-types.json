@@ -1,5 +1,65 @@
 [
   {
+    "type": "case_vairable",
+    "named": false,
+    "fields": {
+      "member": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "object": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": ",",
+            "named": false
+          },
+          {
+            "type": ".",
+            "named": false
+          },
+          {
+            "type": "[",
+            "named": false
+          },
+          {
+            "type": "]",
+            "named": false
+          },
+          {
+            "type": "expression",
+            "named": true
+          },
+          {
+            "type": "identifier",
+            "named": false
+          },
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "expression",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "compiler_options",
     "named": true,
     "fields": {}
@@ -78,13 +138,58 @@
   {
     "type": "expression",
     "named": true,
-    "fields": {},
+    "fields": {
+      "member": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "object": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": ",",
+            "named": false
+          },
+          {
+            "type": ".",
+            "named": false
+          },
+          {
+            "type": "[",
+            "named": false
+          },
+          {
+            "type": "]",
+            "named": false
+          },
+          {
+            "type": "expression",
+            "named": true
+          },
+          {
+            "type": "identifier",
+            "named": false
+          },
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
     "children": {
       "multiple": true,
-      "required": true,
+      "required": false,
       "types": [
         {
-          "type": "literal",
+          "type": "expression",
           "named": true
         },
         {
@@ -137,6 +242,262 @@
     "type": "filename",
     "named": false,
     "fields": {}
+  },
+  {
+    "type": "flow_ctrl_statement",
+    "named": true,
+    "fields": {
+      "member": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "object": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": ",",
+            "named": false
+          },
+          {
+            "type": ".",
+            "named": false
+          },
+          {
+            "type": "[",
+            "named": false
+          },
+          {
+            "type": "]",
+            "named": false
+          },
+          {
+            "type": "expression",
+            "named": true
+          },
+          {
+            "type": "identifier",
+            "named": false
+          },
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "expression",
+          "named": true
+        },
+        {
+          "type": "fgl_statement",
+          "named": true
+        },
+        {
+          "type": "sql_statement",
+          "named": true
+        },
+        {
+          "type": "variable",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "func_name",
+    "named": false,
+    "fields": {
+      "member": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "object": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": ",",
+            "named": false
+          },
+          {
+            "type": ".",
+            "named": false
+          },
+          {
+            "type": "[",
+            "named": false
+          },
+          {
+            "type": "]",
+            "named": false
+          },
+          {
+            "type": "expression",
+            "named": true
+          },
+          {
+            "type": "identifier",
+            "named": false
+          },
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "expression",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "func_params",
+    "named": false,
+    "fields": {
+      "member": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "object": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": ",",
+            "named": false
+          },
+          {
+            "type": ".",
+            "named": false
+          },
+          {
+            "type": "[",
+            "named": false
+          },
+          {
+            "type": "]",
+            "named": false
+          },
+          {
+            "type": "expression",
+            "named": true
+          },
+          {
+            "type": "identifier",
+            "named": false
+          },
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "expression",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "func_returns",
+    "named": false,
+    "fields": {
+      "member": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "object": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": ",",
+            "named": false
+          },
+          {
+            "type": ".",
+            "named": false
+          },
+          {
+            "type": "[",
+            "named": false
+          },
+          {
+            "type": "]",
+            "named": false
+          },
+          {
+            "type": "expression",
+            "named": true
+          },
+          {
+            "type": "identifier",
+            "named": false
+          },
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "expression",
+          "named": true
+        },
+        {
+          "type": "variable",
+          "named": true
+        }
+      ]
+    }
   },
   {
     "type": "function_block",
@@ -207,6 +568,66 @@
       "types": [
         {
           "type": "identifier",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "label_name",
+    "named": false,
+    "fields": {
+      "member": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "object": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": ",",
+            "named": false
+          },
+          {
+            "type": ".",
+            "named": false
+          },
+          {
+            "type": "[",
+            "named": false
+          },
+          {
+            "type": "]",
+            "named": false
+          },
+          {
+            "type": "expression",
+            "named": true
+          },
+          {
+            "type": "identifier",
+            "named": false
+          },
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "expression",
           "named": true
         }
       ]
@@ -444,17 +865,62 @@
   {
     "type": "variable_statement",
     "named": true,
-    "fields": {},
+    "fields": {
+      "member": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "object": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": ",",
+            "named": false
+          },
+          {
+            "type": ".",
+            "named": false
+          },
+          {
+            "type": "[",
+            "named": false
+          },
+          {
+            "type": "]",
+            "named": false
+          },
+          {
+            "type": "expression",
+            "named": true
+          },
+          {
+            "type": "identifier",
+            "named": false
+          },
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
     "children": {
       "multiple": true,
-      "required": true,
+      "required": false,
       "types": [
         {
-          "type": "identifier",
+          "type": "expression",
           "named": true
         },
         {
-          "type": "literal",
+          "type": "identifier",
           "named": true
         },
         {
@@ -561,6 +1027,10 @@
     "named": false
   },
   {
+    "type": "ANY",
+    "named": false
+  },
+  {
     "type": "ARRAY",
     "named": false
   },
@@ -601,6 +1071,10 @@
     "named": false
   },
   {
+    "type": "CASE",
+    "named": false
+  },
+  {
     "type": "CATCH",
     "named": false
   },
@@ -634,6 +1108,10 @@
   },
   {
     "type": "CONSTRAINED",
+    "named": false
+  },
+  {
+    "type": "CONSTRUCT",
     "named": false
   },
   {
@@ -681,6 +1159,10 @@
     "named": false
   },
   {
+    "type": "DIALOG",
+    "named": false
+  },
+  {
     "type": "DIM",
     "named": false
   },
@@ -697,7 +1179,19 @@
     "named": false
   },
   {
+    "type": "ELSE",
+    "named": false
+  },
+  {
     "type": "END",
+    "named": false
+  },
+  {
+    "type": "END_CASE",
+    "named": false
+  },
+  {
+    "type": "END_FOR",
     "named": false
   },
   {
@@ -709,11 +1203,19 @@
     "named": false
   },
   {
+    "type": "END_IF",
+    "named": false
+  },
+  {
     "type": "END_MAIN",
     "named": false
   },
   {
     "type": "END_TRY",
+    "named": false
+  },
+  {
+    "type": "END_WHILE",
     "named": false
   },
   {
@@ -733,6 +1235,14 @@
     "named": false
   },
   {
+    "type": "EXIT",
+    "named": false
+  },
+  {
+    "type": "FALSE",
+    "named": false
+  },
+  {
     "type": "FGL",
     "named": false
   },
@@ -746,6 +1256,14 @@
   },
   {
     "type": "FLOAT",
+    "named": false
+  },
+  {
+    "type": "FOR",
+    "named": false
+  },
+  {
+    "type": "FOREACH",
     "named": false
   },
   {
@@ -790,6 +1308,10 @@
   },
   {
     "type": "HOUR",
+    "named": false
+  },
+  {
+    "type": "IF",
     "named": false
   },
   {
@@ -849,6 +1371,10 @@
     "named": false
   },
   {
+    "type": "LABEL",
+    "named": false
+  },
+  {
     "type": "LET",
     "named": false
   },
@@ -878,6 +1404,10 @@
   },
   {
     "type": "MEMORY",
+    "named": false
+  },
+  {
+    "type": "MENU",
     "named": false
   },
   {
@@ -957,6 +1487,10 @@
     "named": false
   },
   {
+    "type": "OTHERWISE",
+    "named": false
+  },
+  {
     "type": "PREVIOUS",
     "named": false
   },
@@ -993,6 +1527,18 @@
     "named": false
   },
   {
+    "type": "REPORT",
+    "named": false
+  },
+  {
+    "type": "RETURN",
+    "named": false
+  },
+  {
+    "type": "RETURNING",
+    "named": false
+  },
+  {
     "type": "REVERSE",
     "named": false
   },
@@ -1010,6 +1556,10 @@
   },
   {
     "type": "SHORT_CIRCUIT",
+    "named": false
+  },
+  {
+    "type": "SLEEP",
     "named": false
   },
   {
@@ -1033,6 +1583,10 @@
     "named": false
   },
   {
+    "type": "STEP",
+    "named": false
+  },
+  {
     "type": "STOP",
     "named": false
   },
@@ -1042,6 +1596,10 @@
   },
   {
     "type": "TEXT",
+    "named": false
+  },
+  {
+    "type": "THEN",
     "named": false
   },
   {
@@ -1058,6 +1616,10 @@
   },
   {
     "type": "TO_NULL",
+    "named": false
+  },
+  {
+    "type": "TRUE",
     "named": false
   },
   {
@@ -1097,7 +1659,15 @@
     "named": false
   },
   {
+    "type": "WHEN",
+    "named": false
+  },
+  {
     "type": "WHENEVER",
+    "named": false
+  },
+  {
+    "type": "WHILE",
     "named": false
   },
   {
@@ -1164,10 +1734,6 @@
   {
     "type": "file_name",
     "named": false
-  },
-  {
-    "type": "flow_ctrl_statement",
-    "named": true
   },
   {
     "type": "func_name",

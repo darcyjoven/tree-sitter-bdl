@@ -1,0 +1,47 @@
+================================================================================|||
+WHENEVER 错误处理
+================================================================================|||
+main
+    WHENEVER ERROR STOP
+    WHENEVER WARNING CONTINUE
+    WHENEVER NOT FOUND GOTO not_found_handler
+end main
+--------------------------------------------------------------------------------|||
+
+(source_file
+    (main_block
+        (fgl_statement
+            (exception_statement))
+        (fgl_statement
+            (exception_statement))
+        (fgl_statement
+            (exception_statement))))
+
+================================================================================|||
+TRY/CATCH 错误处理
+================================================================================|||
+main
+    TRY
+        TRY
+            let num_cust = 0
+        CATCH
+            let num_cust = 0
+        END TRY
+    CATCH
+        let num_cust = 0
+    END TRY
+end main
+--------------------------------------------------------------------------------|||
+(source_file
+    (main_block
+    (fgl_statement
+        (exception_statement
+            (fgl_statement
+                (exception_statement
+                    (fgl_statement
+                        (variable_statement))
+                    (fgl_statement
+                        (variable_statement))))
+            (fgl_statement
+                (variable_statement))))))
+    

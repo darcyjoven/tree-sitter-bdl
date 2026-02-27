@@ -19,11 +19,11 @@ export default {
   // 变量操作
   variable_statement: ($) =>
     choice(
-      seq(kw("LET"), $.variable, "=", $._expression),
+      seq(kw("LET"), $._variable, "=", $._expression),
       // VALIDATE
       seq(
         kw("VALIDATE"),
-        commaSep1($.variable),
+        commaSep1($._variable),
         kw("LIKE"),
         choice(
           seq(alias($.identifier, "table_name"), ".*"),
@@ -75,23 +75,154 @@ export default {
       seq(kw("TRY"), $._statement, kw("CATCH"), $._statement, kw("END TRY")),
     ),
   _exception_classes: ($) =>
-    choice(kw("ERROR"), kw("SQLERROR"), kw("NOT FOUND"), kw("WARNING")),
+    choice(seq(optional(kw('ANY')), kw("ERROR")), seq(kw('ANY'), kw("SQLERROR")), kw("NOT FOUND"), kw("WARNING")),
   _exception_action: ($) =>
     choice(
       kw("STOP"),
       kw("CONTINUE"),
       kw("RAISE"),
-      seq(kw("CALL"), alias($.identifier, "func_name")),
-      seq(kw("GOTO"), alias($.identifier, "label_name")),
+      seq(kw("CALL"), alias($.variable, "func_name")),
+      seq(kw("GOTO"), alias($.variable, "label_name")),
     ),
   // 流程控制
-  flow_ctrl_statement: ($) => "flow_ctrl_statement",
+  flow_ctrl_statement: ($) => choice(
+    $._call_flow,
+    $._return_flow,
+    $._case_flow,
+    $._continue_flow,
+    $._exit_flow,
+    $._for_flow,
+    $._goto_flow,
+    $._if_flow,
+    $._label_flow,
+    $._sleep_flow,
+    $._while_flow,
+  ),
+  _call_flow: ($) => seq(
+    kw('CALL'),
+    alias($._variable, 'func_name'),
+    '(',
+    alias(commaSep($._variable), 'func_params'),
+    ')',
+    optional(
+      seq(
+        kw('RETURNING'),
+        alias(commaSep1($._variable), 'func_returns'),
+      )
+    )
+  ),
+  _return_flow: ($) => seq(
+    kw('RETURN'),
+    alias(commaSep($._expression), 'func_returns'),
+  ),
+  _case_flow: ($) => seq(
+    kw('CASE'),
+    alias(optional($._variable),'case_vairable'),
+    repeat(
+      seq(
+        kw('WHEN'),
+        choice($._variable, $._expression),
+        repeat(
+          choice(
+            $.fgl_statement,
+            $.sql_statement,
+          )
+        )
+      ),
+    ),
+    optional(
+      seq(
+        kw('OTHERWISE'),
+        repeat(
+          choice(
+            $.fgl_statement,
+            $.sql_statement,
+          )
+        )
+      )
+    ),
+    kw('END CASE')
+  ),
+  _continue_flow: ($) => seq(kw('CONTINUE'), choice(
+    kw('FOR'),
+    kw('FOREACH'),
+    kw('WHILE'),
+    kw('MENU'),
+    kw('CONSTRUCT'),
+    kw('INPUT'),
+    kw('DIALOG'),
+  )),
+  _exit_flow: ($) => seq(kw('EXIT'), choice(
+    kw('CASE'),
+    kw('FOR'),
+    kw('FOREACH'),
+    kw('WHILE'),
+    kw('MENU'),
+    kw('CONSTRUCT'),
+    kw('REPORT'),
+    kw('DISPLAY'),
+    kw('INPUT'),
+    kw('DIALOG'),
+  )),
+  _for_flow: ($) => seq(
+    kw('FOR'),
+    $._variable,
+    '=',
+    $._expression,
+    kw('TO'),
+    $._expression,
+    optional(
+      seq(
+        kw('STEP'),
+        $._expression,
+      )
+    ),
+    repeat(
+      choice($.fgl_statement,
+        $.sql_statement,)
+    ),
+    kw('END FOR')
+  ),
+  _goto_flow: ($) => seq(
+    kw('GOTO'),
+    optional(':'),
+    alias($.identifier, 'label_name')
+  ),
+  _if_flow: ($) => seq(
+    kw('IF'),
+    $._expression,
+    kw('THEN'),
+    repeat(choice($.fgl_statement, $.sql_statement)),
+    optional(
+      seq(
+        kw('ELSE'),
+        repeat(choice($.fgl_statement, $.sql_statement))
+      )
+    ),
+    kw('END IF')
+  ),
+  _label_flow: ($) => seq(
+    kw('LABEL'),
+    alias($.identifier, 'label_name'),
+    ":"
+  ),
+  _sleep_flow: ($) => seq(
+    kw('SLEEP'),
+    $._expression
+  ),
+  _while_flow: ($) => seq(
+    kw('WHILE'),
+    $._expression,
+    repeat(choice($.fgl_statement, $.sql_statement)),
+    kw('END WHILE'),
+  ),
   preprocessor_statement: ($) => "preprocessor_statement",
   // 结果是一个值的内容
   expression: ($) => $._expression,
   _expression: ($) =>
     choice(
-      $.literal,
+      $._literal,
+      $._variable,
       $._boolean_expression,
       $._numberic_expression,
       $._string_expression,
