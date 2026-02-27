@@ -106,3 +106,27 @@ END MAIN
         (fgl_statement
             (variable_statement
                 (identifier)))))
+
+================================================================================|||
+Preprocessor 预定义
+================================================================================|||
+&include "foo.4gl"
+&define foo() yes
+&define dis1() dis1
+&define dis2(x) dis2, \
+    disp, \
+    dis3 
+&define dis3(x) dis3
+
+main
+end main
+
+--------------------------------------------------------------------------------|||
+
+(source_file
+        (preprocessor_statement)
+        (preprocessor_statement)
+        (preprocessor_statement)
+        (preprocessor_statement)
+        (preprocessor_statement)
+        (main_block))

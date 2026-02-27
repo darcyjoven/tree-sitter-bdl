@@ -1,5 +1,10 @@
 [
   {
+    "type": "&define_content",
+    "named": false,
+    "fields": {}
+  },
+  {
     "type": "case_vairable",
     "named": false,
     "fields": {
@@ -115,6 +120,21 @@
     "type": "defer_statement",
     "named": true,
     "fields": {}
+  },
+  {
+    "type": "define_identifier",
+    "named": false,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        }
+      ]
+    }
   },
   {
     "type": "exception_statement",
@@ -670,6 +690,11 @@
     }
   },
   {
+    "type": "preprocessor_statement",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "schema_statement",
     "named": true,
     "fields": {}
@@ -724,6 +749,10 @@
         },
         {
           "type": "main_block",
+          "named": true
+        },
+        {
+          "type": "preprocessor_statement",
           "named": true
         },
         {
@@ -936,6 +965,14 @@
   },
   {
     "type": "\"",
+    "named": false
+  },
+  {
+    "type": "&define",
+    "named": false
+  },
+  {
+    "type": "&include",
     "named": false
   },
   {
@@ -1724,6 +1761,10 @@
     "named": false
   },
   {
+    "type": "define_identifier",
+    "named": false
+  },
+  {
     "type": "dialog_block",
     "named": true
   },
@@ -1774,10 +1815,6 @@
   {
     "type": "password",
     "named": false
-  },
-  {
-    "type": "preprocessor_statement",
-    "named": true
   },
   {
     "type": "report_block",

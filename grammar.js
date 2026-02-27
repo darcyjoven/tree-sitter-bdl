@@ -41,7 +41,7 @@ export default grammar({
     // 指令(Directive)
     // compiler import schema
     _directive: ($) =>
-      choice($.compiler_options, $.import_statement, $.schema_statement),
+      choice($.compiler_options, $.import_statement, $.schema_statement, $.preprocessor_statement),
 
     compiler_options: ($) =>
       seq(

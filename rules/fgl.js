@@ -117,7 +117,7 @@ export default {
   ),
   _case_flow: ($) => seq(
     kw('CASE'),
-    alias(optional($._variable),'case_vairable'),
+    alias(optional($._variable), 'case_vairable'),
     repeat(
       seq(
         kw('WHEN'),
@@ -216,7 +216,32 @@ export default {
     repeat(choice($.fgl_statement, $.sql_statement)),
     kw('END WHILE'),
   ),
-  preprocessor_statement: ($) => "preprocessor_statement",
+  preprocessor_statement: ($) => $._preprocessor_statement,
+  _preprocessor_statement: ($) => choice(
+    seq('&include', $._string_literal),
+    seq(
+      '&define',
+      alias(seq(
+        $.identifier,
+        optional(seq('(', commaSep($.identifier), ')')),
+      ), 'define_identifier'),
+      alias($._pre_define_content, '&define_content'))
+  ),
+  // _pre_define_body: ($) => repeat1(
+  //   choice(
+  //     /\\\r?\n/,
+  //     /[^\n\\]+/,
+  //     /\\.[^\n\\]*/
+  //   )
+  // ),
+  _pre_define_content: ($) => seq(
+    repeat(choice(
+      /.*\\\r?\n/,      // 匹配以 \ 结尾的行（包含 \ 和换行）
+      /[^\n\\]+/,       // 匹配行内普通字符
+      /\\./             // 匹配单个转义字符
+    )),
+    /[^\n]*/            // 匹配最后一行（不带反斜杠的结尾行）
+  ),
   // 结果是一个值的内容
   expression: ($) => $._expression,
   _expression: ($) =>
