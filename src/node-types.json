@@ -23,11 +23,191 @@
         "required": false,
         "types": [
           {
+            "type": "!=",
+            "named": false
+          },
+          {
+            "type": "\"",
+            "named": false
+          },
+          {
+            "type": "'",
+            "named": false
+          },
+          {
+            "type": "(",
+            "named": false
+          },
+          {
+            "type": ")",
+            "named": false
+          },
+          {
+            "type": "*",
+            "named": false
+          },
+          {
+            "type": "**",
+            "named": false
+          },
+          {
+            "type": "+",
+            "named": false
+          },
+          {
             "type": ",",
             "named": false
           },
           {
+            "type": "-",
+            "named": false
+          },
+          {
             "type": ".",
+            "named": false
+          },
+          {
+            "type": "/",
+            "named": false
+          },
+          {
+            "type": "<",
+            "named": false
+          },
+          {
+            "type": "<=",
+            "named": false
+          },
+          {
+            "type": "<>",
+            "named": false
+          },
+          {
+            "type": "=",
+            "named": false
+          },
+          {
+            "type": "==",
+            "named": false
+          },
+          {
+            "type": ">",
+            "named": false
+          },
+          {
+            "type": ">=",
+            "named": false
+          },
+          {
+            "type": "AND",
+            "named": false
+          },
+          {
+            "type": "CLIPPED",
+            "named": false
+          },
+          {
+            "type": "COLUMN",
+            "named": false
+          },
+          {
+            "type": "CURRENT",
+            "named": false
+          },
+          {
+            "type": "DATETIME",
+            "named": false
+          },
+          {
+            "type": "DAY",
+            "named": false
+          },
+          {
+            "type": "E",
+            "named": false
+          },
+          {
+            "type": "ESCAPE",
+            "named": false
+          },
+          {
+            "type": "FALSE",
+            "named": false
+          },
+          {
+            "type": "FRACTION",
+            "named": false
+          },
+          {
+            "type": "HOUR",
+            "named": false
+          },
+          {
+            "type": "INTERVAL",
+            "named": false
+          },
+          {
+            "type": "IS_NOT_NULL",
+            "named": false
+          },
+          {
+            "type": "IS_NULL",
+            "named": false
+          },
+          {
+            "type": "LIKE",
+            "named": false
+          },
+          {
+            "type": "MATCHES",
+            "named": false
+          },
+          {
+            "type": "MINUTE",
+            "named": false
+          },
+          {
+            "type": "MOD",
+            "named": false
+          },
+          {
+            "type": "MONTH",
+            "named": false
+          },
+          {
+            "type": "NOT",
+            "named": false
+          },
+          {
+            "type": "OR",
+            "named": false
+          },
+          {
+            "type": "SECOND",
+            "named": false
+          },
+          {
+            "type": "SPACE",
+            "named": false
+          },
+          {
+            "type": "THRU",
+            "named": false
+          },
+          {
+            "type": "TO",
+            "named": false
+          },
+          {
+            "type": "TRUE",
+            "named": false
+          },
+          {
+            "type": "USING",
+            "named": false
+          },
+          {
+            "type": "YEAR",
             "named": false
           },
           {
@@ -39,8 +219,8 @@
             "named": false
           },
           {
-            "type": "expression",
-            "named": true
+            "type": "e",
+            "named": false
           },
           {
             "type": "identifier",
@@ -49,19 +229,17 @@
           {
             "type": "identifier",
             "named": true
+          },
+          {
+            "type": "string_content",
+            "named": false
+          },
+          {
+            "type": "||",
+            "named": false
           }
         ]
       }
-    },
-    "children": {
-      "multiple": true,
-      "required": false,
-      "types": [
-        {
-          "type": "expression",
-          "named": true
-        }
-      ]
     }
   },
   {
@@ -156,70 +334,6 @@
     }
   },
   {
-    "type": "expression",
-    "named": true,
-    "fields": {
-      "member": {
-        "multiple": true,
-        "required": false,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      },
-      "object": {
-        "multiple": true,
-        "required": false,
-        "types": [
-          {
-            "type": ",",
-            "named": false
-          },
-          {
-            "type": ".",
-            "named": false
-          },
-          {
-            "type": "[",
-            "named": false
-          },
-          {
-            "type": "]",
-            "named": false
-          },
-          {
-            "type": "expression",
-            "named": true
-          },
-          {
-            "type": "identifier",
-            "named": false
-          },
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      }
-    },
-    "children": {
-      "multiple": true,
-      "required": false,
-      "types": [
-        {
-          "type": "expression",
-          "named": true
-        },
-        {
-          "type": "variable",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
     "type": "fgl_statement",
     "named": true,
     "fields": {},
@@ -282,11 +396,191 @@
         "required": false,
         "types": [
           {
+            "type": "!=",
+            "named": false
+          },
+          {
+            "type": "\"",
+            "named": false
+          },
+          {
+            "type": "'",
+            "named": false
+          },
+          {
+            "type": "(",
+            "named": false
+          },
+          {
+            "type": ")",
+            "named": false
+          },
+          {
+            "type": "*",
+            "named": false
+          },
+          {
+            "type": "**",
+            "named": false
+          },
+          {
+            "type": "+",
+            "named": false
+          },
+          {
             "type": ",",
             "named": false
           },
           {
+            "type": "-",
+            "named": false
+          },
+          {
             "type": ".",
+            "named": false
+          },
+          {
+            "type": "/",
+            "named": false
+          },
+          {
+            "type": "<",
+            "named": false
+          },
+          {
+            "type": "<=",
+            "named": false
+          },
+          {
+            "type": "<>",
+            "named": false
+          },
+          {
+            "type": "=",
+            "named": false
+          },
+          {
+            "type": "==",
+            "named": false
+          },
+          {
+            "type": ">",
+            "named": false
+          },
+          {
+            "type": ">=",
+            "named": false
+          },
+          {
+            "type": "AND",
+            "named": false
+          },
+          {
+            "type": "CLIPPED",
+            "named": false
+          },
+          {
+            "type": "COLUMN",
+            "named": false
+          },
+          {
+            "type": "CURRENT",
+            "named": false
+          },
+          {
+            "type": "DATETIME",
+            "named": false
+          },
+          {
+            "type": "DAY",
+            "named": false
+          },
+          {
+            "type": "E",
+            "named": false
+          },
+          {
+            "type": "ESCAPE",
+            "named": false
+          },
+          {
+            "type": "FALSE",
+            "named": false
+          },
+          {
+            "type": "FRACTION",
+            "named": false
+          },
+          {
+            "type": "HOUR",
+            "named": false
+          },
+          {
+            "type": "INTERVAL",
+            "named": false
+          },
+          {
+            "type": "IS_NOT_NULL",
+            "named": false
+          },
+          {
+            "type": "IS_NULL",
+            "named": false
+          },
+          {
+            "type": "LIKE",
+            "named": false
+          },
+          {
+            "type": "MATCHES",
+            "named": false
+          },
+          {
+            "type": "MINUTE",
+            "named": false
+          },
+          {
+            "type": "MOD",
+            "named": false
+          },
+          {
+            "type": "MONTH",
+            "named": false
+          },
+          {
+            "type": "NOT",
+            "named": false
+          },
+          {
+            "type": "OR",
+            "named": false
+          },
+          {
+            "type": "SECOND",
+            "named": false
+          },
+          {
+            "type": "SPACE",
+            "named": false
+          },
+          {
+            "type": "THRU",
+            "named": false
+          },
+          {
+            "type": "TO",
+            "named": false
+          },
+          {
+            "type": "TRUE",
+            "named": false
+          },
+          {
+            "type": "USING",
+            "named": false
+          },
+          {
+            "type": "YEAR",
             "named": false
           },
           {
@@ -298,8 +592,8 @@
             "named": false
           },
           {
-            "type": "expression",
-            "named": true
+            "type": "e",
+            "named": false
           },
           {
             "type": "identifier",
@@ -308,6 +602,14 @@
           {
             "type": "identifier",
             "named": true
+          },
+          {
+            "type": "string_content",
+            "named": false
+          },
+          {
+            "type": "||",
+            "named": false
           }
         ]
       }
@@ -317,19 +619,11 @@
       "required": false,
       "types": [
         {
-          "type": "expression",
-          "named": true
-        },
-        {
           "type": "fgl_statement",
           "named": true
         },
         {
           "type": "sql_statement",
-          "named": true
-        },
-        {
-          "type": "variable",
           "named": true
         }
       ]
@@ -354,11 +648,191 @@
         "required": false,
         "types": [
           {
+            "type": "!=",
+            "named": false
+          },
+          {
+            "type": "\"",
+            "named": false
+          },
+          {
+            "type": "'",
+            "named": false
+          },
+          {
+            "type": "(",
+            "named": false
+          },
+          {
+            "type": ")",
+            "named": false
+          },
+          {
+            "type": "*",
+            "named": false
+          },
+          {
+            "type": "**",
+            "named": false
+          },
+          {
+            "type": "+",
+            "named": false
+          },
+          {
             "type": ",",
             "named": false
           },
           {
+            "type": "-",
+            "named": false
+          },
+          {
             "type": ".",
+            "named": false
+          },
+          {
+            "type": "/",
+            "named": false
+          },
+          {
+            "type": "<",
+            "named": false
+          },
+          {
+            "type": "<=",
+            "named": false
+          },
+          {
+            "type": "<>",
+            "named": false
+          },
+          {
+            "type": "=",
+            "named": false
+          },
+          {
+            "type": "==",
+            "named": false
+          },
+          {
+            "type": ">",
+            "named": false
+          },
+          {
+            "type": ">=",
+            "named": false
+          },
+          {
+            "type": "AND",
+            "named": false
+          },
+          {
+            "type": "CLIPPED",
+            "named": false
+          },
+          {
+            "type": "COLUMN",
+            "named": false
+          },
+          {
+            "type": "CURRENT",
+            "named": false
+          },
+          {
+            "type": "DATETIME",
+            "named": false
+          },
+          {
+            "type": "DAY",
+            "named": false
+          },
+          {
+            "type": "E",
+            "named": false
+          },
+          {
+            "type": "ESCAPE",
+            "named": false
+          },
+          {
+            "type": "FALSE",
+            "named": false
+          },
+          {
+            "type": "FRACTION",
+            "named": false
+          },
+          {
+            "type": "HOUR",
+            "named": false
+          },
+          {
+            "type": "INTERVAL",
+            "named": false
+          },
+          {
+            "type": "IS_NOT_NULL",
+            "named": false
+          },
+          {
+            "type": "IS_NULL",
+            "named": false
+          },
+          {
+            "type": "LIKE",
+            "named": false
+          },
+          {
+            "type": "MATCHES",
+            "named": false
+          },
+          {
+            "type": "MINUTE",
+            "named": false
+          },
+          {
+            "type": "MOD",
+            "named": false
+          },
+          {
+            "type": "MONTH",
+            "named": false
+          },
+          {
+            "type": "NOT",
+            "named": false
+          },
+          {
+            "type": "OR",
+            "named": false
+          },
+          {
+            "type": "SECOND",
+            "named": false
+          },
+          {
+            "type": "SPACE",
+            "named": false
+          },
+          {
+            "type": "THRU",
+            "named": false
+          },
+          {
+            "type": "TO",
+            "named": false
+          },
+          {
+            "type": "TRUE",
+            "named": false
+          },
+          {
+            "type": "USING",
+            "named": false
+          },
+          {
+            "type": "YEAR",
             "named": false
           },
           {
@@ -370,8 +844,8 @@
             "named": false
           },
           {
-            "type": "expression",
-            "named": true
+            "type": "e",
+            "named": false
           },
           {
             "type": "identifier",
@@ -380,19 +854,17 @@
           {
             "type": "identifier",
             "named": true
+          },
+          {
+            "type": "string_content",
+            "named": false
+          },
+          {
+            "type": "||",
+            "named": false
           }
         ]
       }
-    },
-    "children": {
-      "multiple": true,
-      "required": false,
-      "types": [
-        {
-          "type": "expression",
-          "named": true
-        }
-      ]
     }
   },
   {
@@ -414,11 +886,191 @@
         "required": false,
         "types": [
           {
+            "type": "!=",
+            "named": false
+          },
+          {
+            "type": "\"",
+            "named": false
+          },
+          {
+            "type": "'",
+            "named": false
+          },
+          {
+            "type": "(",
+            "named": false
+          },
+          {
+            "type": ")",
+            "named": false
+          },
+          {
+            "type": "*",
+            "named": false
+          },
+          {
+            "type": "**",
+            "named": false
+          },
+          {
+            "type": "+",
+            "named": false
+          },
+          {
             "type": ",",
             "named": false
           },
           {
+            "type": "-",
+            "named": false
+          },
+          {
             "type": ".",
+            "named": false
+          },
+          {
+            "type": "/",
+            "named": false
+          },
+          {
+            "type": "<",
+            "named": false
+          },
+          {
+            "type": "<=",
+            "named": false
+          },
+          {
+            "type": "<>",
+            "named": false
+          },
+          {
+            "type": "=",
+            "named": false
+          },
+          {
+            "type": "==",
+            "named": false
+          },
+          {
+            "type": ">",
+            "named": false
+          },
+          {
+            "type": ">=",
+            "named": false
+          },
+          {
+            "type": "AND",
+            "named": false
+          },
+          {
+            "type": "CLIPPED",
+            "named": false
+          },
+          {
+            "type": "COLUMN",
+            "named": false
+          },
+          {
+            "type": "CURRENT",
+            "named": false
+          },
+          {
+            "type": "DATETIME",
+            "named": false
+          },
+          {
+            "type": "DAY",
+            "named": false
+          },
+          {
+            "type": "E",
+            "named": false
+          },
+          {
+            "type": "ESCAPE",
+            "named": false
+          },
+          {
+            "type": "FALSE",
+            "named": false
+          },
+          {
+            "type": "FRACTION",
+            "named": false
+          },
+          {
+            "type": "HOUR",
+            "named": false
+          },
+          {
+            "type": "INTERVAL",
+            "named": false
+          },
+          {
+            "type": "IS_NOT_NULL",
+            "named": false
+          },
+          {
+            "type": "IS_NULL",
+            "named": false
+          },
+          {
+            "type": "LIKE",
+            "named": false
+          },
+          {
+            "type": "MATCHES",
+            "named": false
+          },
+          {
+            "type": "MINUTE",
+            "named": false
+          },
+          {
+            "type": "MOD",
+            "named": false
+          },
+          {
+            "type": "MONTH",
+            "named": false
+          },
+          {
+            "type": "NOT",
+            "named": false
+          },
+          {
+            "type": "OR",
+            "named": false
+          },
+          {
+            "type": "SECOND",
+            "named": false
+          },
+          {
+            "type": "SPACE",
+            "named": false
+          },
+          {
+            "type": "THRU",
+            "named": false
+          },
+          {
+            "type": "TO",
+            "named": false
+          },
+          {
+            "type": "TRUE",
+            "named": false
+          },
+          {
+            "type": "USING",
+            "named": false
+          },
+          {
+            "type": "YEAR",
             "named": false
           },
           {
@@ -430,8 +1082,8 @@
             "named": false
           },
           {
-            "type": "expression",
-            "named": true
+            "type": "e",
+            "named": false
           },
           {
             "type": "identifier",
@@ -440,19 +1092,17 @@
           {
             "type": "identifier",
             "named": true
+          },
+          {
+            "type": "string_content",
+            "named": false
+          },
+          {
+            "type": "||",
+            "named": false
           }
         ]
       }
-    },
-    "children": {
-      "multiple": true,
-      "required": false,
-      "types": [
-        {
-          "type": "expression",
-          "named": true
-        }
-      ]
     }
   },
   {
@@ -474,11 +1124,191 @@
         "required": false,
         "types": [
           {
+            "type": "!=",
+            "named": false
+          },
+          {
+            "type": "\"",
+            "named": false
+          },
+          {
+            "type": "'",
+            "named": false
+          },
+          {
+            "type": "(",
+            "named": false
+          },
+          {
+            "type": ")",
+            "named": false
+          },
+          {
+            "type": "*",
+            "named": false
+          },
+          {
+            "type": "**",
+            "named": false
+          },
+          {
+            "type": "+",
+            "named": false
+          },
+          {
             "type": ",",
             "named": false
           },
           {
+            "type": "-",
+            "named": false
+          },
+          {
             "type": ".",
+            "named": false
+          },
+          {
+            "type": "/",
+            "named": false
+          },
+          {
+            "type": "<",
+            "named": false
+          },
+          {
+            "type": "<=",
+            "named": false
+          },
+          {
+            "type": "<>",
+            "named": false
+          },
+          {
+            "type": "=",
+            "named": false
+          },
+          {
+            "type": "==",
+            "named": false
+          },
+          {
+            "type": ">",
+            "named": false
+          },
+          {
+            "type": ">=",
+            "named": false
+          },
+          {
+            "type": "AND",
+            "named": false
+          },
+          {
+            "type": "CLIPPED",
+            "named": false
+          },
+          {
+            "type": "COLUMN",
+            "named": false
+          },
+          {
+            "type": "CURRENT",
+            "named": false
+          },
+          {
+            "type": "DATETIME",
+            "named": false
+          },
+          {
+            "type": "DAY",
+            "named": false
+          },
+          {
+            "type": "E",
+            "named": false
+          },
+          {
+            "type": "ESCAPE",
+            "named": false
+          },
+          {
+            "type": "FALSE",
+            "named": false
+          },
+          {
+            "type": "FRACTION",
+            "named": false
+          },
+          {
+            "type": "HOUR",
+            "named": false
+          },
+          {
+            "type": "INTERVAL",
+            "named": false
+          },
+          {
+            "type": "IS_NOT_NULL",
+            "named": false
+          },
+          {
+            "type": "IS_NULL",
+            "named": false
+          },
+          {
+            "type": "LIKE",
+            "named": false
+          },
+          {
+            "type": "MATCHES",
+            "named": false
+          },
+          {
+            "type": "MINUTE",
+            "named": false
+          },
+          {
+            "type": "MOD",
+            "named": false
+          },
+          {
+            "type": "MONTH",
+            "named": false
+          },
+          {
+            "type": "NOT",
+            "named": false
+          },
+          {
+            "type": "OR",
+            "named": false
+          },
+          {
+            "type": "SECOND",
+            "named": false
+          },
+          {
+            "type": "SPACE",
+            "named": false
+          },
+          {
+            "type": "THRU",
+            "named": false
+          },
+          {
+            "type": "TO",
+            "named": false
+          },
+          {
+            "type": "TRUE",
+            "named": false
+          },
+          {
+            "type": "USING",
+            "named": false
+          },
+          {
+            "type": "YEAR",
             "named": false
           },
           {
@@ -490,8 +1320,8 @@
             "named": false
           },
           {
-            "type": "expression",
-            "named": true
+            "type": "e",
+            "named": false
           },
           {
             "type": "identifier",
@@ -500,23 +1330,17 @@
           {
             "type": "identifier",
             "named": true
+          },
+          {
+            "type": "string_content",
+            "named": false
+          },
+          {
+            "type": "||",
+            "named": false
           }
         ]
       }
-    },
-    "children": {
-      "multiple": true,
-      "required": false,
-      "types": [
-        {
-          "type": "expression",
-          "named": true
-        },
-        {
-          "type": "variable",
-          "named": true
-        }
-      ]
     }
   },
   {
@@ -612,11 +1436,191 @@
         "required": false,
         "types": [
           {
+            "type": "!=",
+            "named": false
+          },
+          {
+            "type": "\"",
+            "named": false
+          },
+          {
+            "type": "'",
+            "named": false
+          },
+          {
+            "type": "(",
+            "named": false
+          },
+          {
+            "type": ")",
+            "named": false
+          },
+          {
+            "type": "*",
+            "named": false
+          },
+          {
+            "type": "**",
+            "named": false
+          },
+          {
+            "type": "+",
+            "named": false
+          },
+          {
             "type": ",",
             "named": false
           },
           {
+            "type": "-",
+            "named": false
+          },
+          {
             "type": ".",
+            "named": false
+          },
+          {
+            "type": "/",
+            "named": false
+          },
+          {
+            "type": "<",
+            "named": false
+          },
+          {
+            "type": "<=",
+            "named": false
+          },
+          {
+            "type": "<>",
+            "named": false
+          },
+          {
+            "type": "=",
+            "named": false
+          },
+          {
+            "type": "==",
+            "named": false
+          },
+          {
+            "type": ">",
+            "named": false
+          },
+          {
+            "type": ">=",
+            "named": false
+          },
+          {
+            "type": "AND",
+            "named": false
+          },
+          {
+            "type": "CLIPPED",
+            "named": false
+          },
+          {
+            "type": "COLUMN",
+            "named": false
+          },
+          {
+            "type": "CURRENT",
+            "named": false
+          },
+          {
+            "type": "DATETIME",
+            "named": false
+          },
+          {
+            "type": "DAY",
+            "named": false
+          },
+          {
+            "type": "E",
+            "named": false
+          },
+          {
+            "type": "ESCAPE",
+            "named": false
+          },
+          {
+            "type": "FALSE",
+            "named": false
+          },
+          {
+            "type": "FRACTION",
+            "named": false
+          },
+          {
+            "type": "HOUR",
+            "named": false
+          },
+          {
+            "type": "INTERVAL",
+            "named": false
+          },
+          {
+            "type": "IS_NOT_NULL",
+            "named": false
+          },
+          {
+            "type": "IS_NULL",
+            "named": false
+          },
+          {
+            "type": "LIKE",
+            "named": false
+          },
+          {
+            "type": "MATCHES",
+            "named": false
+          },
+          {
+            "type": "MINUTE",
+            "named": false
+          },
+          {
+            "type": "MOD",
+            "named": false
+          },
+          {
+            "type": "MONTH",
+            "named": false
+          },
+          {
+            "type": "NOT",
+            "named": false
+          },
+          {
+            "type": "OR",
+            "named": false
+          },
+          {
+            "type": "SECOND",
+            "named": false
+          },
+          {
+            "type": "SPACE",
+            "named": false
+          },
+          {
+            "type": "THRU",
+            "named": false
+          },
+          {
+            "type": "TO",
+            "named": false
+          },
+          {
+            "type": "TRUE",
+            "named": false
+          },
+          {
+            "type": "USING",
+            "named": false
+          },
+          {
+            "type": "YEAR",
             "named": false
           },
           {
@@ -628,8 +1632,8 @@
             "named": false
           },
           {
-            "type": "expression",
-            "named": true
+            "type": "e",
+            "named": false
           },
           {
             "type": "identifier",
@@ -638,19 +1642,17 @@
           {
             "type": "identifier",
             "named": true
+          },
+          {
+            "type": "string_content",
+            "named": false
+          },
+          {
+            "type": "||",
+            "named": false
           }
         ]
       }
-    },
-    "children": {
-      "multiple": true,
-      "required": false,
-      "types": [
-        {
-          "type": "expression",
-          "named": true
-        }
-      ]
     }
   },
   {
@@ -831,11 +1833,191 @@
         "required": false,
         "types": [
           {
+            "type": "!=",
+            "named": false
+          },
+          {
+            "type": "\"",
+            "named": false
+          },
+          {
+            "type": "'",
+            "named": false
+          },
+          {
+            "type": "(",
+            "named": false
+          },
+          {
+            "type": ")",
+            "named": false
+          },
+          {
+            "type": "*",
+            "named": false
+          },
+          {
+            "type": "**",
+            "named": false
+          },
+          {
+            "type": "+",
+            "named": false
+          },
+          {
             "type": ",",
             "named": false
           },
           {
+            "type": "-",
+            "named": false
+          },
+          {
             "type": ".",
+            "named": false
+          },
+          {
+            "type": "/",
+            "named": false
+          },
+          {
+            "type": "<",
+            "named": false
+          },
+          {
+            "type": "<=",
+            "named": false
+          },
+          {
+            "type": "<>",
+            "named": false
+          },
+          {
+            "type": "=",
+            "named": false
+          },
+          {
+            "type": "==",
+            "named": false
+          },
+          {
+            "type": ">",
+            "named": false
+          },
+          {
+            "type": ">=",
+            "named": false
+          },
+          {
+            "type": "AND",
+            "named": false
+          },
+          {
+            "type": "CLIPPED",
+            "named": false
+          },
+          {
+            "type": "COLUMN",
+            "named": false
+          },
+          {
+            "type": "CURRENT",
+            "named": false
+          },
+          {
+            "type": "DATETIME",
+            "named": false
+          },
+          {
+            "type": "DAY",
+            "named": false
+          },
+          {
+            "type": "E",
+            "named": false
+          },
+          {
+            "type": "ESCAPE",
+            "named": false
+          },
+          {
+            "type": "FALSE",
+            "named": false
+          },
+          {
+            "type": "FRACTION",
+            "named": false
+          },
+          {
+            "type": "HOUR",
+            "named": false
+          },
+          {
+            "type": "INTERVAL",
+            "named": false
+          },
+          {
+            "type": "IS_NOT_NULL",
+            "named": false
+          },
+          {
+            "type": "IS_NULL",
+            "named": false
+          },
+          {
+            "type": "LIKE",
+            "named": false
+          },
+          {
+            "type": "MATCHES",
+            "named": false
+          },
+          {
+            "type": "MINUTE",
+            "named": false
+          },
+          {
+            "type": "MOD",
+            "named": false
+          },
+          {
+            "type": "MONTH",
+            "named": false
+          },
+          {
+            "type": "NOT",
+            "named": false
+          },
+          {
+            "type": "OR",
+            "named": false
+          },
+          {
+            "type": "SECOND",
+            "named": false
+          },
+          {
+            "type": "SPACE",
+            "named": false
+          },
+          {
+            "type": "THRU",
+            "named": false
+          },
+          {
+            "type": "TO",
+            "named": false
+          },
+          {
+            "type": "TRUE",
+            "named": false
+          },
+          {
+            "type": "USING",
+            "named": false
+          },
+          {
+            "type": "YEAR",
             "named": false
           },
           {
@@ -847,8 +2029,8 @@
             "named": false
           },
           {
-            "type": "expression",
-            "named": true
+            "type": "e",
+            "named": false
           },
           {
             "type": "identifier",
@@ -857,19 +2039,17 @@
           {
             "type": "identifier",
             "named": true
+          },
+          {
+            "type": "string_content",
+            "named": false
+          },
+          {
+            "type": "||",
+            "named": false
           }
         ]
       }
-    },
-    "children": {
-      "multiple": true,
-      "required": false,
-      "types": [
-        {
-          "type": "expression",
-          "named": true
-        }
-      ]
     }
   },
   {
@@ -910,11 +2090,191 @@
         "required": false,
         "types": [
           {
+            "type": "!=",
+            "named": false
+          },
+          {
+            "type": "\"",
+            "named": false
+          },
+          {
+            "type": "'",
+            "named": false
+          },
+          {
+            "type": "(",
+            "named": false
+          },
+          {
+            "type": ")",
+            "named": false
+          },
+          {
+            "type": "*",
+            "named": false
+          },
+          {
+            "type": "**",
+            "named": false
+          },
+          {
+            "type": "+",
+            "named": false
+          },
+          {
             "type": ",",
             "named": false
           },
           {
+            "type": "-",
+            "named": false
+          },
+          {
             "type": ".",
+            "named": false
+          },
+          {
+            "type": "/",
+            "named": false
+          },
+          {
+            "type": "<",
+            "named": false
+          },
+          {
+            "type": "<=",
+            "named": false
+          },
+          {
+            "type": "<>",
+            "named": false
+          },
+          {
+            "type": "=",
+            "named": false
+          },
+          {
+            "type": "==",
+            "named": false
+          },
+          {
+            "type": ">",
+            "named": false
+          },
+          {
+            "type": ">=",
+            "named": false
+          },
+          {
+            "type": "AND",
+            "named": false
+          },
+          {
+            "type": "CLIPPED",
+            "named": false
+          },
+          {
+            "type": "COLUMN",
+            "named": false
+          },
+          {
+            "type": "CURRENT",
+            "named": false
+          },
+          {
+            "type": "DATETIME",
+            "named": false
+          },
+          {
+            "type": "DAY",
+            "named": false
+          },
+          {
+            "type": "E",
+            "named": false
+          },
+          {
+            "type": "ESCAPE",
+            "named": false
+          },
+          {
+            "type": "FALSE",
+            "named": false
+          },
+          {
+            "type": "FRACTION",
+            "named": false
+          },
+          {
+            "type": "HOUR",
+            "named": false
+          },
+          {
+            "type": "INTERVAL",
+            "named": false
+          },
+          {
+            "type": "IS_NOT_NULL",
+            "named": false
+          },
+          {
+            "type": "IS_NULL",
+            "named": false
+          },
+          {
+            "type": "LIKE",
+            "named": false
+          },
+          {
+            "type": "MATCHES",
+            "named": false
+          },
+          {
+            "type": "MINUTE",
+            "named": false
+          },
+          {
+            "type": "MOD",
+            "named": false
+          },
+          {
+            "type": "MONTH",
+            "named": false
+          },
+          {
+            "type": "NOT",
+            "named": false
+          },
+          {
+            "type": "OR",
+            "named": false
+          },
+          {
+            "type": "SECOND",
+            "named": false
+          },
+          {
+            "type": "SPACE",
+            "named": false
+          },
+          {
+            "type": "THRU",
+            "named": false
+          },
+          {
+            "type": "TO",
+            "named": false
+          },
+          {
+            "type": "TRUE",
+            "named": false
+          },
+          {
+            "type": "USING",
+            "named": false
+          },
+          {
+            "type": "YEAR",
             "named": false
           },
           {
@@ -926,8 +2286,8 @@
             "named": false
           },
           {
-            "type": "expression",
-            "named": true
+            "type": "e",
+            "named": false
           },
           {
             "type": "identifier",
@@ -936,6 +2296,14 @@
           {
             "type": "identifier",
             "named": true
+          },
+          {
+            "type": "string_content",
+            "named": false
+          },
+          {
+            "type": "||",
+            "named": false
           }
         ]
       }
@@ -944,10 +2312,6 @@
       "multiple": true,
       "required": false,
       "types": [
-        {
-          "type": "expression",
-          "named": true
-        },
         {
           "type": "identifier",
           "named": true
@@ -1156,6 +2520,10 @@
     "named": false
   },
   {
+    "type": "CURRENT",
+    "named": false
+  },
+  {
     "type": "CYAN",
     "named": false
   },
@@ -1349,10 +2717,6 @@
   },
   {
     "type": "IF",
-    "named": false
-  },
-  {
-    "type": "IINTERVAL",
     "named": false
   },
   {

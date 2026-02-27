@@ -480,9 +480,18 @@ export default grammar({
     _number_literal: (_) => choice(integerLiterals, decimalLiterals),
     _datetime_literal: (_) =>
       choice(
-        seq(kw("DATETIME"), datetimeQualifier, kw("TO"), datetimeQualifier),
+        seq(kw("CURRENT"), datetimeQualifier, kw("TO"), datetimeQualifier),
         seq(
-          kw("IINTERVAL"),
+          kw("DATETIME"),
+          "(",
+          /[^)]+/,
+          ")",
+          datetimeQualifier,
+          kw("TO"),
+          datetimeQualifier,
+        ),
+        seq(
+          kw("INTERVAL"),
           "(",
           /[^)]+/,
           ")",
@@ -491,6 +500,10 @@ export default grammar({
           datetimeQualifier,
         ),
       ),
+    _other_literal: (_) => choice(
+      kw('NULL'),
+      kw('TODAY')
+    ),
     // 作用域
     scope: ($) => choice(kw("PRIVATE"), kw("PUBLIC")),
     // 变量/方法名
@@ -505,7 +518,7 @@ export default grammar({
     _array_item: ($) =>
       prec.left(
         2,
-        seq(field("object", $._variable), "[", commaSep1($.expression), "]"),
+        seq(field("object", $._variable), "[", commaSep1($._expression), "]"),
       ),
   },
 });

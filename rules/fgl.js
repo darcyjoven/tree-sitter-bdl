@@ -319,11 +319,11 @@ export default {
       // seq(kw("COLEMN"), choice(seq("(", $._expression, ")"), $._expression)),
       prec.left(-1, seq($._expression, "||", $._expression)),
       prec.left(-1, seq($._expression, ",", $._expression)),
-      prec.right(PREC.ascii, seq($._expression, "USING", $._expression)),
-      prec.left(PREC.ascii, seq($._expression, "CLIPPED")),
-      prec.left(PREC.ascii, seq($._expression, "SPACE")),
+      prec.right(PREC.ascii, seq($._expression, kw("USING"), $._expression)),
+      prec.left(PREC.ascii, seq($._expression, kw("CLIPPED"))),
+      prec.left(PREC.ascii, seq($._expression, kw("SPACE"))),
     ),
   _function_expression: ($) =>
-    seq($.variable, "(", commaSep($._expression), ")"),
+    seq($._variable, "(", commaSep($._expression), ")"),
   ...interface_statement,
 };
