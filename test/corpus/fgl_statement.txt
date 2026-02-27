@@ -42,7 +42,7 @@ Let 赋值语句
 ================================================================================|||
 
 function main()
-    
+
     let l_sql = "select"
     let l_sql = 'select'
 
@@ -60,3 +60,112 @@ end function
             (variable_statement
                 (variable)
                 (literal)))))
+
+================================================================================|||
+VALIDATE 验证
+================================================================================|||
+
+MAIN
+    DEFINE cname LIKE customer.cust_name
+    LET cname = "aaa"
+    VALIDATE cname LIKE customer.cust_name
+END MAIN
+
+--------------------------------------------------------------------------------|||
+
+(source_file
+    (main_block
+        (variable_definition
+            (variable_name)
+            (data_type))
+        (fgl_statement
+            (variable_statement
+                (variable)
+                (literal)))
+        (fgl_statement
+            (variable_statement
+            (variable)))))
+
+
+================================================================================|||
+LOCATE/FREE 语句
+================================================================================|||
+
+MAIN
+    DEFINE ctext TEXT
+    DATABASE stock
+    LOCATE ctext IN FILE "/tmp/data1.txt"
+    --SELECT col1 INTO ctext FROM lobtab WHERE key=123
+    FREE ctext
+END MAIN
+
+--------------------------------------------------------------------------------|||
+
+(source_file
+    (main_block
+        (variable_definition
+            (variable_name)
+            (data_type))
+        (fgl_statement
+            (schema_statement))
+        (fgl_statement
+            (variable_statement
+                (identifier)))
+        (comment)
+        (fgl_statement
+            (variable_statement
+                (identifier)))))
+
+================================================================================|||
+WHENEVER 错误处理
+================================================================================|||
+main
+    WHENEVER ERROR STOP
+    WHENEVER WARNING CONTINUE
+    WHENEVER NOT FOUND GOTO not_found_handler
+end main
+--------------------------------------------------------------------------------|||
+
+(source_file
+    (main_block
+        (fgl_statement
+            (exception_statement))
+        (fgl_statement
+            (exception_statement))
+        (fgl_statement
+            (exception_statement))))
+
+================================================================================|||
+TRY/CATCH 错误处理
+================================================================================|||
+main
+    TRY
+        TRY
+            let num_cust = 0
+        CATCH
+            let num_cust = 0
+        END TRY
+    CATCH
+        let num_cust = 0
+    END TRY
+end main
+--------------------------------------------------------------------------------|||
+(source_file
+    (main_block
+    (fgl_statement
+        (exception_statement
+            (fgl_statement
+                (exception_statement
+                    (fgl_statement
+                        (variable_statement
+                            (variable)
+                            (literal)))
+                    (fgl_statement
+                        (variable_statement
+                            (variable)
+                            (literal)))))
+            (fgl_statement
+                (variable_statement
+                    (variable)
+                    (literal)))))))
+    

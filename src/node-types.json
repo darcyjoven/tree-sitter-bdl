@@ -123,6 +123,10 @@
           "named": true
         },
         {
+          "type": "schema_statement",
+          "named": true
+        },
+        {
           "type": "variable_statement",
           "named": true
         }
@@ -446,6 +450,10 @@
       "required": true,
       "types": [
         {
+          "type": "identifier",
+          "named": true
+        },
+        {
           "type": "literal",
           "named": true
         },
@@ -545,7 +553,143 @@
     "named": false
   },
   {
+    "type": "ACCEPT",
+    "named": false
+  },
+  {
+    "type": "AND",
+    "named": false
+  },
+  {
+    "type": "ARRAY",
+    "named": false
+  },
+  {
+    "type": "ATTRIBUTES",
+    "named": false
+  },
+  {
+    "type": "BIGINT",
+    "named": false
+  },
+  {
+    "type": "BLACK",
+    "named": false
+  },
+  {
+    "type": "BLINK",
+    "named": false
+  },
+  {
+    "type": "BLUE",
+    "named": false
+  },
+  {
+    "type": "BOLD",
+    "named": false
+  },
+  {
+    "type": "BOOLEAN",
+    "named": false
+  },
+  {
+    "type": "BYTE",
+    "named": false
+  },
+  {
+    "type": "CALL",
+    "named": false
+  },
+  {
+    "type": "CATCH",
+    "named": false
+  },
+  {
+    "type": "CHAR",
+    "named": false
+  },
+  {
+    "type": "CHARACTER",
+    "named": false
+  },
+  {
     "type": "CLIPPED",
+    "named": false
+  },
+  {
+    "type": "COLUMN",
+    "named": false
+  },
+  {
+    "type": "COMMENT_LINE",
+    "named": false
+  },
+  {
+    "type": "CONNECT_TO",
+    "named": false
+  },
+  {
+    "type": "CONSTANT",
+    "named": false
+  },
+  {
+    "type": "CONSTRAINED",
+    "named": false
+  },
+  {
+    "type": "CONTINUE",
+    "named": false
+  },
+  {
+    "type": "CYAN",
+    "named": false
+  },
+  {
+    "type": "DATABASE",
+    "named": false
+  },
+  {
+    "type": "DATE",
+    "named": false
+  },
+  {
+    "type": "DATETIME",
+    "named": false
+  },
+  {
+    "type": "DAY",
+    "named": false
+  },
+  {
+    "type": "DECIMAL",
+    "named": false
+  },
+  {
+    "type": "DEFER",
+    "named": false
+  },
+  {
+    "type": "DEFINE",
+    "named": false
+  },
+  {
+    "type": "DELETE",
+    "named": false
+  },
+  {
+    "type": "DESCRIBE",
+    "named": false
+  },
+  {
+    "type": "DIM",
+    "named": false
+  },
+  {
+    "type": "DISPLAY",
+    "named": false
+  },
+  {
+    "type": "DYNAMIC_ARRAY",
     "named": false
   },
   {
@@ -553,11 +697,431 @@
     "named": false
   },
   {
+    "type": "END",
+    "named": false
+  },
+  {
+    "type": "END_FUNCTION",
+    "named": false
+  },
+  {
+    "type": "END_GLOBALS",
+    "named": false
+  },
+  {
+    "type": "END_MAIN",
+    "named": false
+  },
+  {
+    "type": "END_TRY",
+    "named": false
+  },
+  {
+    "type": "ERROR",
+    "named": false
+  },
+  {
+    "type": "ERROR_LINE",
+    "named": false
+  },
+  {
+    "type": "ESCAPE",
+    "named": false
+  },
+  {
+    "type": "EXCLUSIVE",
+    "named": false
+  },
+  {
+    "type": "FGL",
+    "named": false
+  },
+  {
+    "type": "FIELD_ORDER",
+    "named": false
+  },
+  {
+    "type": "FILE",
+    "named": false
+  },
+  {
+    "type": "FLOAT",
+    "named": false
+  },
+  {
+    "type": "FORM",
+    "named": false
+  },
+  {
+    "type": "FORM_LINE",
+    "named": false
+  },
+  {
+    "type": "FRACTION",
+    "named": false
+  },
+  {
+    "type": "FREE",
+    "named": false
+  },
+  {
+    "type": "FUNCTION",
+    "named": false
+  },
+  {
+    "type": "GLOBALS",
+    "named": false
+  },
+  {
+    "type": "GOTO",
+    "named": false
+  },
+  {
+    "type": "GREEN",
+    "named": false
+  },
+  {
+    "type": "HELP",
+    "named": false
+  },
+  {
+    "type": "HELP_FILE",
+    "named": false
+  },
+  {
+    "type": "HOUR",
+    "named": false
+  },
+  {
+    "type": "IINTERVAL",
+    "named": false
+  },
+  {
+    "type": "IMPORT",
+    "named": false
+  },
+  {
+    "type": "IN",
+    "named": false
+  },
+  {
+    "type": "INITIALIZE",
+    "named": false
+  },
+  {
+    "type": "INPUT",
+    "named": false
+  },
+  {
+    "type": "INSERT",
+    "named": false
+  },
+  {
+    "type": "INTEGER",
+    "named": false
+  },
+  {
+    "type": "INTERRUPT",
+    "named": false
+  },
+  {
+    "type": "INTERVAL",
+    "named": false
+  },
+  {
+    "type": "INVISIBLE",
+    "named": false
+  },
+  {
+    "type": "IS_NOT_NULL",
+    "named": false
+  },
+  {
+    "type": "IS_NULL",
+    "named": false
+  },
+  {
+    "type": "JAVA",
+    "named": false
+  },
+  {
+    "type": "KEY",
+    "named": false
+  },
+  {
+    "type": "LET",
+    "named": false
+  },
+  {
+    "type": "LIKE",
+    "named": false
+  },
+  {
+    "type": "LINE",
+    "named": false
+  },
+  {
+    "type": "LOCATE",
+    "named": false
+  },
+  {
+    "type": "MAGENTA",
+    "named": false
+  },
+  {
+    "type": "MAIN",
+    "named": false
+  },
+  {
+    "type": "MATCHES",
+    "named": false
+  },
+  {
+    "type": "MEMORY",
+    "named": false
+  },
+  {
+    "type": "MENU_LINE",
+    "named": false
+  },
+  {
+    "type": "MESSAGE_LINE",
+    "named": false
+  },
+  {
+    "type": "MINUTE",
+    "named": false
+  },
+  {
+    "type": "MOD",
+    "named": false
+  },
+  {
+    "type": "MODE",
+    "named": false
+  },
+  {
+    "type": "MONEY",
+    "named": false
+  },
+  {
+    "type": "MONTH",
+    "named": false
+  },
+  {
+    "type": "NEXT",
+    "named": false
+  },
+  {
+    "type": "NO",
+    "named": false
+  },
+  {
+    "type": "NORMAL",
+    "named": false
+  },
+  {
+    "type": "NOT",
+    "named": false
+  },
+  {
+    "type": "NOT_FOUND",
+    "named": false
+  },
+  {
+    "type": "OF",
+    "named": false
+  },
+  {
+    "type": "OFF",
+    "named": false
+  },
+  {
+    "type": "ON",
+    "named": false
+  },
+  {
+    "type": "ON_CLOSE_APPLICATION_CALL",
+    "named": false
+  },
+  {
+    "type": "ON_TERMINATE_SIGNAL_CALL",
+    "named": false
+  },
+  {
+    "type": "OPTIONS",
+    "named": false
+  },
+  {
+    "type": "OR",
+    "named": false
+  },
+  {
+    "type": "PREVIOUS",
+    "named": false
+  },
+  {
+    "type": "PRIVATE",
+    "named": false
+  },
+  {
+    "type": "PROMPT_LINE",
+    "named": false
+  },
+  {
+    "type": "PUBLIC",
+    "named": false
+  },
+  {
+    "type": "QUIT",
+    "named": false
+  },
+  {
+    "type": "RAISE",
+    "named": false
+  },
+  {
+    "type": "RECORD",
+    "named": false
+  },
+  {
+    "type": "RECORD_LIKE",
+    "named": false
+  },
+  {
+    "type": "RED",
+    "named": false
+  },
+  {
+    "type": "REVERSE",
+    "named": false
+  },
+  {
+    "type": "RUN_IN",
+    "named": false
+  },
+  {
+    "type": "SCHEMA",
+    "named": false
+  },
+  {
+    "type": "SECOND",
+    "named": false
+  },
+  {
+    "type": "SHORT_CIRCUIT",
+    "named": false
+  },
+  {
+    "type": "SMALLFLOAT",
+    "named": false
+  },
+  {
+    "type": "SMALLINT",
+    "named": false
+  },
+  {
     "type": "SPACE",
     "named": false
   },
   {
+    "type": "SQLERROR",
+    "named": false
+  },
+  {
+    "type": "SQL_INTERRUPT",
+    "named": false
+  },
+  {
+    "type": "STOP",
+    "named": false
+  },
+  {
+    "type": "STRING",
+    "named": false
+  },
+  {
+    "type": "TEXT",
+    "named": false
+  },
+  {
+    "type": "THRU",
+    "named": false
+  },
+  {
+    "type": "TINYINT",
+    "named": false
+  },
+  {
+    "type": "TO",
+    "named": false
+  },
+  {
+    "type": "TO_NULL",
+    "named": false
+  },
+  {
+    "type": "TRY",
+    "named": false
+  },
+  {
+    "type": "TYPE",
+    "named": false
+  },
+  {
+    "type": "UNCONSTRAINED",
+    "named": false
+  },
+  {
+    "type": "UNDERLINE",
+    "named": false
+  },
+  {
+    "type": "USER",
+    "named": false
+  },
+  {
     "type": "USING",
+    "named": false
+  },
+  {
+    "type": "VALIDATE",
+    "named": false
+  },
+  {
+    "type": "VARCHAR",
+    "named": false
+  },
+  {
+    "type": "WARNING",
+    "named": false
+  },
+  {
+    "type": "WHENEVER",
+    "named": false
+  },
+  {
+    "type": "WHITE",
+    "named": false
+  },
+  {
+    "type": "WINDOW",
+    "named": false
+  },
+  {
+    "type": "WITH_DIMENSION",
+    "named": false
+  },
+  {
+    "type": "WRAP",
+    "named": false
+  },
+  {
+    "type": "YEAR",
+    "named": false
+  },
+  {
+    "type": "YELLO",
     "named": false
   },
   {

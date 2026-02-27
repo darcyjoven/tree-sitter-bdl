@@ -13,6 +13,7 @@ export default {
       $.variable_statement,
       $.preprocessor_statement,
       $.interface_statement,
+      $.schema_statement,
     ),
   defer_statement: ($) => seq(kw("DEFER"), choice(kw("INTERRUPT"), kw("QUIT"))),
   // 变量操作
@@ -33,8 +34,9 @@ export default {
           ),
         ),
       ),
-      seq(kw("FREE"), $._expression),
-      seq(kw("LOCATE"), $._expression),
+      seq(kw("FREE"), $.identifier),
+      // seq(kw("LOCATE"), $._expression),
+      $._locate_statement,
       // INITIALIZE
       seq(
         kw("INITIALIZE"),
@@ -53,6 +55,17 @@ export default {
             ),
           ),
         ),
+      ),
+    ),
+  _locate_statement: ($) =>
+    seq(
+      kw("LOCATE"),
+      commaSep1($.identifier),
+      kw("IN"),
+      choice(
+        kw("MEMORY"),
+        kw("FILE"),
+        seq(kw("FILE"), choice($._string_literal, $.identifier)),
       ),
     ),
   // 错误处理
@@ -89,46 +102,61 @@ export default {
   _bracket_expression: ($) =>
     choice(
       seq("(", $._expression, ")"),
-      prec.right(PREC.comparative,seq($._expression, kw("THRU"), $._expression)),
+      prec.right(
+        PREC.comparative,
+        seq($._expression, kw("THRU"), $._expression),
+      ),
     ),
   // 结果是boolean的操作
   _boolean_expression: ($) =>
     choice(
-     prec.left(PREC.and, seq($._expression, kw("AND"), $._expression)),
-     prec.left(PREC.or, seq($._expression, kw("OR"), $._expression)),
-     prec.right(PREC.not, seq(kw("NOT"), $._expression)),
-      prec.left(PREC.null,seq($._expression, kw("IS NULL"))),
-      prec.left(PREC.null,seq($._expression, kw("IS NOT NULL"))),
-      prec.left(PREC.stringcomparison,seq(
-        $._expression,
-        kw("LIKE"),
-        $._expression,
-        optional(seq(kw("ESCAPE"), $._expression)),
-      )),
-      prec.right(PREC.stringcomparison,seq(
-        $._expression,
-        kw("MATCHES"),
-        $._expression,
-        optional(seq(kw("ESCAPE"), $._expression)),
-      )),
-      prec.left(PREC.comparative,seq($._expression, "=", $._expression)),
-      prec.left(PREC.comparative,seq($._expression, "==", $._expression)),
-      prec.left(PREC.comparative,seq($._expression, "!=", $._expression)),
-      prec.left(PREC.comparative,seq($._expression, "<>", $._expression)),
-      prec.left(PREC.comparative,seq($._expression, "<", $._expression)),
-      prec.left(PREC.comparative,seq($._expression, "<=", $._expression)),
-      prec.left(PREC.comparative,seq($._expression, ">", $._expression)),
-      prec.left(PREC.comparative,seq($._expression, ">=", $._expression)),
+      prec.left(PREC.and, seq($._expression, kw("AND"), $._expression)),
+      prec.left(PREC.or, seq($._expression, kw("OR"), $._expression)),
+      prec.right(PREC.not, seq(kw("NOT"), $._expression)),
+      prec.left(PREC.null, seq($._expression, kw("IS NULL"))),
+      prec.left(PREC.null, seq($._expression, kw("IS NOT NULL"))),
+      prec.left(
+        PREC.stringcomparison,
+        seq(
+          $._expression,
+          kw("LIKE"),
+          $._expression,
+          optional(seq(kw("ESCAPE"), $._expression)),
+        ),
+      ),
+      prec.right(
+        PREC.stringcomparison,
+        seq(
+          $._expression,
+          kw("MATCHES"),
+          $._expression,
+          optional(seq(kw("ESCAPE"), $._expression)),
+        ),
+      ),
+      prec.left(PREC.comparative, seq($._expression, "=", $._expression)),
+      prec.left(PREC.comparative, seq($._expression, "==", $._expression)),
+      prec.left(PREC.comparative, seq($._expression, "!=", $._expression)),
+      prec.left(PREC.comparative, seq($._expression, "<>", $._expression)),
+      prec.left(PREC.comparative, seq($._expression, "<", $._expression)),
+      prec.left(PREC.comparative, seq($._expression, "<=", $._expression)),
+      prec.left(PREC.comparative, seq($._expression, ">", $._expression)),
+      prec.left(PREC.comparative, seq($._expression, ">=", $._expression)),
     ),
   _numberic_expression: ($) =>
     choice(
-      prec.left(PREC.call,seq(kw("COLUMN"), choice(seq("(", $._expression, ")"), $._expression))),
-      prec.left(PREC.additive,seq($._expression, "+", $._expression)),
-      prec.left(PREC.additive,seq($._expression, "-", $._expression)),
-      prec.left(PREC.multiplicative,seq($._expression, "*", $._expression)),
-      prec.left(PREC.multiplicative,seq($._expression, "/", $._expression)),
-      prec.left(PREC.multiplicative,seq($._expression, "**", $._expression)),
-      prec.left(PREC.multiplicative,seq($._expression, kw("MOD"), $._expression)),
+      prec.left(
+        PREC.call,
+        seq(kw("COLUMN"), choice(seq("(", $._expression, ")"), $._expression)),
+      ),
+      prec.left(PREC.additive, seq($._expression, "+", $._expression)),
+      prec.left(PREC.additive, seq($._expression, "-", $._expression)),
+      prec.left(PREC.multiplicative, seq($._expression, "*", $._expression)),
+      prec.left(PREC.multiplicative, seq($._expression, "/", $._expression)),
+      prec.left(PREC.multiplicative, seq($._expression, "**", $._expression)),
+      prec.left(
+        PREC.multiplicative,
+        seq($._expression, kw("MOD"), $._expression),
+      ),
     ),
   _string_expression: ($) =>
     choice(
@@ -136,8 +164,8 @@ export default {
       prec.left(-1, seq($._expression, "||", $._expression)),
       prec.left(-1, seq($._expression, ",", $._expression)),
       prec.right(PREC.ascii, seq($._expression, "USING", $._expression)),
-      prec.left(PREC.ascii,seq($._expression, "CLIPPED")),
-      prec.left(PREC.ascii,seq($._expression, "SPACE")),
+      prec.left(PREC.ascii, seq($._expression, "CLIPPED")),
+      prec.left(PREC.ascii, seq($._expression, "SPACE")),
     ),
   _function_expression: ($) =>
     seq($.variable, "(", commaSep($._expression), ")"),

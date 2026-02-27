@@ -24,7 +24,7 @@ export default grammar({
 
   extras: ($) => [$.comment, /\s/],
 
-  inline: ($) => [ $._constant_statement, $.scope],
+  inline: ($) => [$._constant_statement, $.scope],
 
   rules: {
     //============================================================
@@ -354,13 +354,26 @@ export default grammar({
       choice(
         prec(
           1,
-          commaSep1(seq(alias($.identifier, $.variable_name), alias($._data_type, $.data_type))),
+          commaSep1(
+            seq(
+              alias($.identifier, $.variable_name),
+              alias($._data_type, $.data_type),
+            ),
+          ),
         ),
-        seq(commaSep1(alias($.identifier, $.variable_name)), alias($._data_type, $.data_type)),
+        seq(
+          commaSep1(alias($.identifier, $.variable_name)),
+          alias($._data_type, $.data_type),
+        ),
       ),
     // record 因为有end record
     _record_list: ($) =>
-      commaSep1(seq(alias($.identifier, $.variable_name), alias($._data_type, $.data_type))),
+      commaSep1(
+        seq(
+          alias($.identifier, $.variable_name),
+          alias($._data_type, $.data_type),
+        ),
+      ),
     //choice(
     // seq(
     //   optional(repeat(seq(alias($.identifier, 'variable_name'), $._data_type, ',')),),
@@ -380,7 +393,7 @@ export default grammar({
     main_block: ($) =>
       seq(
         kw("MAIN"),
-        seq(repeat($._top_declarartion), repeat($._statement)),
+        seq(repeat($._top_declaration), repeat($._statement)),
         kw("END MAIN"),
       ),
     function_block: ($) =>
@@ -391,13 +404,13 @@ export default grammar({
         "(",
         commaSep(alias($.identifier, "param_name")),
         ")",
-        seq(repeat($._top_declarartion), repeat($._statement)),
+        seq(repeat($._top_declaration), repeat($._statement)),
         kw("END FUNCTION"),
       ),
     report_block: ($) => "__report_block_",
     dialog_block: ($) => "__dialog_block_",
 
-    _top_declarartion: ($) =>
+    _top_declaration: ($) =>
       choice(
         $.constant_definition,
         $.user_type_definition,
@@ -427,7 +440,8 @@ export default grammar({
     // 整数
     _natural_number: (_) => /\d+/,
     // 字面值
-    literal: ($) => choice($._string_literal, $._number_literal, $._datetime_literal),
+    literal: ($) =>
+      choice($._string_literal, $._number_literal, $._datetime_literal),
     _string_literal: (_) =>
       choice(
         seq(
@@ -457,24 +471,26 @@ export default grammar({
           "'",
         ),
       ),
-    _number_literal: (_) =>
-      choice(integerLiterals, decimalLiterals),
-    _datetime_literal: (_) => choice(
-      seq(kw("DATETIME"), datetimeQualifier, kw("TO"), datetimeQualifier),
-      seq(
-        kw("IINTERVAL"),
-        "(",
-        /[^)]+/,
-        ")",
-        datetimeQualifier,
-        kw("TO"),
-        datetimeQualifier,
-      )),
+    _number_literal: (_) => choice(integerLiterals, decimalLiterals),
+    _datetime_literal: (_) =>
+      choice(
+        seq(kw("DATETIME"), datetimeQualifier, kw("TO"), datetimeQualifier),
+        seq(
+          kw("IINTERVAL"),
+          "(",
+          /[^)]+/,
+          ")",
+          datetimeQualifier,
+          kw("TO"),
+          datetimeQualifier,
+        ),
+      ),
     // 作用域
     scope: ($) => choice(kw("PRIVATE"), kw("PUBLIC")),
     // 变量/方法名
     variable: ($) => $._variable,
-    _variable: ($) => choice(alias($.identifier,'identifier'), $._member, $._array_item),
+    _variable: ($) =>
+      choice(alias($.identifier, "identifier"), $._member, $._array_item),
     _member: ($) =>
       prec.left(
         1,

@@ -22,7 +22,7 @@ const datetimeQualifier = choice(
 );
 
 const PREC = {
-  call:13,
+  call: 13,
   primary: 12,
   unary: 11,
   multiplicative: 10,
@@ -75,6 +75,7 @@ function commaSep(rule) {
  */
 function kw(phrase) {
   const words = phrase.split(/\s+/);
+  const _alias = phrase.replaceAll(" ", "_");
 
   // 统一生成不区分大小写的 token
   const makeToken = (/** @type {string} */ word) =>
@@ -92,9 +93,9 @@ function kw(phrase) {
 
   // 如果是多词短语如 "HELP FILE"，由 seq 拼接
   if (words.length > 1) {
-    return seq(...words.map((w) => makeToken(w)));
+    return alias(prec(10, seq(...words.map((w) => makeToken(w)))), _alias);
   }
-  return makeToken(words[0]);
+  return alias(token(prec(10, makeToken(words[0]))), _alias);
 }
 
 export {
