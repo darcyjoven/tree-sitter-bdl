@@ -8,16 +8,6 @@
     "type": "case_vairable",
     "named": false,
     "fields": {
-      "member": {
-        "multiple": true,
-        "required": false,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      },
       "object": {
         "multiple": true,
         "required": false,
@@ -221,14 +211,6 @@
           {
             "type": "e",
             "named": false
-          },
-          {
-            "type": "identifier",
-            "named": false
-          },
-          {
-            "type": "identifier",
-            "named": true
           },
           {
             "type": "string_content",
@@ -302,17 +284,7 @@
   {
     "type": "define_identifier",
     "named": false,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "identifier",
-          "named": true
-        }
-      ]
-    }
+    "fields": {}
   },
   {
     "type": "exception_statement",
@@ -381,16 +353,6 @@
     "type": "flow_ctrl_statement",
     "named": true,
     "fields": {
-      "member": {
-        "multiple": true,
-        "required": false,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      },
       "object": {
         "multiple": true,
         "required": false,
@@ -594,14 +556,6 @@
           {
             "type": "e",
             "named": false
-          },
-          {
-            "type": "identifier",
-            "named": false
-          },
-          {
-            "type": "identifier",
-            "named": true
           },
           {
             "type": "string_content",
@@ -633,16 +587,6 @@
     "type": "func_name",
     "named": false,
     "fields": {
-      "member": {
-        "multiple": true,
-        "required": false,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      },
       "object": {
         "multiple": true,
         "required": false,
@@ -846,14 +790,6 @@
           {
             "type": "e",
             "named": false
-          },
-          {
-            "type": "identifier",
-            "named": false
-          },
-          {
-            "type": "identifier",
-            "named": true
           },
           {
             "type": "string_content",
@@ -871,16 +807,6 @@
     "type": "func_params",
     "named": false,
     "fields": {
-      "member": {
-        "multiple": true,
-        "required": false,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      },
       "object": {
         "multiple": true,
         "required": false,
@@ -1084,14 +1010,6 @@
           {
             "type": "e",
             "named": false
-          },
-          {
-            "type": "identifier",
-            "named": false
-          },
-          {
-            "type": "identifier",
-            "named": true
           },
           {
             "type": "string_content",
@@ -1109,16 +1027,6 @@
     "type": "func_returns",
     "named": false,
     "fields": {
-      "member": {
-        "multiple": true,
-        "required": false,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      },
       "object": {
         "multiple": true,
         "required": false,
@@ -1322,14 +1230,6 @@
           {
             "type": "e",
             "named": false
-          },
-          {
-            "type": "identifier",
-            "named": false
-          },
-          {
-            "type": "identifier",
-            "named": true
           },
           {
             "type": "string_content",
@@ -1398,6 +1298,11 @@
     }
   },
   {
+    "type": "identifier",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "import_statement",
     "named": true,
     "fields": {}
@@ -1421,16 +1326,6 @@
     "type": "label_name",
     "named": false,
     "fields": {
-      "member": {
-        "multiple": true,
-        "required": false,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      },
       "object": {
         "multiple": true,
         "required": false,
@@ -1634,14 +1529,6 @@
           {
             "type": "e",
             "named": false
-          },
-          {
-            "type": "identifier",
-            "named": false
-          },
-          {
-            "type": "identifier",
-            "named": true
           },
           {
             "type": "string_content",
@@ -1818,16 +1705,6 @@
     "type": "variable",
     "named": true,
     "fields": {
-      "member": {
-        "multiple": true,
-        "required": false,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      },
       "object": {
         "multiple": true,
         "required": false,
@@ -2031,14 +1908,6 @@
           {
             "type": "e",
             "named": false
-          },
-          {
-            "type": "identifier",
-            "named": false
-          },
-          {
-            "type": "identifier",
-            "named": true
           },
           {
             "type": "string_content",
@@ -2075,16 +1944,6 @@
     "type": "variable_statement",
     "named": true,
     "fields": {
-      "member": {
-        "multiple": true,
-        "required": false,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      },
       "object": {
         "multiple": true,
         "required": false,
@@ -2290,14 +2149,6 @@
             "named": false
           },
           {
-            "type": "identifier",
-            "named": false
-          },
-          {
-            "type": "identifier",
-            "named": true
-          },
-          {
             "type": "string_content",
             "named": false
           },
@@ -2312,10 +2163,6 @@
       "multiple": true,
       "required": false,
       "types": [
-        {
-          "type": "identifier",
-          "named": true
-        },
         {
           "type": "variable",
           "named": true
@@ -2588,10 +2435,6 @@
     "named": false
   },
   {
-    "type": "END",
-    "named": false
-  },
-  {
     "type": "END_CASE",
     "named": false
   },
@@ -2613,6 +2456,10 @@
   },
   {
     "type": "END_MAIN",
+    "named": false
+  },
+  {
+    "type": "END_RECORD",
     "named": false
   },
   {
@@ -2920,10 +2767,6 @@
     "named": false
   },
   {
-    "type": "RECORD_LIKE",
-    "named": false
-  },
-  {
     "type": "RED",
     "named": false
   },
@@ -3143,14 +2986,6 @@
   {
     "type": "func_name",
     "named": false
-  },
-  {
-    "type": "identifier",
-    "named": false
-  },
-  {
-    "type": "identifier",
-    "named": true
   },
   {
     "type": "interface_statement",

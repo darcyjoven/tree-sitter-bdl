@@ -26,15 +26,15 @@ export default {
         commaSep1($._variable),
         kw("LIKE"),
         choice(
-          seq(alias($.identifier, "table_name"), ".*"),
+          seq(alias($._identifier, "table_name"), ".*"),
           seq(
-            alias($.identifier, "table_name"),
+            alias($._identifier, "table_name"),
             ".",
-            alias($.identifier, "column_name"),
+            alias($._identifier, "column_name"),
           ),
         ),
       ),
-      seq(kw("FREE"), $.identifier),
+      seq(kw("FREE"), $._identifier),
       // seq(kw("LOCATE"), $._expression),
       $._locate_statement,
       // INITIALIZE
@@ -46,11 +46,11 @@ export default {
           seq(
             kw("LIKE"),
             choice(
-              seq(alias($.identifier, "table_name"), ".*"),
+              seq(alias($._identifier, "table_name"), ".*"),
               seq(
-                alias($.identifier, "table_name"),
+                alias($._identifier, "table_name"),
                 ".",
-                alias($.identifier, "column_name"),
+                alias($._identifier, "column_name"),
               ),
             ),
           ),
@@ -60,12 +60,12 @@ export default {
   _locate_statement: ($) =>
     seq(
       kw("LOCATE"),
-      commaSep1($.identifier),
+      commaSep1($._identifier),
       kw("IN"),
       choice(
         kw("MEMORY"),
         kw("FILE"),
-        seq(kw("FILE"), choice($._string_literal, $.identifier)),
+        seq(kw("FILE"), choice($._string_literal, $._identifier)),
       ),
     ),
   // 错误处理
@@ -102,7 +102,7 @@ export default {
     kw('CALL'),
     alias($._variable, 'func_name'),
     '(',
-    alias(commaSep($._variable), 'func_params'),
+    alias(commaSep($._expression), 'func_params'),
     ')',
     optional(
       seq(
@@ -186,7 +186,7 @@ export default {
   _goto_flow: ($) => seq(
     kw('GOTO'),
     optional(':'),
-    alias($.identifier, 'label_name')
+    alias($._identifier, 'label_name')
   ),
   _if_flow: ($) => seq(
     kw('IF'),
@@ -203,7 +203,7 @@ export default {
   ),
   _label_flow: ($) => seq(
     kw('LABEL'),
-    alias($.identifier, 'label_name'),
+    alias($._identifier, 'label_name'),
     ":"
   ),
   _sleep_flow: ($) => seq(
@@ -222,8 +222,8 @@ export default {
     seq(
       '&define',
       alias(seq(
-        $.identifier,
-        optional(seq('(', commaSep($.identifier), ')')),
+        $._identifier,
+        optional(seq('(', commaSep($._identifier), ')')),
       ), 'define_identifier'),
       alias($._pre_define_content, '&define_content'))
   ),

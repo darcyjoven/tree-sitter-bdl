@@ -99,12 +99,12 @@ export default grammar({
           ),
           // Application termination
           // ON TERMINATE SIGNAL CALL function
-          seq(kw("ON TERMINATE SIGNAL CALL"), alias($.identifier, "func_name")),
+          seq(kw("ON TERMINATE SIGNAL CALL"), alias($._identifier, "func_name")),
           // Front-end termination
           // ON CLOSE APPLICATION CALL function
           seq(
             kw("ON CLOSE APPLICATION CALL"),
-            alias($.identifier, "func_name"),
+            alias($._identifier, "func_name"),
           ),
           // Defining the message file
           // HELP FILE filename
@@ -157,15 +157,15 @@ export default grammar({
           kw("DATABASE"),
           choice(
             seq(
-              alias($.identifier, "dbname"),
-              optional(seq("@", alias($.identifier, "dbserver"))),
+              alias($._identifier, "dbname"),
+              optional(seq("@", alias($._identifier, "dbserver"))),
             ),
             alias($._string_literal, "dbname"),
           ),
           optional(kw("EXCLUSIVE")),
         ),
         // "SCHEMA  dbname",
-        seq(kw("SCHEMA"), alias($.identifier, "dbname")),
+        seq(kw("SCHEMA"), alias($._identifier, "dbname")),
       ),
 
     //============================================================
@@ -197,7 +197,7 @@ export default grammar({
       seq(optional($.scope), kw("CONSTANT"), commaSep1($._constant_statement)),
     _constant_statement: ($) =>
       seq(
-        alias($.identifier, $.constant_name),
+        alias($._identifier, $.constant_name),
         alias(optional($._data_type), $.data_type),
         "=",
         $.literal,
@@ -225,7 +225,7 @@ export default grammar({
           optional(
             seq(
               "(",
-              alias(choice($._natural_number, $.identifier), "length"),
+              alias(choice($._natural_number, $._identifier), "length"),
               ")",
             ),
           ),
@@ -236,7 +236,7 @@ export default grammar({
           optional(
             seq(
               "(",
-              alias(choice($._natural_number, $.identifier), "length"),
+              alias(choice($._natural_number, $._identifier), "length"),
               ")",
             ),
           ),
@@ -246,11 +246,11 @@ export default grammar({
           optional(
             seq(
               "(",
-              alias(choice($._natural_number, $.identifier), "length"),
+              alias(choice($._natural_number, $._identifier), "length"),
               optional(
                 seq(
                   ",",
-                  alias(choice($._natural_number, $.identifier), "length"),
+                  alias(choice($._natural_number, $._identifier), "length"),
                 ),
               ),
               ")",
@@ -270,11 +270,11 @@ export default grammar({
           optional(
             seq(
               "(",
-              alias(choice($._natural_number, $.identifier), "length"),
+              alias(choice($._natural_number, $._identifier), "length"),
               optional(
                 seq(
                   ",",
-                  alias(choice($._natural_number, $.identifier), "length"),
+                  alias(choice($._natural_number, $._identifier), "length"),
                 ),
               ),
               ")",
@@ -287,11 +287,11 @@ export default grammar({
           optional(
             seq(
               "(",
-              alias(choice($._natural_number, $.identifier), "length"),
+              alias(choice($._natural_number, $._identifier), "length"),
               optional(
                 seq(
                   ",",
-                  alias(choice($._natural_number, $.identifier), "length"),
+                  alias(choice($._natural_number, $._identifier), "length"),
                 ),
               ),
               ")",
@@ -310,27 +310,25 @@ export default grammar({
         kw("LIKE"),
         seq(
           // [dbname:]
-          optional(seq(alias($.identifier, "dbname"), ":")),
+          optional(seq(alias($._identifier, "dbname"), ":")),
           // tabname
-          alias($.identifier, "table_name"),
+          alias($._identifier, "table_name"),
           // .colname
           ".",
-          alias($.identifier, "column_name"),
+          alias($._identifier, "column_name"),
         ),
       ),
     _record_data_type: ($) =>
       choice(
         seq(
           kw("RECORD"),
-          // commaSep1(seq(alias($.identifier, "prop_name"), $._data_type)),
           $._record_list,
-          kw("END"),
-          kw("RECORD"),
+          kw("END RECORD"),
         ),
         seq(
-          kw("RECORD LIKE"),
-          optional(seq(alias($.identifier, "dbname"), ":")),
-          alias($.identifier, "table_name"),
+          kw("RECORD"), kw("LIKE"),
+          optional(seq(alias($._identifier, "dbname"), ":")),
+          alias($._identifier, "table_name"),
           ".",
           "*",
         ),
@@ -351,23 +349,22 @@ export default grammar({
           kw("OF"),
           $._data_type,
         ),
-        seq(kw("ARRAY"), "[", "]", kw("OF"), alias($.identifier, "java_type")),
+        seq(kw("ARRAY"), "[", "]", kw("OF"), alias($._identifier, "java_type")),
       ),
     // 系列类型，用于type record define
     _variable_list: ($) =>
-      // commaSep1(seq(alias($.identifier, 'variable_name'), $._data_type)),
       choice(
         prec(
           1,
           commaSep1(
             seq(
-              alias($.identifier, $.variable_name),
+              alias($._identifier, $.variable_name),
               alias($._data_type, $.data_type),
             ),
           ),
         ),
         seq(
-          commaSep1(alias($.identifier, $.variable_name)),
+          commaSep1(alias($._identifier, $.variable_name)),
           alias($._data_type, $.data_type),
         ),
       ),
@@ -375,21 +372,10 @@ export default grammar({
     _record_list: ($) =>
       commaSep1(
         seq(
-          alias($.identifier, $.variable_name),
+          alias($._identifier, $.variable_name),
           alias($._data_type, $.data_type),
         ),
       ),
-    //choice(
-    // seq(
-    //   optional(repeat(seq(alias($.identifier, 'variable_name'), $._data_type, ',')),),
-    //   seq(seq(alias($.identifier, 'variable_name'), $._data_type)
-    //   ),
-    // ),
-    // seq(
-    //   repeat1(seq(alias($.identifier, 'variable_name'), ',')),
-    //   alias($.identifier, 'variable_name'),
-    //   $._data_type
-    // )),
     //============================================================
     // 函数（function）
     // main function report dialog
@@ -405,9 +391,9 @@ export default grammar({
       seq(
         optional($.scope),
         kw("FUNCTION"),
-        alias($.identifier, "func_name"),
+        alias($._identifier, "func_name"),
         "(",
-        commaSep(alias($.identifier, "param_name")),
+        commaSep(alias($._identifier, "param_name")),
         ")",
         seq(repeat($._top_declaration), repeat($._statement)),
         kw("END FUNCTION"),
@@ -441,7 +427,8 @@ export default grammar({
     // 空白符结束的字符串
     _unquoted_string: (_) => /[^\s]+/,
     // 标识符
-    identifier: (_) => /[_\p{XID_Start}][_\p{XID_Continue}]*/u,
+    identifier: ($) => $._identifier,
+    _identifier: (_) => /[_\p{XID_Start}][_\p{XID_Continue}]*/u,
     // 整数
     _natural_number: (_) => /\d+/,
     // 字面值
@@ -509,11 +496,11 @@ export default grammar({
     // 变量/方法名
     variable: ($) => $._variable,
     _variable: ($) =>
-      choice(alias($.identifier, "identifier"), $._member, $._array_item),
+      choice($._identifier, $._member, $._array_item),
     _member: ($) =>
       prec.left(
         1,
-        seq(field("object", $._variable), ".", field("member", $.identifier)),
+        seq(field("object", $._variable), ".", field("member", $._identifier)),
       ),
     _array_item: ($) =>
       prec.left(

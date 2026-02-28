@@ -17,6 +17,8 @@ main
 
     LET r = 4 + (1==0)
 
+    let a = not cl_null('ok')
+
     let r = abb(1,2,)
 
 end main
@@ -38,8 +40,10 @@ end main
         (fgl_statement
             (variable_statement))
         (fgl_statement
+            (variable_statement))
+        (fgl_statement
             (variable_statement
-                (MISSING identifier)))))
+                (MISSING _identifier)))))
 
 
 ================================================================================|||

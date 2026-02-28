@@ -172,3 +172,46 @@ DEFINE
             (data_type)
             (variable_name)
             (data_type))))
+
+================================================================================|||
+结构体定义 2
+================================================================================|||
+
+DEFINE  l_apb02  LIKE apb_file.apb02,
+        l_apb08  LIKE apb_file.apb08,
+        l_apb081 LIKE apb_file.apb081,
+        l_apb09  LIKE apb_file.apb09,
+        l_apb23  LIKE apb_file.apb23,
+        l_apb24  LIKE apb_file.apb24,    
+        l_apb10  LIKE apb_file.apb10,
+        l_apb101 LIKE apb_file.apb101,
+        p_apa01  LIKE apa_file.apa01,
+        l_apa32  LIKE apa_file.apa32
+DEFINE g_apk    RECORD LIKE apk_file.*
+
+--------------------------------------------------------------------------------|||
+(source_file
+    (variable_definition
+        (variable_name)
+        (data_type) 
+        (variable_name)
+        (data_type) 
+        (variable_name)
+        (data_type) 
+        (variable_name)
+        (data_type) 
+        (variable_name)
+        (data_type)
+        (variable_name)
+        (data_type) 
+        (variable_name)
+        (data_type) 
+        (variable_name)
+        (data_type) 
+        (variable_name)
+        (data_type) 
+        (variable_name)
+        (data_type))
+    (variable_definition
+        (variable_name)
+        (data_type)))
