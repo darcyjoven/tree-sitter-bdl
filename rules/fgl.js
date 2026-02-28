@@ -14,7 +14,9 @@ export default {
       $.preprocessor_statement,
       $.interface_statement,
       $.schema_statement,
+      $.demo_statement
     ),
+  demo_statement: ($) =>'ON ACTION',
   defer_statement: ($) => seq(kw("DEFER"), choice(kw("INTERRUPT"), kw("QUIT"))),
   // 变量操作
   variable_statement: ($) =>

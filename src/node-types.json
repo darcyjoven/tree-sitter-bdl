@@ -318,6 +318,10 @@
           "named": true
         },
         {
+          "type": "demo_statement",
+          "named": true
+        },
+        {
           "type": "exception_statement",
           "named": true
         },
@@ -2967,6 +2971,10 @@
   {
     "type": "define_identifier",
     "named": false
+  },
+  {
+    "type": "demo_statement",
+    "named": true
   },
   {
     "type": "dialog_block",

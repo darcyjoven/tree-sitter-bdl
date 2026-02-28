@@ -11,50 +11,113 @@ enum TokenType
     ERROR_SENTINEL
 };
 
+// --- 配置区 ---
+static const char *BDL_TERMINATORS[] = {
+    "ACCEPT",
+    "AFTER",
+    "ALTER",
+    "BEFORE",
+    "CALL",
+    "CANCEL",
+    "CASE",
+    "CATCH",
+    "CLEAR",
+    "CLOSE",
+    "COMMAND",
+    "CONNECT",
+    "CONTINUE",
+    "CREATE",
+    "CURSOR",
+    "DATABASE",
+    "DECLARE",
+    "DEFINE",
+    "DELETE",
+    "DISPLAY",
+    "DROP",
+    "END",
+    "ERROR",
+    "EXECUTE",
+    "EXIT",
+    "FETCH",
+    "FLUSH",
+    "FOR",
+    "FOREACH",
+    "FREE",
+    "GLOBALS",
+    "GOTO",
+    "HIDE",
+    "IF",
+    "INITIALIZE",
+    "INSERT",
+    "LABEL",
+    "LET",
+    "LOAD",
+    "LOCATE",
+    "MENU",
+    "MESSAGE",
+    "NEXT",
+    "OPEN",
+    "OPEN",
+    "PREPARE",
+    "PUT",
+    "RENAME",
+    "RETURN",
+    "SCHEMA",
+    "SCROLL",
+    "SELECT",
+    "SHOW",
+    "SQL",
+    "TRY",
+    "TYPE",
+    "UNLOAD",
+    "UPDATE",
+    "VALIDATE",
+    "WHENEVER",
+    "WHILE"};
+
 typedef struct
 {
-    const char *keyword;
-    enum TokenType type;
-} StatementConfig;
+    const char *first;
+    const char *second;
+} Phrase;
+static const Phrase PHRASE_TERMINATORS[] = {
+    {"ON", "ACTION"},
+    {"ON", "APPEND"},
+    {"ON", "CHANGE"},
+    {"ON", "COLLAPSE"},
+    {"ON", "DELETE"},
+    {"ON", "DRAG_ENTER"},
+    {"ON", "DRAG_FINISH"},
+    {"ON", "DRAG_OVER"},
+    {"ON", "DRAG_START"},
+    {"ON", "DROP"},
+    {"ON", "EXPAND"},
+    {"ON", "FILL"},
+    {"ON", "IDLE"},
+    {"ON", "INSERT"},
+    {"ON", "KEY"},
+    {"ON", "ROW"},
+    {"ON", "UPDATE"}};
 
-static const StatementConfig SQL_STARTERS[] = {
-    {"SELECT", SELECT_STATEMENT},
-    {"UPDATE", UPDATE_STATEMENT},
-    {"CREATE TABLE", CREATE_TABLE_STATEMENT}};
-
-// 终止符：包含 BDL 关键字和所有的 SQL 起始词
-static const char *BDL_TERMINATORS[] = {
-    "IF", "END", "LET", "RETURN", "FOR", "WHILE", "CASE",
-    "SELECT", "UPDATE", "INSERT", "DELETE", "CREATE", "DROP"};
-
-#define STARTER_COUNT (sizeof(SQL_STARTERS) / sizeof(SQL_STARTERS[0]))
 #define TERM_COUNT (sizeof(BDL_TERMINATORS) / sizeof(BDL_TERMINATORS[0]))
+#define PHRASE_COUNT (sizeof(PHRASE_TERMINATORS) / sizeof(PHRASE_TERMINATORS[0]))
 
+// --- 辅助工具 ---
 static bool is_word_char(int32_t c)
 {
     return iswalnum(c) || c == '_';
 }
 
-// 精准匹配起始词
-static bool try_match_starter(TSLexer *lexer, const char *target)
+// 模拟读取单词但不影响主循环的 mark_end
+static void scan_word(TSLexer *lexer, char *buf)
 {
-    for (int i = 0; target[i]; i++)
+    int i = 0;
+    while (is_word_char(lexer->lookahead) && i < 63)
     {
-        if (target[i] == ' ')
-        {
-            if (!iswspace(lexer->lookahead))
-                return false;
-            while (iswspace(lexer->lookahead))
-                lexer->advance(lexer, false);
-        }
-        else
-        {
-            if (towupper(lexer->lookahead) != target[i])
-                return false;
-            lexer->advance(lexer, false);
-        }
+        buf[i++] = (char)towupper(lexer->lookahead);
+        lexer->advance(lexer, false);
     }
-    return !is_word_char(lexer->lookahead);
+    buf[i] = '\0';
 }
 
 bool tree_sitter_bdl_external_scanner_scan(void *payload, TSLexer *lexer, const bool *valid_symbols)
@@ -66,31 +129,52 @@ bool tree_sitter_bdl_external_scanner_scan(void *payload, TSLexer *lexer, const 
     while (iswspace(lexer->lookahead))
         lexer->advance(lexer, true);
 
-    // 2. 尝试识别起始词
-    int current_type = -1;
-    for (int i = 0; i < STARTER_COUNT; i++)
+    // 2. 识别起始词
+    lexer->mark_end(lexer);
+    char starter[64];
+    if (!is_word_char(lexer->lookahead))
+        return false;
+
+    // 探测起始词
+    int i = 0;
+    while (is_word_char(lexer->lookahead) && i < 63)
     {
-        if (valid_symbols[SQL_STARTERS[i].type])
-        {
-            if (try_match_starter(lexer, SQL_STARTERS[i].keyword))
-            {
-                current_type = SQL_STARTERS[i].type;
-                break;
-            }
-        }
+        starter[i++] = (char)towupper(lexer->lookahead);
+        lexer->advance(lexer, false);
+    }
+    starter[i] = '\0';
+
+    int current_type = -1;
+    if (strcmp(starter, "SELECT") == 0 && valid_symbols[SELECT_STATEMENT])
+        current_type = SELECT_STATEMENT;
+    else if (strcmp(starter, "UPDATE") == 0 && valid_symbols[UPDATE_STATEMENT])
+        current_type = UPDATE_STATEMENT;
+    else if (strcmp(starter, "CREATE") == 0 && valid_symbols[CREATE_TABLE_STATEMENT])
+    {
+        while (iswspace(lexer->lookahead))
+            lexer->advance(lexer, false);
+        char second[64];
+        scan_word(lexer, second);
+        if (strcmp(second, "TABLE") == 0)
+            current_type = CREATE_TABLE_STATEMENT;
     }
 
     if (current_type == -1)
         return false;
 
-    // 3. 进入内容扫描
+    // 3. 核心循环：寻找边界
     int paren_depth = 0;
     bool in_s_quote = false;
     bool in_d_quote = false;
 
     while (!lexer->eof(lexer))
     {
-        // A. 处理引号
+        // ---【关键：仅在深度为0且不在引号内时，记录当前的“干净边界”】---
+        if (!in_s_quote && !in_d_quote && paren_depth == 0)
+        {
+            lexer->mark_end(lexer);
+        }
+
         if (lexer->lookahead == '\'')
         {
             if (!in_d_quote)
@@ -100,10 +184,9 @@ bool tree_sitter_bdl_external_scanner_scan(void *payload, TSLexer *lexer, const 
         else if (lexer->lookahead == '"')
         {
             if (!in_s_quote)
-                in_d_quote = !in_d_quote;
+                in_d_quote = !in_s_quote;
             lexer->advance(lexer, false);
         }
-        // B. 在非引号内处理括号和单词
         else if (!in_s_quote && !in_d_quote)
         {
             if (lexer->lookahead == '(')
@@ -119,27 +202,50 @@ bool tree_sitter_bdl_external_scanner_scan(void *payload, TSLexer *lexer, const 
             }
             else if (paren_depth == 0 && is_word_char(lexer->lookahead))
             {
-                // 【关键修复点】：只要 paren_depth 为 0，读取任何词前先标记结束位置
-                lexer->mark_end(lexer);
 
-                char word[64] = {0};
-                int len = 0;
-                while (is_word_char(lexer->lookahead) && len < 63)
-                {
-                    word[len++] = (char)towupper(lexer->lookahead);
-                    lexer->advance(lexer, false);
-                }
-                word[len] = '\0';
+                // 探测接下来的单词，但注意：我们已经在上面 mark_end 了
+                char word1[64];
+                scan_word(lexer, word1);
 
-                // 检查是否为终止词（包括另一个 SELECT）
+                // 检查单词终止
+                bool matched = false;
                 for (int i = 0; i < TERM_COUNT; i++)
                 {
-                    if (strcmp(word, BDL_TERMINATORS[i]) == 0)
+                    if (strcmp(word1, BDL_TERMINATORS[i]) == 0)
                     {
-                        lexer->result_symbol = current_type;
-                        return true;
+                        matched = true;
+                        break;
                     }
                 }
+
+                // 检查短语终止
+                if (!matched)
+                {
+                    for (int i = 0; i < PHRASE_COUNT; i++)
+                    {
+                        if (strcmp(word1, PHRASE_TERMINATORS[i].first) == 0)
+                        {
+                            while (iswspace(lexer->lookahead))
+                                lexer->advance(lexer, false);
+                            char word2[64];
+                            scan_word(lexer, word2);
+                            if (strcmp(word2, PHRASE_TERMINATORS[i].second) == 0)
+                            {
+                                matched = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                if (matched)
+                {
+                    lexer->result_symbol = current_type;
+                    return true; // 结果停在 word1 之前的 mark_end 处
+                }
+
+                // 如果没有匹配到终止符，继续循环。
+                // 此时 lexer 已经在单词之后，下一次循环开头会执行 mark_end 更新边界。
             }
             else
             {

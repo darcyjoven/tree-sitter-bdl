@@ -5083,8 +5083,16 @@
         {
           "type": "SYMBOL",
           "name": "schema_statement"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "demo_statement"
         }
       ]
+    },
+    "demo_statement": {
+      "type": "STRING",
+      "value": "ON ACTION"
     },
     "defer_statement": {
       "type": "SEQ",

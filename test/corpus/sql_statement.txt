@@ -12,6 +12,9 @@ MAIN
     create table asdasd 
 
     select * from (select 123 from dual)
+
+    let a = i
+
 END MAIN
 
 --------------------------------------------------------------------------------|||
@@ -26,4 +29,6 @@ END MAIN
         (sql_statement
             (create_table_statement))
         (sql_statement
-            (select_statement))))
+            (select_statement))
+        (fgl_statement
+            (variable_statement))))
