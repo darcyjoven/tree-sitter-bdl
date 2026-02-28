@@ -1589,21 +1589,6 @@
     "fields": {}
   },
   {
-    "type": "select_statement",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "identifier",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
     "type": "source_file",
     "named": true,
     "root": true,
@@ -1672,11 +1657,19 @@
       "required": true,
       "types": [
         {
+          "type": "create_table_statement",
+          "named": true
+        },
+        {
           "type": "insert_statement",
           "named": true
         },
         {
           "type": "select_statement",
+          "named": true
+        },
+        {
+          "type": "update_statement",
           "named": true
         }
       ]
@@ -2960,6 +2953,10 @@
     "named": true
   },
   {
+    "type": "create_table_statement",
+    "named": true
+  },
+  {
     "type": "dbname",
     "named": false
   },
@@ -3020,12 +3017,20 @@
     "named": true
   },
   {
+    "type": "select_statement",
+    "named": true
+  },
+  {
     "type": "string_content",
     "named": false
   },
   {
     "type": "table_name",
     "named": false
+  },
+  {
+    "type": "update_statement",
+    "named": true
   },
   {
     "type": "username",

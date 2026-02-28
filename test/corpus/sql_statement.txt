@@ -1,0 +1,29 @@
+================================================================================|||
+UPDATE 语句
+================================================================================|||
+MAIN
+    UPDATE ima_file set ima02 = '123'
+     where ima01 = '1' and 1=2 
+
+    select 'M.IN.0002R' from dual
+    
+    SELECt * from ima_file where asd = 22
+
+    create table asdasd 
+
+    select * from (select 123 from dual)
+END MAIN
+
+--------------------------------------------------------------------------------|||
+(source_file
+    (main_block
+        (sql_statement
+            (update_statement))
+        (sql_statement
+            (select_statement))
+        (sql_statement
+            (select_statement))
+        (sql_statement
+            (create_table_statement))
+        (sql_statement
+            (select_statement))))

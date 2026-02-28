@@ -48,3 +48,4 @@ zig-out/
 *.jar
 
 yarn.lock
+test/4gl/ketword.4gl

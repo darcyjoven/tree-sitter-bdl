@@ -8833,23 +8833,14 @@
         {
           "type": "SYMBOL",
           "name": "insert_statement"
-        }
-      ]
-    },
-    "select_statement": {
-      "type": "SEQ",
-      "members": [
-        {
-          "type": "PATTERN",
-          "value": "[Ss][Ee][Ll][Ee][Cc][Tt]"
-        },
-        {
-          "type": "PATTERN",
-          "value": "[Ff][Rr][Oo][Mm]"
         },
         {
           "type": "SYMBOL",
-          "name": "identifier"
+          "name": "update_statement"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "create_table_statement"
         }
       ]
     },
@@ -10813,7 +10804,24 @@
     ]
   ],
   "precedences": [],
-  "externals": [],
+  "externals": [
+    {
+      "type": "SYMBOL",
+      "name": "select_statement"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "update_statement"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "create_table_statement"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "error_sentinel"
+    }
+  ],
   "inline": [
     "_constant_statement",
     "scope"

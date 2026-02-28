@@ -7,7 +7,6 @@
 /// <reference types="tree-sitter-cli/dsl" />
 // @ts-check
 
-// const sqlStatement = require("./rules/sql")
 import {
   integerLiterals,
   decimalLiterals,
@@ -17,12 +16,17 @@ import {
   commaSep,
 } from "./rules/util.js";
 import sqlStatement from "./rules/sql.js";
+import { externals as sqlExternals } from "./rules/sql.js"
 import fglStatement from "./rules/fgl.js";
 
 export default grammar({
   name: "bdl",
 
   extras: ($) => [$.comment, /\s/],
+
+  externals: ($) => [
+    ...sqlExternals($)
+  ],
 
   inline: ($) => [$._constant_statement, $.scope],
 
