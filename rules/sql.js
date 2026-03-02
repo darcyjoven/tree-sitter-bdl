@@ -16,8 +16,17 @@ const rules = {
       $.alter_sql,
       $.drop_sql,
       $.block_sql,
+      $.rename_sql,
     ),
   block_sql: ($) => seq(kw("SQL"), $._static_sql, kw("END SQL")),
+  rename_sql: ($) =>
+    seq(
+      kw("RENAME"),
+      choice(kw("TABLE"), kw("COLUMN"), kw("INDEX"), kw("SEQUENCE")),
+      $._identifier,
+      kw("TO"),
+      $._identifier,
+    ),
 };
 const externals = ($) => [
   $.insert_sql,

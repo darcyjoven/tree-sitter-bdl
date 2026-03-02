@@ -134,7 +134,7 @@ END MAIN
             (insert_sql))))
 
 ================================================================================|||
-SEQUENCE 语句
+DDL 语句
 ================================================================================|||
 
 MAIN
@@ -145,6 +145,8 @@ MAIN
     select * from (select 123 from dual)
 
     ALTER SEQUENCE seq1 INCREMENT BY 3
+
+    rename table ima_file to imb_file
 END MAIN
 
 --------------------------------------------------------------------------------|||
@@ -158,4 +160,7 @@ END MAIN
         (sql_statement
             (select_sql))
         (sql_statement
-            (alter_sql))))
+            (alter_sql))
+        (sql_statement
+            (rename_sql))))
+
