@@ -100,12 +100,15 @@ MAIN
      INTO myrec.name, myrec.cdate
      FROM items
      WHERE key=myrec.key
+    select * from ima_file for update
 END MAIN
 
 --------------------------------------------------------------------------------|||
 
 (source_file
     (main_block
+        (sql_statement
+            (select_sql))
         (sql_statement
             (select_sql))))
 
