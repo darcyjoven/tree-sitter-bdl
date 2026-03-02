@@ -164,3 +164,413 @@ END MAIN
         (sql_statement
             (rename_sql))))
 
+================================================================================|||
+动态SQL 语句
+================================================================================|||
+
+MAIN
+    PREPARE s1 FROM "DELETE FROM order WHERE key=?"
+    EXECUTE s1 USING n
+    FREE s1
+END MAIN
+
+--------------------------------------------------------------------------------|||
+
+(source_file
+    (main_block
+        (sql_statement
+            (prepare_sql))
+        (sql_statement
+            (execute_sql))
+        (fgl_statement
+            (variable_statement))))
+
+================================================================================|||
+DECLARE 语句
+================================================================================|||
+
+MAIN
+    PREPARE s1
+        FROM "SELECT customer_num, cust_name FROM customer WHERE customer_num>?"
+    DECLARE c1 CURSOR FOR s1
+    LET key=101
+    FOREACH c1 USING key INTO cust.*
+         let cust = '*'
+    END FOREACH
+END MAIN
+
+--------------------------------------------------------------------------------|||
+
+(source_file
+    (main_block
+        (sql_statement
+            (prepare_sql))
+        (sql_statement
+            (declare_sql))
+        (fgl_statement
+            (variable_statement))
+        (sql_statement
+            (foreach_sql
+                (fgl_statement
+                    (variable_statement))))))
+
+
+================================================================================|||
+DECLARE 语句 2
+================================================================================|||
+
+MAIN
+    DECLARE c1 CURSOR FOR SELECT * FROM customer
+END MAIN
+
+--------------------------------------------------------------------------------|||
+(source_file
+    (main_block
+        (sql_statement
+            (declare_sql
+                (select_sql)))))
+
+================================================================================|||
+DECLARE 语句 3
+================================================================================|||
+
+MAIN
+    DECLARE c1 SCROLL CURSOR
+        FROM "SELECT customer_num, cust_name FROM customer WHERE customer_num>?"
+    LET key=101
+    FOREACH c1 USING key INTO cust.*
+        let cust = null
+    END FOREACH
+END MAIN
+
+--------------------------------------------------------------------------------|||
+(source_file
+    (main_block
+        (sql_statement
+            (declare_sql))
+        (fgl_statement
+            (variable_statement))
+        (sql_statement
+            (foreach_sql
+                (fgl_statement
+                    (variable_statement))))))
+
+================================================================================|||
+DECLARE 语句 4
+================================================================================|||
+
+MAIN
+    DECLARE c1 CURSOR WITH HOLD
+        FOR SELECT customer_num, cust_name FROM customer WHERE customer_num > ?
+    LET key=101
+    FOREACH c1 USING key INTO cust.*
+        UPDATE cust2 SET name=cust.cust_name WHERE num=cust.num
+    END FOREACH
+END MAIN
+
+--------------------------------------------------------------------------------|||
+(source_file
+    (main_block
+        (sql_statement
+            (declare_sql
+                (select_sql)))
+        (fgl_statement
+            (variable_statement))
+        (sql_statement
+            (foreach_sql
+                (sql_statement
+                    (update_sql))))))
+
+================================================================================|||
+OPEN 语句
+================================================================================|||
+
+MAIN
+    DECLARE c1 CURSOR FROM "SELECT cust_name FROM customer WHERE cust_id > ?"
+    LET k = 102
+    OPEN c1 USING k
+    FETCH c1 INTO n
+    LET k = 103
+    OPEN c1 USING k
+    FETCH c1 INTO n
+END MAIN
+
+--------------------------------------------------------------------------------|||
+(source_file
+    (main_block
+        (sql_statement
+            (declare_sql))
+        (fgl_statement
+            (variable_statement))
+        (sql_statement
+            (open_sql))
+        (sql_statement
+            (fetch_sql))
+        (fgl_statement
+            (variable_statement))
+        (sql_statement
+            (open_sql))
+        (sql_statement
+            (fetch_sql))))
+
+
+================================================================================|||
+FETCH 语句
+================================================================================|||
+
+MAIN
+    DECLARE c1 SCROLL CURSOR FOR SELECT customer_num, cust_name FROM customer
+    OPEN c1
+    FETCH c1 INTO cust_rec.*
+    FETCH LAST c1 INTO cust_rec.*
+    FETCH PREVIOUS c1 INTO  cust_rec.*
+    FETCH FIRST c1 INTO cust_rec.*
+    FETCH LAST c1 -- INTO clause is optional
+    FETCH FIRST c1 -- INTO clause is optional
+END MAIN
+
+--------------------------------------------------------------------------------|||
+(source_file
+    (main_block
+        (sql_statement
+            (declare_sql
+                (select_sql)))
+        (sql_statement
+            (open_sql))
+        (sql_statement
+            (fetch_sql))
+        (sql_statement
+            (fetch_sql))
+        (sql_statement
+            (fetch_sql))
+        (sql_statement
+            (fetch_sql))
+        (sql_statement
+            (fetch_sql))
+        (comment)
+        (sql_statement
+            (fetch_sql))
+        (comment)))
+
+================================================================================|||
+CLOSE 语句
+================================================================================|||
+
+MAIN
+    DECLARE c1 CURSOR FOR SELECT * FROM customer
+    OPEN c1
+    CLOSE c1
+    OPEN c1
+    CLOSE c1
+END MAIN
+
+--------------------------------------------------------------------------------|||
+(source_file
+    (main_block
+    (sql_statement
+        (declare_sql
+            (select_sql)))
+    (sql_statement
+        (open_sql))
+    (sql_statement
+        (close_sql))
+    (sql_statement
+        (open_sql))
+    (sql_statement
+        (close_sql))))
+
+
+================================================================================|||
+FREE 语句
+================================================================================|||
+
+MAIN
+    FOR i=1 TO 10
+        DECLARE c1 CURSOR FOR SELECT * FROM customer
+        FOR j=1 TO 10
+            OPEN c1
+            FETCH c1
+            CLOSE c1
+        END FOR
+        FREE c1
+    END FOR
+END MAIN
+
+--------------------------------------------------------------------------------|||
+(source_file
+    (main_block
+    (fgl_statement
+        (flow_ctrl_statement
+            (sql_statement
+                (declare_sql
+                    (select_sql)))
+            (fgl_statement
+                (flow_ctrl_statement
+                    (sql_statement
+                        (open_sql))
+                    (sql_statement
+                        (fetch_sql))
+                    (sql_statement
+                        (close_sql))))
+        (fgl_statement
+            (variable_statement))))))
+
+================================================================================|||
+FOREACH 语句
+================================================================================|||
+
+MAIN
+    DECLARE c1 CURSOR FOR SELECT customer_num, cust_name FROM customer
+    LET i=0
+    FOREACHc1 INTO clist[i+1].*
+        LET i=i+1
+        --DISPLAY clist[i].*
+    END FOREACH
+    -- DISPLAY "Number of rows found: ", i
+END MAIN
+
+--------------------------------------------------------------------------------|||
+(source_file
+    (main_block
+        (sql_statement
+            (declare_sql
+                (select_sql)))
+        (fgl_statement
+            (variable_statement))
+        (sql_statement
+            (foreach_sql
+                (fgl_statement
+                    (variable_statement))
+                (comment)))
+        (comment)))
+
+================================================================================|||
+PUT/FLUSH 语句
+================================================================================|||
+
+MAIN
+    DECLARE ic CURSOR FOR
+        INSERT INTO item VALUES (rec.*)
+    OPEN ic
+    FOR i=1 TO 100
+        LET rec.key = i
+        LET rec.name = "Item #" || i
+        PUT ic
+        IF i MOD 50 = 0 THEN
+            FLUSH ic
+        END IF
+    END FOR
+    CLOSE ic
+    FREE ic
+END MAIN
+
+--------------------------------------------------------------------------------|||
+(source_file
+    (main_block
+    (sql_statement
+        (declare_sql
+            (insert_sql)))
+    (sql_statement
+        (open_sql))
+    (fgl_statement
+        (flow_ctrl_statement
+            (fgl_statement
+                (variable_statement))
+            (fgl_statement
+                (variable_statement))
+            (sql_statement
+                (put_sql))
+            (fgl_statement
+                (flow_ctrl_statement
+                    (sql_statement
+                        (flush_sql))))))
+    (sql_statement
+        (close_sql))
+    (fgl_statement
+        (variable_statement))))
+
+================================================================================|||
+PUT/FLUSH 语句 2
+================================================================================|||
+
+MAIN
+    DECLARE ic CURSOR FROM "INSERT INTO item VALUES (?,?)"
+    OPEN ic
+    FOR i=1 TO 100
+        LET rec.key = i
+        LET rec.name = "Item #" || i
+        PUT ic FROM rec.*
+        IF i MOD 50 = 0 THEN
+            FLUSH ic
+        END IF
+    END FOR
+    CLOSE ic
+    FREE ic
+END MAIN
+
+--------------------------------------------------------------------------------|||
+(source_file
+    (main_block
+        (sql_statement
+            (declare_sql))
+        (sql_statement
+            (open_sql))
+        (fgl_statement
+            (flow_ctrl_statement
+                (fgl_statement
+                    (variable_statement))
+                (fgl_statement
+                    (variable_statement))
+                (sql_statement
+                    (put_sql))
+                (fgl_statement
+                    (flow_ctrl_statement
+                        (sql_statement
+                            (flush_sql))))))
+        (sql_statement
+            (close_sql))
+        (fgl_statement
+            (variable_statement))))
+
+================================================================================|||
+PUT/FLUSH 语句 3
+================================================================================|||
+
+MAIN
+    DECLARE ic CURSOR WITH HOLD FOR
+        INSERT INTO item VALUES (1,name)
+    OPEN ic
+    LET name = "Item 1"
+    PUT ic
+    UPDATE refs SET name="xyz" WHERE key=123
+    PUT ic
+    PUT ic
+    FLUSH ic
+    CLOSE ic
+    FREE ic
+END MAIN
+
+--------------------------------------------------------------------------------|||
+(source_file
+    (main_block
+        (sql_statement
+            (declare_sql
+                (insert_sql)))
+        (sql_statement
+            (open_sql))
+        (fgl_statement
+            (variable_statement))
+        (sql_statement
+            (put_sql))
+        (sql_statement
+            (update_sql))
+        (sql_statement
+            (put_sql))
+        (sql_statement
+            (put_sql))
+        (sql_statement
+            (flush_sql))
+        (sql_statement
+            (close_sql))
+        (fgl_statement
+            (variable_statement))))

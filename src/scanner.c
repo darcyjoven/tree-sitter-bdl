@@ -141,7 +141,7 @@ bool tree_sitter_bdl_external_scanner_scan(void *payload, TSLexer *lexer,
       lexer->advance(lexer, false);
     } else if (lexer->lookahead == '"') {
       if (!in_s_quote)
-        in_d_quote = !in_s_quote;
+        in_d_quote = !in_d_quote;
       lexer->advance(lexer, false);
     } else if (!in_s_quote && !in_d_quote) {
       if (lexer->lookahead == '(') {

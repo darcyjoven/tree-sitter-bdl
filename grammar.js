@@ -16,7 +16,7 @@ import {
   commaSep,
 } from "./rules/util.js";
 import sqlStatement from "./rules/sql.js";
-import { externals as sqlExternals } from "./rules/sql.js"
+import { externals as sqlExternals } from "./rules/sql.js";
 import fglStatement from "./rules/fgl.js";
 
 export default grammar({
@@ -24,9 +24,7 @@ export default grammar({
 
   extras: ($) => [$.comment, /\s/],
 
-  externals: ($) => [
-    ...sqlExternals($)
-  ],
+  externals: ($) => [...sqlExternals($)],
 
   inline: ($) => [$._constant_statement, $.scope],
 
@@ -45,7 +43,12 @@ export default grammar({
     // 指令(Directive)
     // compiler import schema
     _directive: ($) =>
-      choice($.compiler_options, $.import_statement, $.schema_statement, $.preprocessor_statement),
+      choice(
+        $.compiler_options,
+        $.import_statement,
+        $.schema_statement,
+        $.preprocessor_statement,
+      ),
 
     compiler_options: ($) =>
       seq(
@@ -103,7 +106,10 @@ export default grammar({
           ),
           // Application termination
           // ON TERMINATE SIGNAL CALL function
-          seq(kw("ON TERMINATE SIGNAL CALL"), alias($._identifier, "func_name")),
+          seq(
+            kw("ON TERMINATE SIGNAL CALL"),
+            alias($._identifier, "func_name"),
+          ),
           // Front-end termination
           // ON CLOSE APPLICATION CALL function
           seq(
@@ -324,13 +330,10 @@ export default grammar({
       ),
     _record_data_type: ($) =>
       choice(
+        seq(kw("RECORD"), $._record_list, kw("END RECORD")),
         seq(
           kw("RECORD"),
-          $._record_list,
-          kw("END RECORD"),
-        ),
-        seq(
-          kw("RECORD"), kw("LIKE"),
+          kw("LIKE"),
           optional(seq(alias($._identifier, "dbname"), ":")),
           alias($._identifier, "table_name"),
           ".",
@@ -441,31 +444,41 @@ export default grammar({
       choice($._string_literal, $._number_literal, $._datetime_literal),
     _string_literal: (_) =>
       choice(
-        seq(
-          '"',
-          repeat(
-            choice(
-              // 普通字符（不含 " 和 \）
-              alias(/[^"\\]/, "string_content"),
-              // 转义序列：\n, \", \\, \t 等
-              alias(/\\./, "string_content"),
-              alias('""', "string_content"),
+        token(
+          prec(
+            2,
+            seq(
+              '"',
+              repeat(
+                choice(
+                  // 普通字符（不含 " 和 \）
+                  alias(/[^"\\]/, "string_content"),
+                  // 转义序列：\n, \", \\, \t 等
+                  alias(/\\./, "string_content"),
+                  alias('""', "string_content"),
+                ),
+              ),
+              '"',
             ),
           ),
-          '"',
         ),
-        seq(
-          "'",
-          repeat(
-            choice(
-              // 普通字符（不含 " 和 \）
-              alias(/[^'\\]/, "string_content"),
-              // 转义序列：\n, \", \\, \t 等
-              alias(/\\./, "string_content"),
-              alias("''", "string_content"),
+        token(
+          prec(
+            2,
+            seq(
+              "'",
+              repeat(
+                choice(
+                  // 普通字符（不含 " 和 \）
+                  alias(/[^'\\]/, "string_content"),
+                  // 转义序列：\n, \", \\, \t 等
+                  alias(/\\./, "string_content"),
+                  alias("''", "string_content"),
+                ),
+              ),
+              "'",
             ),
           ),
-          "'",
         ),
       ),
     _number_literal: (_) => choice(integerLiterals, decimalLiterals),
@@ -491,20 +504,22 @@ export default grammar({
           datetimeQualifier,
         ),
       ),
-    _other_literal: (_) => choice(
-      kw('NULL'),
-      kw('TODAY')
-    ),
+    _other_literal: (_) => choice(kw("NULL"), kw("TODAY")),
     // 作用域
     scope: ($) => choice(kw("PRIVATE"), kw("PUBLIC")),
     // 变量/方法名
     variable: ($) => $._variable,
-    _variable: ($) =>
-      choice($._identifier, $._member, $._array_item),
+    _variable: ($) => choice($._identifier, $._member, $._array_item),
     _member: ($) =>
       prec.left(
         1,
-        seq(field("object", $._variable), ".", field("member", $._identifier)),
+        choice(
+          seq(
+            field("object", $._variable),
+            ".",
+            choice(field("member", $._identifier), "*"),
+          ),
+        ),
       ),
     _array_item: ($) =>
       prec.left(
