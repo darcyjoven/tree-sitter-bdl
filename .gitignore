@@ -49,3 +49,6 @@ zig-out/
 
 yarn.lock
 test/4gl/ketword.4gl
+src/grammar.json
+src/node-types.json
+src/parser.c

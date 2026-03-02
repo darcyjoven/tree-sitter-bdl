@@ -5,13 +5,30 @@
 
 enum TokenType
 {
-    SELECT_STATEMENT,
-    UPDATE_STATEMENT,
-    CREATE_TABLE_STATEMENT,
+    SELECT_SQL,
+    UPDATE_SQL,
+    CREATE_TABLE_SQL,
     ERROR_SENTINEL
 };
 
+typedef struct {
+    const char *first;
+    const char *second;   // 可为 NULL
+    enum TokenType type;
+} SqlRule;
+
 // --- 配置区 ---
+
+static const SqlRule SQL_RULES[] = {
+    {"SELECT", NULL, SELECT_SQL},
+    {"UPDATE", NULL, UPDATE_SQL},
+    {"CREATE", "TABLE", CREATE_TABLE_SQL},
+    // 后续只在这里加：
+    // {"DELETE", NULL, DELETE_SQL},
+    // {"INSERT", NULL, INSERT_SQL},
+};
+#define SQL_RULE_COUNT (sizeof(SQL_RULES) / sizeof(SQL_RULES[0]))
+
 static const char *BDL_TERMINATORS[] = {
     "ACCEPT",
     "AFTER",
@@ -145,18 +162,47 @@ bool tree_sitter_bdl_external_scanner_scan(void *payload, TSLexer *lexer, const 
     starter[i] = '\0';
 
     int current_type = -1;
-    if (strcmp(starter, "SELECT") == 0 && valid_symbols[SELECT_STATEMENT])
-        current_type = SELECT_STATEMENT;
-    else if (strcmp(starter, "UPDATE") == 0 && valid_symbols[UPDATE_STATEMENT])
-        current_type = UPDATE_STATEMENT;
-    else if (strcmp(starter, "CREATE") == 0 && valid_symbols[CREATE_TABLE_STATEMENT])
-    {
+    // if (strcmp(starter, "SELECT") == 0 && valid_symbols[SELECT_SQL])
+    //     current_type = SELECT_SQL;
+    // else if (strcmp(starter, "UPDATE") == 0 && valid_symbols[UPDATE_SQL])
+    //     current_type = UPDATE_SQL;
+    // else if (strcmp(starter, "CREATE") == 0 && valid_symbols[CREATE_TABLE_SQL])
+    // {
+    //     while (iswspace(lexer->lookahead))
+    //         lexer->advance(lexer, false);
+    //     char second[64];
+    //     scan_word(lexer, second);
+    //     if (strcmp(second, "TABLE") == 0)
+    //         current_type = CREATE_TABLE_SQL;
+    // }
+
+    //
+    for (int r = 0; r < SQL_RULE_COUNT; r++) {
+        const SqlRule *rule = &SQL_RULES[r];
+
+        // 没匹配到退出
+        if (strcmp(starter, rule->first) != 0)
+                continue;
+        // 关键字未定义退出
+        if (!valid_symbols[rule->type])
+                continue;
+        // 单词直接结束
+        if (rule->second == NULL) {
+            current_type = rule->type;
+            break;
+        }
+        // 找第二词
+        // 遍历掉空白符
         while (iswspace(lexer->lookahead))
             lexer->advance(lexer, false);
+
         char second[64];
         scan_word(lexer, second);
-        if (strcmp(second, "TABLE") == 0)
-            current_type = CREATE_TABLE_STATEMENT;
+
+        if (strcmp(second, rule->second) == 0) {
+            current_type = rule->type;
+            break;
+        }
     }
 
     if (current_type == -1)
