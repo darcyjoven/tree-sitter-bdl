@@ -5,27 +5,31 @@
 
 enum TokenType
 {
-    SELECT_SQL,
+    INSERT_SQL,
     UPDATE_SQL,
-    CREATE_TABLE_SQL,
+    SELECT_SQL,
+    DELETE_SQL,
+    CREATE_SQL,
+    ALTER_SQL,
+    DROP_SQL,
     ERROR_SENTINEL
 };
 
 typedef struct {
-    const char *first;
-    const char *second;   // 可为 NULL
+    const char *keword;
     enum TokenType type;
 } SqlRule;
 
 // --- 配置区 ---
 
 static const SqlRule SQL_RULES[] = {
-    {"SELECT", NULL, SELECT_SQL},
-    {"UPDATE", NULL, UPDATE_SQL},
-    {"CREATE", "TABLE", CREATE_TABLE_SQL},
-    // 后续只在这里加：
-    // {"DELETE", NULL, DELETE_SQL},
-    // {"INSERT", NULL, INSERT_SQL},
+    {"SELECT", SELECT_SQL},
+    {"INSERT", INSERT_SQL},
+    {"DELETE", DELETE_SQL},
+    {"UPDATE", UPDATE_SQL},
+    {"CREATE",  CREATE_SQL},
+    {"ALTER", ALTER_SQL},
+    {"DROP",  DROP_SQL},
 };
 #define SQL_RULE_COUNT (sizeof(SQL_RULES) / sizeof(SQL_RULES[0]))
 
@@ -181,28 +185,12 @@ bool tree_sitter_bdl_external_scanner_scan(void *payload, TSLexer *lexer, const 
         const SqlRule *rule = &SQL_RULES[r];
 
         // 没匹配到退出
-        if (strcmp(starter, rule->first) != 0)
-                continue;
+        if (strcmp(starter, rule->keword) != 0)
+            continue;
         // 关键字未定义退出
         if (!valid_symbols[rule->type])
-                continue;
-        // 单词直接结束
-        if (rule->second == NULL) {
-            current_type = rule->type;
-            break;
-        }
-        // 找第二词
-        // 遍历掉空白符
-        while (iswspace(lexer->lookahead))
-            lexer->advance(lexer, false);
-
-        char second[64];
-        scan_word(lexer, second);
-
-        if (strcmp(second, rule->second) == 0) {
-            current_type = rule->type;
-            break;
-        }
+            continue;
+        current_type = rule->type;
     }
 
     if (current_type == -1)

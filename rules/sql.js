@@ -4,27 +4,29 @@ import { kw } from "./util.js";
 
 const rules = {
   // 定义 SQL 相关的规则
-  sql_statement: ($) =>
+  sql_statement: ($) => choice($._static_sql),
+  // 静态SQL
+  _static_sql: ($) =>
     choice(
       $.select_sql,
       $.insert_sql,
+      $.delete_sql,
       $.update_sql,
-      $.create_table_sql,
-      // ...
+      $.create_sql,
+      $.alter_sql,
+      $.drop_sql,
+      $.block_sql,
     ),
-
-  insert_sql: ($) =>
-    seq(
-      /[Ii][Ss][Ee][Ee][Cc][Tt]/, // 也可以在这里调用通用的 kw("SELECT")
-      $.identifier,
-    ),
-
-  // 更多 SQL 规则...
+  block_sql: ($) => seq(kw("SQL"), $._static_sql, kw("END SQL")),
 };
 const externals = ($) => [
-  $.select_sql,
+  $.insert_sql,
   $.update_sql,
-  $.create_table_sql,
+  $.select_sql,
+  $.delete_sql,
+  $.create_sql,
+  $.alter_sql,
+  $.drop_sql,
   $.error_sentinel, // 用于错误恢复的哨兵
 ];
 

@@ -15,6 +15,8 @@ MAIN
 
     let a = i
 
+    delete from ima_file
+
 END MAIN
 
 --------------------------------------------------------------------------------|||
@@ -27,8 +29,130 @@ END MAIN
         (sql_statement
             (select_sql))
         (sql_statement
-            (create_table_sql))
+            (create_sql))
         (sql_statement
             (select_sql))
         (fgl_statement
-            (variable_statement))))
+            (variable_statement))
+        (sql_statement
+            (delete_sql))))
+
+================================================================================|||
+INSERT 语句
+================================================================================|||
+MAIN
+    INSERT INTO items VALUES ( 123, 'Practal', NULL, myrec.comment )
+    INSERT INTO items VALUES ( myrec.* )
+    INSERT INTO items VALUES myrec.*  -- without serial (if one is used)
+    INSERT INTO items SELECT * FROM histitems WHERE name = myrec.name
+END MAIN
+--------------------------------------------------------------------------------|||
+(source_file
+    (main_block
+        (sql_statement
+            (insert_sql))
+        (sql_statement
+            (insert_sql))
+        (sql_statement
+            (insert_sql))
+        (sql_statement
+            (insert_sql))
+        (sql_statement
+            (select_sql))))
+
+
+================================================================================|||
+UPDATE 语句 2
+================================================================================|||
+MAIN
+    UPDATE items SET
+        name    = myrec.name,
+        cdate   = myrec.cdate,
+        comment = myrec.comment
+    WHERE key = myrec.key
+END MAIN
+--------------------------------------------------------------------------------|||
+(source_file
+    (main_block
+        (sql_statement
+            (update_sql))))
+
+
+================================================================================|||
+DELETE 语句
+================================================================================|||
+MAIN
+    DELETE FROM items WHERE name LIKE 'A%'
+END MAIN
+--------------------------------------------------------------------------------|||
+(source_file
+    (main_block
+        (sql_statement
+            (delete_sql))))
+
+
+================================================================================|||
+SELECT 语句
+================================================================================|||
+
+MAIN
+    SELECT name, cdate
+     INTO myrec.name, myrec.cdate
+     FROM items
+     WHERE key=myrec.key
+END MAIN
+
+--------------------------------------------------------------------------------|||
+
+(source_file
+    (main_block
+        (sql_statement
+            (select_sql))))
+
+================================================================================|||
+SQL ... END SQL 语句
+================================================================================|||
+
+MAIN
+    SQL
+        INSERT INTO items VALUES ( 123, 'Practal', NULL, myrec.comment )
+    END SQL
+    INSERT INTO items VALUES ( 123, 'Practal', NULL, myrec.comment )
+END MAIN
+
+--------------------------------------------------------------------------------|||
+
+(source_file
+    (main_block
+        (sql_statement
+            (block_sql
+                (insert_sql)))
+        (sql_statement
+            (insert_sql))))
+
+================================================================================|||
+SEQUENCE 语句
+================================================================================|||
+
+MAIN
+    SELECt * from ima_file where asd = 22
+
+    create table asdasd
+
+    select * from (select 123 from dual)
+
+    ALTER SEQUENCE seq1 INCREMENT BY 3
+END MAIN
+
+--------------------------------------------------------------------------------|||
+
+(source_file
+    (main_block
+        (sql_statement
+            (select_sql))
+        (sql_statement
+            (create_sql))
+        (sql_statement
+            (select_sql))
+        (sql_statement
+            (alter_sql))))
