@@ -30,7 +30,6 @@ export default grammar({
 
   conflicts: ($) => [
     [$.case_flow, $._expression],
-    // [$.variable, $._expression]
   ],
 
   rules: {
@@ -406,7 +405,7 @@ export default grammar({
         kw("END FUNCTION"),
       ),
     report_block: ($) => "__report_block_",
-    dialog_block: ($) => "__dialog_block_",
+    // dialog_block: ($) => "__dialog_block_",
 
     _top_declaration: ($) =>
       choice(

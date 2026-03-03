@@ -1,0 +1,86 @@
+================================================================================|||
+WINDOW/FORM 操作
+================================================================================|||
+
+MAIN
+    OPEN WINDOW w1 WITH FORM "customer"
+    CLOSE WINDOW w1
+    OPEN WINDOW w1 WITH FORM "customer"
+    OPEN WINDOW w2 WITH FORM "custlist"
+    CURRENT WINDOW IS w1
+    CURRENT WINDOW IS w2
+    CLOSE WINDOW w1
+    CLOSE WINDOW w2
+    OPEN FORM custform FROM "customer"
+    CLOSE FORM custform
+END MAIN
+--------------------------------------------------------------------------------|||
+(source_file
+    (main_block
+        (fgl_statement
+            (open_window))
+        (fgl_statement
+            (close_window))
+        (fgl_statement
+            (open_window))
+        (fgl_statement
+            (open_window))
+        (fgl_statement
+            (current_window))
+        (fgl_statement
+            (current_window))
+        (fgl_statement
+            (close_window))
+        (fgl_statement
+            (close_window))
+        (fgl_statement
+            (open_form))
+        (fgl_statement
+            (close_form))))
+
+================================================================================|||
+ATTRIBUTE 语句
+================================================================================|||
+
+MAIN
+    DISPLAY BY NAME cust.* ATTRIBUTE(BLACK,REVERSE,DIM)
+END MAIN
+--------------------------------------------------------------------------------|||
+(source_file
+    (main_block
+        (fgl_statement
+            (display_block))))
+
+================================================================================|||
+INLINE 语句
+================================================================================|||
+
+MAIN
+    DISPLAY FORM form1
+    DISPLAY 'demo text' AT 1,2
+    DISPLAY 'demo text' to field1,field2
+    DISPLAY BY NAME cust.*
+    DISPLAY BY NAME cust.field1,cust.field2
+    ERROR "ERROR"
+    MESSAGE "OK"
+    SCROLL cust.field
+END MAIN
+--------------------------------------------------------------------------------|||
+(source_file
+    (main_block
+        (fgl_statement
+            (display_block))
+        (fgl_statement
+            (display_block))
+        (fgl_statement
+            (display_block))
+        (fgl_statement
+            (display_block))
+        (fgl_statement
+            (display_block))
+        (fgl_statement
+            (error_interface))
+        (fgl_statement
+            (message_interface))
+        (fgl_statement
+            (scroll_interface))))
