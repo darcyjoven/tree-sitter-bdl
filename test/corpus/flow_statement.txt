@@ -13,10 +13,10 @@ END FUNCTION
 (source_file
     (main_block
         (fgl_statement
-            (flow_ctrl_statement)))
+            (call_flow)))
     (function_block
         (fgl_statement
-            (flow_ctrl_statement))))
+            (return_flow))))
 
 
 ================================================================================|||
@@ -34,7 +34,7 @@ END FUNCTION
 (source_file
     (main_block
         (fgl_statement
-            (flow_ctrl_statement)))
+            (call_flow)))
     (function_block
         (comment)))
 
@@ -48,7 +48,7 @@ end main
 (source_file
     (main_block
         (fgl_statement
-            (flow_ctrl_statement))))
+            (call_flow))))
 
 
 ================================================================================|||
@@ -74,15 +74,15 @@ END MAIN
  (source_file
     (main_block
         (fgl_statement
-            (flow_ctrl_statement
+            (case_flow
                 (fgl_statement
                     (variable_statement))
                 (fgl_statement
                     (variable_statement))
                 (fgl_statement
-                    (flow_ctrl_statement))
+                    (exit_flow))
                 (fgl_statement
-                    (flow_ctrl_statement
+                    (case_flow
                         (fgl_statement
                             (variable_statement))))))))
 
@@ -126,14 +126,14 @@ END MAIN
             (variable_statement))
         (comment)
         (fgl_statement
-            (flow_ctrl_statement
+            (case_flow
                 (comment)
                 (comment)
                 (comment)
                 (comment)))
         (comment)
         (fgl_statement
-            (flow_ctrl_statement
+            (case_flow
                 (comment)
                 (comment)
                 (comment)))))
@@ -173,11 +173,11 @@ END MAIN
         (comment)
         (comment)
         (fgl_statement
-            (flow_ctrl_statement
+            (for_flow
                 (comment)))
         (comment)
         (fgl_statement
-            (flow_ctrl_statement
+            (for_flow
                 (fgl_statement
                     (variable_statement))))))
 
@@ -218,23 +218,23 @@ END MAIN
         (fgl_statement
             (exception_statement))
         (fgl_statement
-            (flow_ctrl_statement))
+            (goto_flow))
         (fgl_statement
-            (flow_ctrl_statement))
-        (fgl_statement
-            (variable_statement))
+            (label_flow))
         (fgl_statement
             (variable_statement))
         (fgl_statement
-            (flow_ctrl_statement))
+            (variable_statement))
         (fgl_statement
-            (flow_ctrl_statement))
+            (goto_flow))
+        (fgl_statement
+            (label_flow))
         (fgl_statement
             (variable_statement))
         (fgl_statement
-            (flow_ctrl_statement))
+            (goto_flow))
         (fgl_statement
-            (flow_ctrl_statement))
+            (label_flow))
         (comment)))
 
 ================================================================================|||
@@ -261,7 +261,7 @@ END MAIN
         (fgl_statement
             (variable_statement))
         (fgl_statement
-            (flow_ctrl_statement
+            (if_flow
                 (fgl_statement
                     (variable_statement))
                 (fgl_statement
@@ -285,15 +285,15 @@ end main
 (source_file
     (main_block
         (fgl_statement
-            (flow_ctrl_statement
+            (if_flow
                 (fgl_statement
-                    (flow_ctrl_statement
+                    (if_flow
                         (fgl_statement
-                            (flow_ctrl_statement))
+                            (call_flow))
                         (fgl_statement
                             (variable_statement))
                         (fgl_statement
-                            (flow_ctrl_statement))))))))
+                            (return_flow))))))))
 
 
 ================================================================================|||
@@ -312,7 +312,7 @@ END MAIN
     (main_block
         (comment)
         (fgl_statement
-            (flow_ctrl_statement))
+            (sleep_flow))
         (comment)))
 
 ================================================================================|||
@@ -340,11 +340,11 @@ END MAIN
         (fgl_statement
             (variable_statement))
         (fgl_statement
-            (flow_ctrl_statement
+            (while_flow
                 (fgl_statement
                     (variable_statement))
                 (fgl_statement
-                    (flow_ctrl_statement
+                    (if_flow
                         (fgl_statement
-                            (flow_ctrl_statement))))))))
+                            (exit_flow))))))))
 

@@ -400,12 +400,12 @@ END MAIN
 (source_file
     (main_block
     (fgl_statement
-        (flow_ctrl_statement
+        (for_flow
             (sql_statement
                 (declare_sql
                     (select_sql)))
             (fgl_statement
-                (flow_ctrl_statement
+                (for_flow
                     (sql_statement
                         (open_sql))
                     (sql_statement
@@ -473,7 +473,7 @@ END MAIN
     (sql_statement
         (open_sql))
     (fgl_statement
-        (flow_ctrl_statement
+        (for_flow
             (fgl_statement
                 (variable_statement))
             (fgl_statement
@@ -481,7 +481,7 @@ END MAIN
             (sql_statement
                 (put_sql))
             (fgl_statement
-                (flow_ctrl_statement
+                (if_flow
                     (sql_statement
                         (flush_sql))))))
     (sql_statement
@@ -516,7 +516,7 @@ END MAIN
         (sql_statement
             (open_sql))
         (fgl_statement
-            (flow_ctrl_statement
+            (for_flow
                 (fgl_statement
                     (variable_statement))
                 (fgl_statement
@@ -524,7 +524,7 @@ END MAIN
                 (sql_statement
                     (put_sql))
                 (fgl_statement
-                    (flow_ctrl_statement
+                    (if_flow
                         (sql_statement
                             (flush_sql))))))
         (sql_statement
@@ -602,7 +602,7 @@ END MAIN
         (sql_statement
             (open_sql))
         (fgl_statement
-            (flow_ctrl_statement
+            (for_flow
                 (fgl_statement
                     (variable_statement))
                 (fgl_statement
@@ -610,7 +610,7 @@ END MAIN
                 (sql_statement
                     (put_sql))
                 (fgl_statement
-                    (flow_ctrl_statement
+                    (if_flow
                         (sql_statement
                             (flush_sql))))))
         (sql_statement
@@ -703,7 +703,7 @@ END MAIN
         (sql_statement
             (delete_sql))
         (fgl_statement
-            (flow_ctrl_statement
+            (if_flow
                 (sql_statement
                     (rollback_work))
                 (sql_statement

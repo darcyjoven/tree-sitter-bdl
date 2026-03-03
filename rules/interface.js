@@ -4,5 +4,5 @@ import { kw } from "./util.js";
 // @ts-check
 
 export default {
-    interface_statement: ($) => 'interface_statement',
+    _interface_statement: ($) => 'interface_statement',
 }

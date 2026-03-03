@@ -29,7 +29,7 @@ export default grammar({
   inline: ($) => [$._constant_statement, $.scope],
 
   conflicts: ($) => [
-    [$._case_flow, $._expression],
+    [$.case_flow, $._expression],
     // [$.variable, $._expression]
   ],
 

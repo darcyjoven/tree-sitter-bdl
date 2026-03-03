@@ -1,6 +1,6 @@
 /// <reference types="tree-sitter-cli/dsl" />
 
-import interface_statement from "./interface.js";
+import _interface_statement from "./interface.js";
 import { commaSep, commaSep1, datetimeQualifier, kw, PREC } from "./util.js";
 // @ts-check
 
@@ -8,13 +8,13 @@ export default {
   fgl_statement: ($) =>
     choice(
       $.defer_statement,
-      $.flow_ctrl_statement,
+      $._flow_ctrl_statement,
       $.exception_statement,
       $.variable_statement,
       $.preprocessor_statement,
-      $.interface_statement,
+      $._interface_statement,
       $.schema_statement,
-      $.demo_statement
+      $.demo_statement,
     ),
   demo_statement: ($) =>'ON ACTION',
   defer_statement: ($) => seq(kw("DEFER"), choice(kw("INTERRUPT"), kw("QUIT"))),
@@ -87,20 +87,20 @@ export default {
       seq(kw("GOTO"), alias($.variable, "label_name")),
     ),
   // 流程控制
-  flow_ctrl_statement: ($) => choice(
-    $._call_flow,
-    $._return_flow,
-    $._case_flow,
-    $._continue_flow,
-    $._exit_flow,
-    $._for_flow,
-    $._goto_flow,
-    $._if_flow,
-    $._label_flow,
-    $._sleep_flow,
-    $._while_flow,
+  _flow_ctrl_statement: ($) => choice(
+    $.call_flow,
+    $.return_flow,
+    $.case_flow,
+    $.continue_flow,
+    $.exit_flow,
+    $.for_flow,
+    $.goto_flow,
+    $.if_flow,
+    $.label_flow,
+    $.sleep_flow,
+    $.while_flow,
   ),
-  _call_flow: ($) => seq(
+  call_flow: ($) => seq(
     kw('CALL'),
     alias($._variable, 'func_name'),
     '(',
@@ -113,11 +113,11 @@ export default {
       )
     )
   ),
-  _return_flow: ($) => seq(
+  return_flow: ($) => seq(
     kw('RETURN'),
     alias(commaSep($._expression), 'func_returns'),
   ),
-  _case_flow: ($) => seq(
+  case_flow: ($) => seq(
     kw('CASE'),
     alias(optional($._variable), 'case_vairable'),
     repeat(
@@ -145,7 +145,7 @@ export default {
     ),
     kw('END CASE')
   ),
-  _continue_flow: ($) => seq(kw('CONTINUE'), choice(
+  continue_flow: ($) => seq(kw('CONTINUE'), choice(
     kw('FOR'),
     kw('FOREACH'),
     kw('WHILE'),
@@ -154,7 +154,7 @@ export default {
     kw('INPUT'),
     kw('DIALOG'),
   )),
-  _exit_flow: ($) => seq(kw('EXIT'), choice(
+  exit_flow: ($) => seq(kw('EXIT'), choice(
     kw('CASE'),
     kw('FOR'),
     kw('FOREACH'),
@@ -166,7 +166,7 @@ export default {
     kw('INPUT'),
     kw('DIALOG'),
   )),
-  _for_flow: ($) => seq(
+  for_flow: ($) => seq(
     kw('FOR'),
     $._variable,
     '=',
@@ -185,12 +185,12 @@ export default {
     ),
     kw('END FOR')
   ),
-  _goto_flow: ($) => seq(
+  goto_flow: ($) => seq(
     kw('GOTO'),
     optional(':'),
     alias($._identifier, 'label_name')
   ),
-  _if_flow: ($) => seq(
+  if_flow: ($) => seq(
     kw('IF'),
     $._expression,
     kw('THEN'),
@@ -203,16 +203,16 @@ export default {
     ),
     kw('END IF')
   ),
-  _label_flow: ($) => seq(
+  label_flow: ($) => seq(
     kw('LABEL'),
     alias($._identifier, 'label_name'),
     ":"
   ),
-  _sleep_flow: ($) => seq(
+  sleep_flow: ($) => seq(
     kw('SLEEP'),
     $._expression
   ),
-  _while_flow: ($) => seq(
+  while_flow: ($) => seq(
     kw('WHILE'),
     $._expression,
     repeat(choice($.fgl_statement, $.sql_statement)),
@@ -327,5 +327,5 @@ export default {
     ),
   _function_expression: ($) =>
     seq($._variable, "(", commaSep($._expression), ")"),
-  ...interface_statement,
+  ..._interface_statement,
 };

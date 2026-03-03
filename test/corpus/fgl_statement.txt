@@ -239,51 +239,51 @@ END FUNCTION
         (fgl_statement
             (variable_statement))
         (fgl_statement
-            (flow_ctrl_statement
+            (if_flow
                 (fgl_statement
                     (variable_statement))))
         (fgl_statement
-            (flow_ctrl_statement
+            (if_flow
                 (fgl_statement
-                    (flow_ctrl_statement
+                    (if_flow
                         (fgl_statement
-                            (flow_ctrl_statement))
+                            (call_flow))
                         (fgl_statement
                             (variable_statement))
                         (fgl_statement
-                            (flow_ctrl_statement))))
+                            (return_flow))))
                 (fgl_statement
-                    (flow_ctrl_statement
-                        (fgl_statement
-                            (variable_statement))
-                        (fgl_statement
-                            (variable_statement))))
-                (fgl_statement
-                    (flow_ctrl_statement
+                    (if_flow
                         (fgl_statement
                             (variable_statement))
                         (fgl_statement
                             (variable_statement))))
                 (fgl_statement
-                    (flow_ctrl_statement
+                    (if_flow
                         (fgl_statement
                             (variable_statement))
                         (fgl_statement
                             (variable_statement))))
                 (fgl_statement
-                    (flow_ctrl_statement
+                    (if_flow
                         (fgl_statement
                             (variable_statement))
                         (fgl_statement
                             (variable_statement))))
                 (fgl_statement
-                    (flow_ctrl_statement))
-                (fgl_statement
-                    (flow_ctrl_statement
+                    (if_flow
+                        (fgl_statement
+                            (variable_statement))
                         (fgl_statement
                             (variable_statement))))
                 (fgl_statement
-                    (flow_ctrl_statement
+                    (if_flow))
+                (fgl_statement
+                    (if_flow
+                        (fgl_statement
+                            (variable_statement))))
+                (fgl_statement
+                    (if_flow
                         (fgl_statement
                             (variable_statement))))
                 (fgl_statement
@@ -291,11 +291,11 @@ END FUNCTION
                 (fgl_statement
                     (variable_statement))
                 (fgl_statement
-                    (flow_ctrl_statement))
+                    (call_flow))
                 (fgl_statement
-                    (flow_ctrl_statement))
+                    (call_flow))
                 (fgl_statement
-                    (flow_ctrl_statement
+                    (if_flow
                         (fgl_statement
                             (variable_statement))
                         (fgl_statement
@@ -303,17 +303,17 @@ END FUNCTION
                         (fgl_statement
                             (variable_statement))
                         (fgl_statement
-                            (flow_ctrl_statement))
+                            (call_flow))
                         (fgl_statement
                             (variable_statement))
                         (fgl_statement
                             (variable_statement))
                         (fgl_statement
-                            (flow_ctrl_statement))
+                            (call_flow))
                         (fgl_statement
-                            (flow_ctrl_statement))))))
+                            (call_flow))))))
         (fgl_statement
-            (flow_ctrl_statement))))
+            (return_flow))))
 
 
 ================================================================================|||
@@ -371,28 +371,28 @@ END FUNCTION
             (variable_name)
             (data_type))
         (fgl_statement
-            (flow_ctrl_statement
+            (if_flow
                 (fgl_statement
-                    (flow_ctrl_statement))
+                    (call_flow))
                 (fgl_statement
-                    (flow_ctrl_statement))))
+                    (return_flow))))
         (comment)
         (fgl_statement
-            (flow_ctrl_statement
+            (if_flow
                 (fgl_statement
-                    (flow_ctrl_statement))
+                    (call_flow))
                 (comment)
                 (fgl_statement
-                    (flow_ctrl_statement))))
+                    (return_flow))))
         (comment)
         (fgl_statement
-            (flow_ctrl_statement
+            (if_flow
                 (fgl_statement
                     (variable_statement))
                 (comment)
                 (comment)
                 (fgl_statement
-                    (flow_ctrl_statement
+                    (if_flow
                         (fgl_statement
                             (variable_statement))
                         (fgl_statement
@@ -408,10 +408,10 @@ END FUNCTION
                     (variable_statement))
                 (comment)
                 (fgl_statement
-                    (flow_ctrl_statement
+                    (if_flow
                         (fgl_statement
-                            (flow_ctrl_statement))))))
+                            (call_flow))))))
         (fgl_statement
             (variable_statement))
         (fgl_statement
-            (flow_ctrl_statement))))
+            (call_flow))))
