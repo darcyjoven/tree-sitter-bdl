@@ -84,3 +84,83 @@ END MAIN
             (message_interface))
         (fgl_statement
             (scroll_interface))))
+
+================================================================================|||
+MENU 语句
+================================================================================|||
+
+MAIN
+    MENU
+        ON ACTION new 
+            CALL newFile()
+        ON ACTION open 
+            CALL openFile()
+        ON ACTION save 
+            CALL saveFile()
+        ON ACTION import 
+            LOAD FROM "infile.dat" INSERT INTO table 
+        ON ACTION quit 
+            EXIT PROGRAM
+    END MENU
+END MAIN
+--------------------------------------------------------------------------------|||
+(source_file
+    (main_block
+        (fgl_statement
+            (menu_block
+                (menu_option)
+                (fgl_statement
+                    (call_flow))
+                (menu_option)
+                (fgl_statement
+                    (call_flow))
+                (menu_option)
+                (fgl_statement
+                    (call_flow))
+                (menu_option)
+                (sql_statement
+                    (load_sql
+                        (insert_sql)))
+                (menu_option)
+                (fgl_statement
+                    (exit_flow))))))
+
+================================================================================|||
+MENU 语句 2
+================================================================================|||
+
+MAIN
+    MENU "File"
+        COMMAND KEY ( CONTROL-N ) "New" "Creates New File" HELP 101
+            CALL newFile()
+        COMMAND KEY ( CONTROL-O ) "Open" "Open existing File" HELP 102
+            CALL openFile()
+        COMMAND KEY ( CONTROL-S ) "Save" "Save Current File" HELP 103
+            CALL saveFile()
+        COMMAND "Import"
+            LOAD FROM "infile.dat" INSERT INTO table 
+        COMMAND KEY ( CONTROL-Q ) "Quit" "Quit Program" HELP 201
+            EXIT PROGRAM
+    END MENU
+END MAIN
+--------------------------------------------------------------------------------|||
+(source_file
+    (main_block
+        (fgl_statement
+            (menu_block
+                (menu_option)
+                (fgl_statement
+                    (call_flow))
+                (menu_option)
+                (fgl_statement
+                    (call_flow))
+                (menu_option)
+                (fgl_statement
+                    (call_flow))
+                (menu_option)
+                (sql_statement
+                    (load_sql
+                        (insert_sql)))
+                (menu_option)
+                (fgl_statement
+                    (exit_flow))))))

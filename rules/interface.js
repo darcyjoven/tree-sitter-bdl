@@ -96,7 +96,68 @@ export default {
       optional($._display_attribute_block),
     ),
 
-  menu_block: ($) => "menu_block",
+  menu_block: ($) =>
+    seq(
+      kw("MENU"),
+      optional(alias($._expression, "menu_title")),
+      optional(alias($._display_attribute, "attribute")),
+      repeat(seq($.menu_option, repeat($._menu_statement))),
+      kw("END MENU"),
+    ),
+  menu_option: ($) =>
+    choice(
+      // COMMAND option-name [option-comment] [HELP help-number]
+      seq(
+        kw("COMMAND"),
+        alias(choice($._identifier, $._string_literal), "option_name"),
+        optional(alias($._expression, "option_comment")),
+        optional(seq(kw("HELP"), $._number_literal)),
+      ),
+
+      // COMMAND KEY ( key-name ) option-name [option-comment] [HELP help-number]
+      seq(
+        kw("COMMAND"),
+        $._menu_key_option,
+        alias(choice($._identifier, $._string_literal), "option_name"),
+        optional(alias($._expression, "option_comment")),
+        optional(seq(kw("HELP"), $._number_literal)),
+      ),
+
+      // COMMAND KEY ( key-name )
+      seq(kw("COMMAND"), $._menu_key_option),
+
+      // ON ACTION action-name
+      seq(kw("ON"), kw("ACTION"), alias($._identifier, "action_name")),
+
+      // ON IDLE idle-seconds
+      seq(kw("ON"), kw("IDLE"), alias($._expression, "idle_seconds")),
+    ),
+  _menu_key_option: ($) =>
+    seq(
+      kw("KEY"),
+      "(",
+      alias(seq($._identifier, optional(seq("-", $._identifier))), "key_name"),
+      ")",
+    ),
+  _menu_statement: ($) =>
+    choice(
+      $.fgl_statement,
+      $.sql_statement,
+      alias(
+        choice(
+          seq(kw("NEXT"), kw("OPTION"), $._identifier),
+          seq(
+            choice(kw("SHOW"), kw("HIDE")),
+            seq(
+              kw("OPTION"),
+              choice(kw("ALL"), alias(commaSep1($._identifier), "options")),
+            ),
+          ),
+        ),
+        $.menu_statement,
+      ),
+    ),
+
   input_block: ($) => "input_block",
   construct_block: ($) => "construct_block",
   dialog_block: ($) => "dialog_block",

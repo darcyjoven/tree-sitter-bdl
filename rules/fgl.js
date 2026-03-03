@@ -164,6 +164,7 @@ export default {
     kw('CONSTRUCT'),
     kw('REPORT'),
     kw('DISPLAY'),
+    kw('PROGRAM'),
     kw('INPUT'),
     kw('DIALOG'),
   )),
