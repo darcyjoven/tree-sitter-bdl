@@ -29,17 +29,17 @@ static const SqlRule SQL_RULES[] = {
 #define SQL_RULE_COUNT (sizeof(SQL_RULES) / sizeof(SQL_RULES[0]))
 
 static const char *BDL_TERMINATORS[] = {
-    "ACCEPT",   "AFTER",   "ALTER",  "BEFORE",   "CALL",       "CANCEL",
-    "CASE",     "CATCH",   "CLEAR",  "CLOSE",    "COMMAND",    "CONNECT",
-    "CONTINUE", "CREATE",  "CURSOR", "DATABASE", "DECLARE",    "DEFINE",
-    "DELETE",   "DISPLAY", "DROP",   "END",      "ERROR",      "EXECUTE",
-    "EXIT",     "FETCH",   "FLUSH",  "FOR",      "FOREACH",    "FREE",
-    "GLOBALS",  "GOTO",    "HIDE",   "IF",       "INITIALIZE", "INSERT",
-    "LABEL",    "LET",     "LOAD",   "LOCATE",   "MENU",       "MESSAGE",
-    "NEXT",     "OPEN",    "OPEN",   "PREPARE",  "PUT",        "RENAME",
-    "RETURN",   "SCHEMA",  "SCROLL", "SELECT",   "SHOW",       "SQL",
-    "TRY",      "TYPE",    "UNLOAD", "UPDATE",   "VALIDATE",   "WHENEVER",
-    "WHILE"};
+    "ACCEPT",  "AFTER",    "ALTER",    "BEFORE",    "CALL",     "CANCEL",
+    "CASE",    "CATCH",    "CLEAR",    "CLOSE",     "COMMAND",  "COMMIT",
+    "CONNECT", "CONTINUE", "CREATE",   "CURSOR",    "DATABASE", "DECLARE",
+    "DEFINE",  "DELETE",   "DISPLAY",  "DROP",      "END",      "ERROR",
+    "EXECUTE", "EXIT",     "FETCH",    "FLUSH",     "FOR",      "FOREACH",
+    "FREE",    "GLOBALS",  "GOTO",     "HIDE",      "IF",       "INITIALIZE",
+    "INSERT",  "LABEL",    "LET",      "LOAD",      "LOCATE",   "MENU",
+    "MESSAGE", "NEXT",     "OPEN",     "OPEN",      "PREPARE",  "PUT",
+    "RELEASE", "RENAME",   "RETURN",  "ROLLBACK", "SAVEPOINT", "SCHEMA",   "SCROLL",
+    "SELECT",  "SHOW",     "SQL",      "TRY",       "TYPE",     "UNLOAD",
+    "UPDATE",  "VALIDATE", "WHENEVER", "WHILE"};
 
 typedef struct {
   const char *first;

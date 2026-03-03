@@ -4,7 +4,8 @@ import { commaSep1, kw } from "./util.js";
 
 const rules = {
   // 定义 SQL 相关的规则
-  sql_statement: ($) => choice($._static_sql, $._dynamic_sql),
+  sql_statement: ($) =>
+    choice($._static_sql, $._dynamic_sql, $._io_sql, $._transactions_sql),
   // 静态SQL
   _static_sql: ($) =>
     choice(
@@ -143,6 +144,60 @@ const rules = {
       optional(seq(kw("FROM"), commaSep1($._expression))),
     ),
   flush_sql: ($) => seq(kw("FLUSH"), $._identifier),
+  // TODO
+  _io_sql: ($) => choice($.unload_sql, $.load_sql),
+  load_sql: ($) =>
+    seq(
+      kw("LOAD FROM"),
+      $._string_literal,
+      optional(seq(kw("DELIMITER"), $._string_literal)),
+      choice($.insert_sql, $._string_literal),
+    ),
+  unload_sql: ($) =>
+    seq(
+      kw("UNLOAD TO"),
+      $._string_literal,
+      optional(seq(kw("DELIMITER"), $._string_literal)),
+      choice($.select_sql, $._string_literal),
+    ),
+  _transactions_sql: ($) => choice(
+    $.begin_work,
+    $.savepoint,
+    $.commit_work,
+    $.rollback_work,
+    $.release_savepoint,
+    $.set_isolation,
+    $.set_lock_mode,
+  ),
+  begin_work: ($) => kw("BEGIN WORK"),
+  savepoint: ($) =>
+    seq(kw("SAVEPOINT"), $._identifier, optional(kw("UNIQUE"))),
+  commit_work: ($) => kw("COMMIT WORK"),
+  rollback_work: ($) =>
+    seq(
+      kw("ROLLBACK WORK"),
+      optional(seq(kw("TO SAVEPOINT"), optional($._identifier))),
+    ),
+  release_savepoint: ($) => prec(1,seq(kw("RELEASE SAVEPOINT"), $._identifier)),
+  set_isolation: ($) =>
+    seq(
+      kw("SET ISOLATION TO"),
+      choice(
+        kw("DIRTY READ"),
+        seq(
+          kw("COMMITTED READ"),
+          optional(kw("LAST COMMITTED")),
+          optional(kw("RETAIN UPDATE LOCKS")),
+        ),
+        kw("CURSOR STABILITY"),
+        kw("REPEATABLE READ"),
+      ),
+    ),
+  set_lock_mode: ($) =>
+    seq(
+      kw("SET LOCK MODE TO"),
+      choice(kw("NOT WAIT"), seq(kw("WAIT"), $._expression)),
+    ),
 };
 const externals = ($) => [
   $.insert_sql,
