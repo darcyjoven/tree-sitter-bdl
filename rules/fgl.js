@@ -14,10 +14,11 @@ export default {
       $.preprocessor_statement,
       $._interface_statement,
       $.schema_statement,
+      $.compiler_options,
       $.demo_statement,
     ),
   // _interface_statement: $ => '_interface_statement',
-  demo_statement: ($) => 'ON ACTION',
+  demo_statement: ($) => "ON ACTION",
   defer_statement: ($) => seq(kw("DEFER"), choice(kw("INTERRUPT"), kw("QUIT"))),
   // 变量操作
   variable_statement: ($) =>
@@ -78,7 +79,12 @@ export default {
       seq(kw("TRY"), $._statement, kw("CATCH"), $._statement, kw("END TRY")),
     ),
   _exception_classes: ($) =>
-    choice(seq(optional(kw('ANY')), kw("ERROR")), seq(kw('ANY'), kw("SQLERROR")), kw("NOT FOUND"), kw("WARNING")),
+    choice(
+      seq(optional(kw("ANY")), kw("ERROR")),
+      seq(kw("ANY"), kw("SQLERROR")),
+      kw("NOT FOUND"),
+      kw("WARNING"),
+    ),
   _exception_action: ($) =>
     choice(
       kw("STOP"),
@@ -88,149 +94,126 @@ export default {
       seq(kw("GOTO"), alias($.variable, "label_name")),
     ),
   // 流程控制
-  _flow_ctrl_statement: ($) => choice(
-    $.call_flow,
-    $.return_flow,
-    $.case_flow,
-    $.continue_flow,
-    $.exit_flow,
-    $.for_flow,
-    $.goto_flow,
-    $.if_flow,
-    $.label_flow,
-    $.sleep_flow,
-    $.while_flow,
-  ),
-  call_flow: ($) => seq(
-    kw('CALL'),
-    alias($._variable, 'func_name'),
-    '(',
-    alias(commaSep($._expression), 'func_params'),
-    ')',
-    optional(
-      seq(
-        kw('RETURNING'),
-        alias(commaSep1($._variable), 'func_returns'),
-      )
-    )
-  ),
-  return_flow: ($) => seq(
-    kw('RETURN'),
-    alias(commaSep($._expression), 'func_returns'),
-  ),
-  case_flow: ($) => seq(
-    kw('CASE'),
-    alias(optional($._variable), 'case_vairable'),
-    repeat(
-      seq(
-        kw('WHEN'),
-        choice($._variable, $._expression),
-        repeat(
-          choice(
-            $.fgl_statement,
-            $.sql_statement,
-          )
-        )
+  _flow_ctrl_statement: ($) =>
+    choice(
+      $.call_flow,
+      $.return_flow,
+      $.case_flow,
+      $.continue_flow,
+      $.exit_flow,
+      $.for_flow,
+      $.goto_flow,
+      $.if_flow,
+      $.label_flow,
+      $.sleep_flow,
+      $.while_flow,
+    ),
+  call_flow: ($) =>
+    seq(
+      kw("CALL"),
+      alias($._variable, "func_name"),
+      "(",
+      alias(commaSep($._expression), "func_params"),
+      ")",
+      optional(
+        seq(kw("RETURNING"), alias(commaSep1($._variable), "func_returns")),
       ),
     ),
-    optional(
-      seq(
-        kw('OTHERWISE'),
-        repeat(
-          choice(
-            $.fgl_statement,
-            $.sql_statement,
-          )
-        )
-      )
-    ),
-    kw('END CASE')
-  ),
-  continue_flow: ($) => seq(kw('CONTINUE'), choice(
-    kw('FOR'),
-    kw('FOREACH'),
-    kw('WHILE'),
-    kw('MENU'),
-    kw('CONSTRUCT'),
-    kw('INPUT'),
-    kw('DIALOG'),
-  )),
-  exit_flow: ($) => seq(kw('EXIT'), choice(
-    kw('CASE'),
-    kw('FOR'),
-    kw('FOREACH'),
-    kw('WHILE'),
-    kw('MENU'),
-    kw('CONSTRUCT'),
-    kw('REPORT'),
-    kw('DISPLAY'),
-    kw('PROGRAM'),
-    kw('INPUT'),
-    kw('DIALOG'),
-  )),
-  for_flow: ($) => seq(
-    kw('FOR'),
-    $._variable,
-    '=',
-    $._expression,
-    kw('TO'),
-    $._expression,
-    optional(
-      seq(
-        kw('STEP'),
-        $._expression,
-      )
-    ),
-    repeat(
-      choice($.fgl_statement,
-        $.sql_statement,)
-    ),
-    kw('END FOR')
-  ),
-  goto_flow: ($) => seq(
-    kw('GOTO'),
-    optional(':'),
-    alias($._identifier, 'label_name')
-  ),
-  if_flow: ($) => seq(
-    kw('IF'),
-    $._expression,
-    kw('THEN'),
-    repeat(choice($.fgl_statement, $.sql_statement)),
-    optional(
-      seq(
-        kw('ELSE'),
-        repeat(choice($.fgl_statement, $.sql_statement))
-      )
-    ),
-    kw('END IF')
-  ),
-  label_flow: ($) => seq(
-    kw('LABEL'),
-    alias($._identifier, 'label_name'),
-    ":"
-  ),
-  sleep_flow: ($) => seq(
-    kw('SLEEP'),
-    $._expression
-  ),
-  while_flow: ($) => seq(
-    kw('WHILE'),
-    $._expression,
-    repeat(choice($.fgl_statement, $.sql_statement)),
-    kw('END WHILE'),
-  ),
-  preprocessor_statement: ($) => $._preprocessor_statement,
-  _preprocessor_statement: ($) => choice(
-    seq('&include', $._string_literal),
+  return_flow: ($) =>
+    seq(kw("RETURN"), alias(commaSep($._expression), "func_returns")),
+  case_flow: ($) =>
     seq(
-      '&define',
-      alias(seq(
-        $._identifier,
-        optional(seq('(', commaSep($._identifier), ')')),
-      ), 'define_identifier'),
-      alias($._pre_define_content, '&define_content'))
-  ),
+      kw("CASE"),
+      alias(optional($._variable), "case_vairable"),
+      repeat(
+        seq(
+          kw("WHEN"),
+          choice($._variable, $._expression),
+          repeat(choice($.fgl_statement, $.sql_statement)),
+        ),
+      ),
+      optional(
+        seq(kw("OTHERWISE"), repeat(choice($.fgl_statement, $.sql_statement))),
+      ),
+      kw("END CASE"),
+    ),
+  continue_flow: ($) =>
+    seq(
+      kw("CONTINUE"),
+      choice(
+        kw("FOR"),
+        kw("FOREACH"),
+        kw("WHILE"),
+        kw("MENU"),
+        kw("CONSTRUCT"),
+        kw("INPUT"),
+        kw("DIALOG"),
+      ),
+    ),
+  exit_flow: ($) =>
+    seq(
+      kw("EXIT"),
+      choice(
+        kw("CASE"),
+        kw("FOR"),
+        kw("FOREACH"),
+        kw("WHILE"),
+        kw("MENU"),
+        kw("CONSTRUCT"),
+        kw("REPORT"),
+        kw("DISPLAY"),
+        kw("PROGRAM"),
+        kw("INPUT"),
+        kw("DIALOG"),
+      ),
+    ),
+  for_flow: ($) =>
+    seq(
+      kw("FOR"),
+      $._variable,
+      "=",
+      $._expression,
+      kw("TO"),
+      $._expression,
+      optional(seq(kw("STEP"), $._expression)),
+      repeat(choice($.fgl_statement, $.sql_statement)),
+      kw("END FOR"),
+    ),
+  goto_flow: ($) =>
+    seq(kw("GOTO"), optional(":"), alias($._identifier, "label_name")),
+  if_flow: ($) =>
+    seq(
+      kw("IF"),
+      $._expression,
+      kw("THEN"),
+      repeat(choice($.fgl_statement, $.sql_statement)),
+      optional(
+        seq(kw("ELSE"), repeat(choice($.fgl_statement, $.sql_statement))),
+      ),
+      kw("END IF"),
+    ),
+  label_flow: ($) => seq(kw("LABEL"), alias($._identifier, "label_name"), ":"),
+  sleep_flow: ($) => seq(kw("SLEEP"), $._expression),
+  while_flow: ($) =>
+    seq(
+      kw("WHILE"),
+      $._expression,
+      repeat(choice($.fgl_statement, $.sql_statement)),
+      kw("END WHILE"),
+    ),
+  preprocessor_statement: ($) => $._preprocessor_statement,
+  _preprocessor_statement: ($) =>
+    choice(
+      seq("&include", $._string_literal),
+      seq(
+        "&define",
+        alias(
+          seq($._identifier, optional(seq("(", commaSep($._identifier), ")"))),
+          "define_identifier",
+        ),
+        alias($._pre_define_content, "&define_content"),
+      ),
+    ),
   // _pre_define_body: ($) => repeat1(
   //   choice(
   //     /\\\r?\n/,
@@ -238,14 +221,17 @@ export default {
   //     /\\.[^\n\\]*/
   //   )
   // ),
-  _pre_define_content: ($) => seq(
-    repeat(choice(
-      /.*\\\r?\n/,      // 匹配以 \ 结尾的行（包含 \ 和换行）
-      /[^\n\\]+/,       // 匹配行内普通字符
-      /\\./             // 匹配单个转义字符
-    )),
-    /[^\n]*/            // 匹配最后一行（不带反斜杠的结尾行）
-  ),
+  _pre_define_content: ($) =>
+    seq(
+      repeat(
+        choice(
+          /.*\\\r?\n/, // 匹配以 \ 结尾的行（包含 \ 和换行）
+          /[^\n\\]+/, // 匹配行内普通字符
+          /\\./, // 匹配单个转义字符
+        ),
+      ),
+      /[^\n]*/, // 匹配最后一行（不带反斜杠的结尾行）
+    ),
   // 结果是一个值的内容
   expression: ($) => $._expression,
   _expression: ($) =>

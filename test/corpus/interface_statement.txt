@@ -49,7 +49,7 @@ END MAIN
 (source_file
     (main_block
         (fgl_statement
-            (display_block))))
+            (display_inline))))
 
 ================================================================================|||
 INLINE 语句
@@ -69,15 +69,15 @@ END MAIN
 (source_file
     (main_block
         (fgl_statement
-            (display_block))
+            (display_inline))
         (fgl_statement
-            (display_block))
+            (display_inline))
         (fgl_statement
-            (display_block))
+            (display_inline))
         (fgl_statement
-            (display_block))
+            (display_inline))
         (fgl_statement
-            (display_block))
+            (display_inline))
         (fgl_statement
             (error_interface))
         (fgl_statement
@@ -164,3 +164,114 @@ END MAIN
                 (menu_option)
                 (fgl_statement
                     (exit_flow))))))
+
+
+================================================================================|||
+INPUT 语句 1
+================================================================================|||
+
+MAIN
+    OPTIONS INPUT WRAP
+
+    OPEN FORM f FROM "form1"
+    DISPLAY FORM f
+
+    LET INT_FLAG = FALSE
+    INPUT custrec.* FROM sr_cust.*
+
+    IF INT_FLAG = FALSE THEN
+        DISPLAY custrec.*
+        LET INT_FLAG = FALSE
+    END IF
+END MAIN
+--------------------------------------------------------------------------------|||
+(source_file
+    (main_block
+        (fgl_statement
+            (compiler_options))
+        (fgl_statement
+            (open_form))
+        (fgl_statement
+            (display_inline))
+        (fgl_statement
+            (variable_statement))
+        (fgl_statement
+            (input_inline))
+        (fgl_statement
+            (if_flow
+                (fgl_statement
+                    (display_inline))
+                (fgl_statement
+                    (variable_statement))))))
+
+================================================================================|||
+INPUT 语句 2
+================================================================================|||
+
+MAIN
+    OPTIONS INPUT WRAP
+    OPEN FORM f FROM "form1"
+    DISPLAY FORM f 
+
+    LET custrec.id = ARG_VAL(1)
+    LET upd = (custrec.id < 0)
+
+    LET INT_FLAG = FALSE
+    INPUT BY NAME custrec.* ATTRIBUTES(UNBUFFERED, WITHOUT DEFAULTS=upd)
+        BEFORE INPUT
+            MESSAGE "Enter customer information..."
+            IF upd THEN
+                SELECT fname, lname INTO custrec.fname, customer.lname 
+                    FROM customer WHERE customer.id = custrec.id
+            END IF
+        AFTER FIELD fname 
+            IF FIELD_TOUCHED(custrec.fname) AND custrec.fname IS NULL THEN
+                LET custrec.lname = NULL
+            END IF
+        AFTER INPUT
+            MESSAGE "Input terminated..."
+    END INPUT
+
+    IF INT_FLAG = FALSE THEN
+        DISPLAY custrec.*
+        LET INT_FLAG = FALSE
+    END IF
+END MAIN
+--------------------------------------------------------------------------------|||
+(source_file
+    (main_block
+        (fgl_statement
+            (compiler_options))
+        (fgl_statement
+            (open_form))
+        (fgl_statement
+            (display_inline))
+        (fgl_statement
+            (variable_statement))
+        (fgl_statement
+            (variable_statement))
+        (fgl_statement
+            (variable_statement))
+        (fgl_statement
+            (input_block
+                (input_option)
+                (fgl_statement
+                    (message_interface))
+                (fgl_statement
+                    (if_flow
+                        (sql_statement
+                            (select_sql))))
+                (input_option)
+                    (fgl_statement
+                        (if_flow
+                            (fgl_statement
+                                (variable_statement))))
+                (input_option)
+                    (fgl_statement
+                        (message_interface))))
+        (fgl_statement
+            (if_flow
+                (fgl_statement
+                    (display_inline))
+                (fgl_statement
+                    (variable_statement))))))

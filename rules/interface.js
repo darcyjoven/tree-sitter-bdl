@@ -8,9 +8,9 @@ export default {
     choice(
       $._window_interface,
       $._show_interface,
-      $.display_block,
+      $._display_block,
       $.menu_block,
-      $.input_block,
+      $._input_inteface,
       $.construct_block,
       $.dialog_block,
       $.prompt_block,
@@ -76,8 +76,8 @@ export default {
       optional(seq(kw("BY"), $._expression)),
     ),
 
-  display_block: ($) => choice($._display_inline),
-  _display_inline: ($) =>
+  _display_block: ($) => choice($.display_inline),
+  display_inline: ($) =>
     seq(
       kw("DISPLAY"),
       choice(
@@ -158,13 +158,116 @@ export default {
       ),
     ),
 
-  input_block: ($) => "input_block",
+  _input_inteface: ($) =>
+    choice($.input_inline, $.input_block, $.input_array_block),
+
+  input_inline: ($) => $._input_header,
+
+  input_block: ($) =>
+    prec(
+      1,
+      seq(
+        $._input_header,
+        repeat(seq($.input_option, repeat($._input_statement))),
+        kw("END INPUT"),
+      ),
+    ),
+  _input_header: ($) =>
+    seq(
+      // input by name
+      kw("INPUT"),
+      choice(
+        seq(
+          kw("BY"),
+          kw("NAME"),
+          commaSep1($._variable),
+          optional(kw("WITHOUT DEFAULTS")),
+        ),
+        // input .. from ..
+        seq(
+          commaSep1($._variable),
+          optional(kw("WITHOUT DEFAULTS")),
+          kw("FROM"),
+          commaSep1($._variable),
+        ),
+      ),
+      optional($._display_ctrl_attribute_block),
+    ),
+  input_option: ($) =>
+    choice(
+      seq(kw("BEFORE"), kw("INPUT")),
+      seq(kw("AFTER"), kw("INPUT")),
+      seq(
+        kw("BEFORE"),
+        kw("FIELD"),
+        alias(commaSep1($._identifier), "field_name"),
+      ),
+      seq(
+        kw("AFTER"),
+        kw("FIELD"),
+        alias(commaSep1($._identifier), "field_name"),
+      ),
+      seq(
+        kw("ON"),
+        kw("CHANGE"),
+        alias(commaSep1($._identifier), "field_name"),
+      ),
+      seq(kw("ON"), kw("IDLE"), $._expression),
+      seq(
+        kw("ON"),
+        kw("ACTION"),
+        alias($._identifier, "action_name"),
+        optional(seq(kw("INFIELD"), alias($._identifier, "filed_name"))),
+      ),
+      seq(
+        kw("ON"),
+        kw("KEY"),
+        "(",
+        alias(
+          seq($._identifier, optional(seq("-", $._identifier))),
+          "key_name",
+        ),
+        ")",
+      ),
+    ),
+  _input_statement: ($) =>
+    choice(
+      $.fgl_statement,
+      $.sql_statement,
+      alias(
+        choice(
+          seq(kw("ACCEPT"), kw("INPUT")),
+          seq(
+            kw("NEXT"),
+            kw("FIELD"),
+            choice(
+              kw("CURRENT"),
+              kw("NEXT"),
+              kw("PREVIOUS"),
+              alias($._identifier, "field_name"),
+            ),
+          ),
+        ),
+        $.input_statement,
+      ),
+    ),
+
+  input_array_block: ($) => "input_array_block",
+  // input array
+
   construct_block: ($) => "construct_block",
   dialog_block: ($) => "dialog_block",
   prompt_block: ($) => "prompt_block",
 
   _display_attribute_block: ($) =>
     seq(kw("ATTRIBUTE"), "(", commaSep1($._display_attribute), ")"),
+  _display_ctrl_attribute_block: ($) =>
+    seq(
+      kw("ATTRIBUTES"),
+      "(",
+      commaSep1(choice($._display_attribute, $._ctrl_atrribute)),
+      ")",
+    ),
   _display_attribute: ($) =>
     choice(
       seq(kw("TEXT"), "=", $._expression),
@@ -194,5 +297,26 @@ export default {
       seq(kw("ERROR LINE"), $._expression),
       seq(kw("COMMENT LINE"), choice(kw("OFF"), $._expression)),
       kw("BORDER"),
+    ),
+  _ctrl_atrribute: ($) =>
+    choice(
+      seq(kw("ACCEPT"), optional(seq("=", $._expression))),
+      seq(kw("APPEND"), kw("ROW"), optional(seq("=", $._expression))),
+      seq(kw("AUTO"), kw("APPEND"), optional(seq("=", $._expression))),
+      seq(kw("CANCEL"), optional(seq("=", $._expression))),
+      seq(kw("COUNT"), "=", $._expression),
+      seq(kw("DELETE"), kw("ROW"), optional(seq("=", $._expression))),
+      seq(kw("FIELD"), kw("ORDER"), kw("FORM")),
+      seq(kw("HELP"), "=", $._expression),
+      seq(kw("INSERT"), kw("ROW"), optional(seq("=", $._expression))),
+      seq(
+        kw("KEEP"),
+        kw("CURRENT"),
+        kw("ROW"),
+        optional(seq("=", $._expression)),
+      ),
+      seq(kw("MAXCOUNT"), "=", $._expression),
+      seq(kw("UNBUFFERED"), optional(seq("=", $._expression))),
+      seq(kw("WITHOUT"), kw("DEFAULTS"), optional(seq("=", $._expression))),
     ),
 };
