@@ -441,3 +441,61 @@ END MAIN
 			(comment)
 			(interface_option)
 			(exit_flow))))
+
+
+================================================================================|||
+PROMPT 语句 1
+================================================================================|||
+MAIN
+	PROMPT "Please enter your birthday: " FOR birth 
+    DISPLAY "Your birthday is: " || birth 
+    PROMPT "Now press a key... " FOR CHAR chkey 
+    DISPLAY "You pressed: " || chkey 
+END MAIN
+--------------------------------------------------------------------------------|||
+
+(source_file
+    (main_block
+        (prompt_inline)
+        (display_inline)
+        (prompt_inline)
+        (display_inline)))
+
+================================================================================|||
+PROMPT 语句 2
+================================================================================|||
+MAIN
+	PROMPT "Please enter your birthday: " FOR birth 
+    IF INT_FLAG THEN
+        DISPLAY "Interrupt received."
+    ELSE
+        DISPLAY "Your birthday is: " || birth 
+    END IF
+END MAIN
+--------------------------------------------------------------------------------|||
+(source_file
+    (main_block
+        (prompt_inline)
+        (if_flow
+            (display_inline)
+            (else_flow
+                (display_inline)))))
+
+================================================================================|||
+PROMPT 语句 3
+================================================================================|||
+MAIN
+	PROMPT "Please enter your birthday: " FOR birth 
+        ATTRIBUTES(WITHOUT DEFAULTS)
+        ON ACTION action1
+            DISPLAY "Action 1"
+    END PROMPT
+    DISPLAY "Your birthday is " || birth 
+END MAIN
+--------------------------------------------------------------------------------|||
+(source_file
+    (main_block
+        (prompt_block
+            (interface_option)
+            (display_inline))
+        (display_inline)))

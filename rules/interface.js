@@ -13,7 +13,7 @@ export default {
       $._input_interface,
       $._construct_interface,
       $.dialog_block,
-      $.prompt_block,
+      $._prompt_interface,
     ),
 
   _window_interface: ($) =>
@@ -352,7 +352,29 @@ export default {
   _dialog_option: ($) =>
     choice(seq(kw("BEFORE"), kw("DIALOG")), seq(kw("AFTER"), kw("DIALOG"))),
 
-  prompt_block: ($) => "prompt_block",
+  _prompt_interface: ($) => choice($.prompt_inline, $.prompt_block),
+  prompt_block: ($) =>
+    prec(
+      1,
+      seq(
+        $._prompt_header,
+        repeat($._interface_block),
+        kw("END"),
+        kw("PROMPT"),
+      ),
+    ),
+  prompt_inline: ($) => $._prompt_header,
+  _prompt_header: ($) =>
+    seq(
+      kw("PROMPT"),
+      alias($._expression, "question"),
+      optional($._interface_attribute),
+      kw("FOR"),
+      optional(seq(kw("CHAR"), optional(kw("ACTER")))),
+      alias($._variable, "variable_name"),
+      optional(seq(kw("HELP"), $._expression)),
+      optional($._interface_attribute),
+    ),
 
   interface_option: ($) =>
     choice(
