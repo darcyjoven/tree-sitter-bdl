@@ -42,7 +42,7 @@ const rules = {
       $.flush_sql,
     ),
   prepare_sql: ($) =>
-    seq(kw("PREPARE"), $._identifier, kw("FROM"), $._string_literal),
+    seq(kw("PREPARE"), $._identifier, kw("FROM"), $._expression),
   execute_sql: ($) =>
     choice(
       seq(
@@ -61,7 +61,7 @@ const rules = {
         ),
         optional(seq(kw("INTO"), commaSep1($._variable))),
       ),
-      seq(kw("EXECUTE IMMEDIATE"), $._string_literal),
+      seq(kw("EXECUTE IMMEDIATE"), $._expression),
     ),
   // 当作fgl处理
   // free_sql: ($) => seq(kw("FREE"), $._identifier),
@@ -160,25 +160,26 @@ const rules = {
       optional(seq(kw("DELIMITER"), $._string_literal)),
       choice($.select_sql, $._string_literal),
     ),
-  _transactions_sql: ($) => choice(
-    $.begin_work,
-    $.savepoint,
-    $.commit_work,
-    $.rollback_work,
-    $.release_savepoint,
-    $.set_isolation,
-    $.set_lock_mode,
-  ),
+  _transactions_sql: ($) =>
+    choice(
+      $.begin_work,
+      $.savepoint,
+      $.commit_work,
+      $.rollback_work,
+      $.release_savepoint,
+      $.set_isolation,
+      $.set_lock_mode,
+    ),
   begin_work: ($) => kw("BEGIN WORK"),
-  savepoint: ($) =>
-    seq(kw("SAVEPOINT"), $._identifier, optional(kw("UNIQUE"))),
+  savepoint: ($) => seq(kw("SAVEPOINT"), $._identifier, optional(kw("UNIQUE"))),
   commit_work: ($) => kw("COMMIT WORK"),
   rollback_work: ($) =>
     seq(
       kw("ROLLBACK WORK"),
       optional(seq(kw("TO SAVEPOINT"), optional($._identifier))),
     ),
-  release_savepoint: ($) => prec(1,seq(kw("RELEASE SAVEPOINT"), $._identifier)),
+  release_savepoint: ($) =>
+    prec(1, seq(kw("RELEASE SAVEPOINT"), $._identifier)),
   set_isolation: ($) =>
     seq(
       kw("SET ISOLATION TO"),

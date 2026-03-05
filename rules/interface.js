@@ -89,7 +89,7 @@ export default {
           optional(seq(kw("AT"), $._expression, ",", $._expression)),
         ),
         // DISPLAY .. TO ..
-        seq($._expression, kw("TO"), commaSep1($._identifier)),
+        seq($._expression, kw("TO"), commaSep1($._variable)),
         // DISPLAY BY NAME
         seq(kw("BY"), kw("NAME"), commaSep1($._variable)),
       ),
@@ -337,7 +337,7 @@ export default {
   dialog_block: ($) =>
     seq(
       kw("DIALOG"),
-      $._interface_attribute,
+      optional($._interface_attribute),
       repeat(
         choice(
           $._input_interface,

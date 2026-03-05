@@ -1,6 +1,5 @@
 /// <reference types="tree-sitter-cli/dsl" />
 
-import _interface_statement from "./interface.js";
 import { commaSep, commaSep1, datetimeQualifier, kw, PREC } from "./util.js";
 // @ts-check
 
@@ -322,5 +321,4 @@ export default {
     ),
   _function_expression: ($) =>
     seq($._variable, "(", commaSep($._expression), ")"),
-  ..._interface_statement,
 };
