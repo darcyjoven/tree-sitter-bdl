@@ -577,7 +577,8 @@ END MAIN
         (delete_sql)
         (if_flow
             (rollback_work)
-            (commit_work))))
+            (else_flow
+                (commit_work)))))
 
 
 ================================================================================|||
@@ -628,9 +629,9 @@ I/O 语句
 
 MAIN
     BEGIN WORK
-    DELETE FROM items 
-    LOAD FROM "items01.unl" INSERT INTO items 
-    LOAD FROM "items02.unl" INSERT INTO items 
+    DELETE FROM items
+    LOAD FROM "items01.unl" INSERT INTO items
+    LOAD FROM "items02.unl" INSERT INTO items
     COMMIT WORK
 END MAIN
 --------------------------------------------------------------------------------|||
@@ -651,7 +652,7 @@ I/O 语句 2
 MAIN
     LET var = 123
     UNLOAD TO "items.unl"
-        SELECT * FROM items WHERE item_num > var 
+        SELECT * FROM items WHERE item_num > var
 END MAIN
 --------------------------------------------------------------------------------|||
  (source_file

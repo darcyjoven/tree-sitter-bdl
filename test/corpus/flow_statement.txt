@@ -53,7 +53,7 @@ CASE 语法1
 MAIN
     CASE
         WHEN true
-            let i = 0 
+            let i = 0
         WHEN "OK"
             let j = 0
             exit case
@@ -70,11 +70,15 @@ END MAIN
  (source_file
     (main_block
         (case_flow
-            (variable_statement)
-            (variable_statement)
-            (exit_flow)
-            (case_flow
-                (variable_statement)))))
+            (when_flow
+                (variable_statement))
+            (when_flow
+                (variable_statement)
+                (exit_flow))
+            (otherwise_flow
+                (case_flow
+                	(when_flow
+                    	(variable_statement)))))))
 
 ================================================================================|||
 CASE 语法2
@@ -84,7 +88,7 @@ MAIN
     DEFINE v CHAR(10)
     LET v = "C1"
     -- CASE Syntax 1
-    CASE v 
+    CASE v
         WHEN "C1"
         --DISPLAY "Value is C1"
         WHEN "C2"
@@ -103,7 +107,7 @@ MAIN
         OTHERWISE
         --DISPLAY "Unexpected value"
     END CASE
-END MAIN 
+END MAIN
 
 --------------------------------------------------------------------------------|||
 
@@ -115,14 +119,21 @@ END MAIN
         (variable_statement)
         (comment)
         (case_flow
+        	(when_flow)
             (comment)
+            (when_flow)
             (comment)
+            (when_flow)
             (comment)
+            (otherwise_flow)
             (comment))
         (comment)
         (case_flow
+        	(when_flow)
             (comment)
+            (when_flow)
             (comment)
+            (otherwise_flow)
             (comment))))
 
 ================================================================================|||
@@ -133,10 +144,10 @@ MAIN
     DEFINE i, i_min, i_max INTEGER
     LET i_min = 1
     LET i_max = 10
-    --DISPLAY "Count from " || i_min || " to " || i_max 
+    --DISPLAY "Count from " || i_min || " to " || i_max
     --DISPLAY "Counting forwards..."
-    FOR i = i_min TO i_max 
-        --DISPLAY i 
+    FOR i = i_min TO i_max
+        --DISPLAY i
     END FOR
     --DISPLAY "... and backwards."
     FOR i = i_max TO i_min STEP -1
@@ -147,7 +158,7 @@ END MAIN
 --------------------------------------------------------------------------------|||
 
 (source_file
-    (main_block 
+    (main_block
         (variable_definition
             (variable_name)
             (variable_name)
@@ -171,7 +182,7 @@ MAIN
     DEFINE exit_code INTEGER
     DEFINE l_status INTEGER
 
-    WHENEVER ANY ERROR GOTO _error 
+    WHENEVER ANY ERROR GOTO _error
     GOTO _noerror
 
 LABEL _error:
@@ -210,7 +221,7 @@ END MAIN
         (comment)))
 
 ================================================================================|||
-IF 语法 
+IF 语法
 ================================================================================|||
 
 MAIN
@@ -233,7 +244,8 @@ END MAIN
         (variable_statement)
         (if_flow
             (variable_statement)
-            (variable_statement))))
+            (else_flow
+	            (variable_statement)))))
 
 ================================================================================|||
 IF 语法 2
@@ -243,10 +255,10 @@ main
     IF g_cnt > 0 THEN
         IF NOT cl_confirm('aap-331') THEN
             CALL cl_err('','aap-888',1)
-            LET g_apa.apa14 = g_apa_t.apa14 
+            LET g_apa.apa14 = g_apa_t.apa14
             RETURN FALSE
-        END IF 
-    END IF 
+        END IF
+    END IF
 end main
 
 --------------------------------------------------------------------------------|||
@@ -304,4 +316,3 @@ END MAIN
             (variable_statement)
             (if_flow
                 (exit_flow)))))
-

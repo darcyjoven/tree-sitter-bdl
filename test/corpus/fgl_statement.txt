@@ -103,7 +103,7 @@ Preprocessor 预定义
 &define dis1() dis1
 &define dis2(x) dis2, \
     disp, \
-    dis3 
+    dis3
 &define dis3(x) dis3
 
 main
@@ -130,29 +130,29 @@ FUNCTION t110_apa14(p_apa01)
             l_apb081 LIKE apb_file.apb081,
             l_apb09  LIKE apb_file.apb09,
             l_apb23  LIKE apb_file.apb23,
-            l_apb24  LIKE apb_file.apb24,    
+            l_apb24  LIKE apb_file.apb24,
             l_apb10  LIKE apb_file.apb10,
             l_apb101 LIKE apb_file.apb101,
             p_apa01  LIKE apa_file.apa01,
             l_apa32  LIKE apa_file.apa32
     DEFINE g_apk    RECORD LIKE apk_file.*
 
-    LET g_apa.apa01=p_apa01 
+    LET g_apa.apa01=p_apa01
     LET g_cnt = 0
-   
-    IF cl_null(g_cnt) THEN LET g_cnt=0 END IF 
+
+    IF cl_null(g_cnt) THEN LET g_cnt=0 END IF
 
     IF g_cnt > 0 THEN
         IF NOT cl_confirm('aap-331') THEN
             CALL cl_err('','aap-888',1)
-            LET g_apa.apa14 = g_apa_t.apa14 
+            LET g_apa.apa14 = g_apa_t.apa14
             RETURN FALSE
-        END IF  
+        END IF
         IF g_amt1 IS NULL THEN
             LET g_amt1 = 0
             LET g_amt1f = 0
         END IF
-          
+
         IF g_amt2 IS NULL THEN
             LET g_amt2 = 0
             LET g_amt2f = 0
@@ -176,7 +176,7 @@ FUNCTION t110_apa14(p_apa01)
         END IF
         LET g_apa.apa57f=cl_digcut(g_apa.apa57f,t_azi04)
         LET g_apa.apa57=cl_digcut(g_apa.apa57,g_azi04)
-   
+
         CALL t110_b_fill(' 1=1')
         CALL t110_sum_apa()
     ELSE
@@ -193,7 +193,7 @@ FUNCTION t110_apa14(p_apa01)
             CALL t110_unpay()
         END IF
     END IF
-    RETURN TRUE 
+    RETURN TRUE
 END FUNCTION
 
 --------------------------------------------------------------------------------|||
@@ -254,7 +254,8 @@ END FUNCTION
             (variable_statement)
             (call_flow)
             (call_flow)
-            (if_flow
+            (else_flow
+                (if_flow
                 (variable_statement)
                 (variable_statement)
                 (variable_statement)
@@ -262,7 +263,7 @@ END FUNCTION
                 (variable_statement)
                 (variable_statement)
                 (call_flow)
-                (call_flow)))
+                (call_flow))))
         (return_flow)))
 
 
@@ -273,18 +274,18 @@ END FUNCTION
 FUNCTION i301_aps_routesubc()
     DEFINE  l_chr4      LIKE type_file.chr4
     DEFINE  l_cmd LIKE type_file.chr1000
-    DEFINE  l_vnf RECORD LIKE vnf_file.*  
- 
+    DEFINE  l_vnf RECORD LIKE vnf_file.*
+
     IF cl_null(g_sfb.sfb01) THEN
         CALL cl_err('',-400,1)
-        RETURN 
+        RETURN
     END IF
     #FUN-C30017 add---str---
-    IF g_sfb.sfb43 MATCHES '[Ss]' THEN 
+    IF g_sfb.sfb43 MATCHES '[Ss]' THEN
         CALL cl_err('','mfg3557',0) #本單據目前已送簽或已核准
-        RETURN 
+        RETURN
     END IF
-    #FUN-C30017 add---end--- 
+    #FUN-C30017 add---end---
     IF SQLCA.SQLCODE=100 THEN
         LET l_vnf.vnf01 = g_sfb.sfb01
         #FUN-960025 MOD --STR-------------------
@@ -298,7 +299,7 @@ FUNCTION i301_aps_routesubc()
         LET l_vnf.vnf07 = 0   #FUN-870012
         LET l_vnf.vnflegal = g_legal #FUN-B50046 add
         LET l_vnf.vnfplant = g_plant #FUN-B50046 add
-      
+
         IF STATUS THEN
             CALL cl_err3("ins","vnf_file",l_vnf.vnf01,"",SQLCA.sqlcode,
                       "","",1)
@@ -335,7 +336,8 @@ END FUNCTION
             (comment)
             (if_flow
                 (variable_statement)
-                (variable_statement))
+                (else_flow
+                    (variable_statement)))
             (comment)
             (variable_statement)
             (comment)

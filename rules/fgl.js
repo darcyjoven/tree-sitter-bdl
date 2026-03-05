@@ -126,20 +126,20 @@ export default {
     seq(
       kw("CASE"),
       alias(optional($._variable), "case_vairable"),
-      repeat(
-        seq(
-          kw("WHEN"),
-          choice($._variable, $._expression),
-          repeat(choice($._fgl_statement, $._sql_statement)),
-        ),
-      ),
-      optional(
-        seq(
-          kw("OTHERWISE"),
-          repeat(choice($._fgl_statement, $._sql_statement)),
-        ),
-      ),
+      repeat($.when_flow),
+      optional($.otherwise_flow),
       kw("END CASE"),
+    ),
+  when_flow: ($) =>
+    seq(
+      kw("WHEN"),
+      $._expression,
+      repeat(choice($._fgl_statement, $._sql_statement)),
+    ),
+  otherwise_flow: ($) =>
+    seq(
+      kw("OTHERWISE"),
+      repeat(choice($._fgl_statement, $._sql_statement)),
     ),
   continue_flow: ($) =>
     seq(
@@ -192,7 +192,10 @@ export default {
       kw("THEN"),
       repeat(choice($._fgl_statement, $._sql_statement)),
       optional(
-        seq(kw("ELSE"), repeat(choice($._fgl_statement, $._sql_statement))),
+        alias(
+          seq(kw("ELSE"), repeat(choice($._fgl_statement, $._sql_statement))),
+          $.else_flow,
+        ),
       ),
       kw("END IF"),
     ),

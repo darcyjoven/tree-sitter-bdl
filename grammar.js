@@ -28,7 +28,9 @@ export default grammar({
 
   inline: ($) => [$._constant_statement, $.scope],
 
-  conflicts: ($) => [[$.case_flow, $._expression]],
+  conflicts: ($) => [
+    // [$.case_flow, $._expression]
+  ],
 
   rules: {
     //============================================================
