@@ -11,7 +11,7 @@ export default {
       $._display_block,
       $.menu_block,
       $._input_interface,
-      $.construct_block,
+      $._construct_interface,
       $.dialog_block,
       $.prompt_block,
     ),
@@ -166,8 +166,8 @@ export default {
       $.input_inline,
     ),
 
+  // INPUT
   input_inline: ($) => $._input_header,
-
   input_block: ($) =>
     prec(
       1,
@@ -194,7 +194,6 @@ export default {
       ),
       optional($._display_ctrl_attribute_block),
     ),
-  input_option: ($) => $._input_option,
   _input_option: ($) =>
     choice(
       seq(kw("BEFORE"), kw("INPUT")),
@@ -239,6 +238,7 @@ export default {
       seq(kw("AFTER"), kw("INSERT")),
     ),
 
+  // INPUT ARRAR
   input_array_block: ($) =>
     prec(
       1,
@@ -249,10 +249,9 @@ export default {
         kw("INPUT"),
       ),
     ),
-  _input_statement_block: ($) =>
-    seq($.input_option, repeat(choice($._sql_statement, $._fgl_statement))),
   input_array_inline: ($) => $._input_array_header,
-  // input array
+  _input_statement_block: ($) =>
+    seq($.interface_option, repeat(choice($._sql_statement, $._fgl_statement))),
   _input_array_header: ($) =>
     seq(
       kw("INPUT"),
@@ -265,6 +264,58 @@ export default {
       optional(seq(kw("HELP"), $._expression)),
     ),
 
+  // CONSTRUCT
+  _construct_interface: ($) => choice($.construct_inline, $.construct_block),
+  construct_block: ($) =>
+    prec(
+      1,
+      seq(
+        $._construct_header,
+        repeat(
+          seq(
+            $.interface_option,
+            repeat(choice($._sql_statement, $._fgl_statement)),
+          ),
+        ),
+        kw("END"),
+        kw("CONSTRUCT"),
+      ),
+    ),
+  construct_inline: ($) => $._construct_header,
+  _construct_header: ($) =>
+    seq(
+      kw("CONSTRUCT"),
+      choice(
+        // CONSTRUCT BY NAME
+        seq(
+          kw("BY"),
+          kw("NAME"),
+          alias($._variable, "where_condition"),
+          kw("ON"),
+          alias(commaSep1($._variable), "column_name"),
+        ),
+        // CONSTRUCT .. ON .. FROM ..
+        seq(
+          alias($._variable, "where_condition"),
+          kw("ON"),
+          alias(commaSep1($._variable), "column_name"),
+          kw("FROM"),
+          alias(commaSep1($._variable), "filed_name"),
+        ),
+      ),
+      optional($._display_ctrl_attribute_block),
+      optional(seq(kw("HELP"), $._expression)),
+    ),
+  _construct_option: ($) =>
+    choice(
+      seq(kw("BEFORE"), kw("CONSTRUCT")),
+      seq(kw("AFTER"), kw("CONSTRUCT")),
+    ),
+
+  dialog_block: ($) => "dialog_block",
+  prompt_block: ($) => "prompt_block",
+
+  interface_option: ($) => choice($._input_option, $._construct_option),
   interface_block_statement: ($) =>
     prec(
       1,
@@ -284,10 +335,6 @@ export default {
         seq(kw("CANCEL"), kw("INSERT")),
       ),
     ),
-
-  construct_block: ($) => "construct_block",
-  dialog_block: ($) => "dialog_block",
-  prompt_block: ($) => "prompt_block",
 
   _display_attribute_block: ($) =>
     seq(kw("ATTRIBUTE"), "(", commaSep1($._display_attribute), ")"),

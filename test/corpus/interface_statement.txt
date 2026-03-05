@@ -208,14 +208,14 @@ END MAIN
         (variable_statement)
         (variable_statement)
         (input_block
-            (input_option)
+            (interface_option)
             (message_interface)
             (if_flow
                 (select_sql))
-            (input_option)
+            (interface_option)
             (if_flow
                 (variable_statement))
-            (input_option)
+            (interface_option)
                 (message_interface))
         (if_flow
             (display_inline)
@@ -271,16 +271,16 @@ END MAIN
         (open_form)
         (display_inline)
         (input_array_block
-            (input_option)
+            (interface_option)
             (message_interface)
-            (input_option)
+            (interface_option)
             (if_flow
                 (interface_block_statement))
-            (input_option)
+            (interface_option)
             (message_interface)
-            (input_option)
+            (interface_option)
             (message_interface)
-            (input_option)
+            (interface_option)
             (if_flow
                 (variable_statement)))))
 
@@ -303,7 +303,61 @@ END MAIN
         (open_form)
         (display_inline)
         (input_array_block
-            (input_option)
+            (interface_option)
             (message_interface))))
 
+================================================================================|||
+CONSTRUCT 语句 1
+================================================================================|||
+MAIN
+    DISPLAY FORM f1
+    CONSTRUCT condition
+            ON id, fname, lname
+            FROM sr_cust.*
+    DISPLAY condition
+END MAIN
+--------------------------------------------------------------------------------|||
+(source_file
+	(main_block
+		(display_inline)
+		(construct_inline)
+		(display_inline)))
 
+
+================================================================================|||
+CONSTRUCT 语句 2
+================================================================================|||
+MAIN
+	OPEN FORM f1 FROM "form1"
+	DISPLAY FORM f1
+
+	CONSTRUCT BY NAME condition ON customer.*
+	    BEFORE CONSTRUCT
+	    	DISPLAY "A*" TO fname
+	      	DISPLAY "B*" TO lname
+	END CONSTRUCT
+
+	LET statement =
+	    "SELECT fname, lname FROM customer WHERE " || condition
+	DISPLAY "SQL: " || statement
+
+	DECLARE c1 CURSOR FROM statement
+	FOREACH c1 INTO cust.*
+		DISPLAY cust.*
+	END FOREACH
+END MAIN
+--------------------------------------------------------------------------------|||
+
+(source_file
+	(main_block
+		(open_form)
+		(display_inline)
+		(construct_block
+			(interface_option)
+			(display_inline)
+			(display_inline))
+		(variable_statement)
+		(display_inline)
+		(declare_sql)
+		(foreach_sql
+			(display_inline))))
