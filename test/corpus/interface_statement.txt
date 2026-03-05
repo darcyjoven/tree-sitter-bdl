@@ -361,3 +361,83 @@ END MAIN
 		(declare_sql)
 		(foreach_sql
 			(display_inline))))
+
+================================================================================|||
+DIALOG 语句 1
+================================================================================|||
+MAIN
+    OPEN FORM f FROM "lists"
+    DISPLAY FORM f
+    DIALOG ATTRIBUTES(UNBUFFERED)
+        DISPLAY ARRAY arr1 TO sr1.*
+        	BEFORE DISPLAY
+            	MESSAGE "We are in list one"
+        END DISPLAY
+
+        DISPLAY ARRAY arr2 TO sr2.*
+	        BEFORE DISPLAY
+	            MESSAGE "We are in list two"
+        END DISPLAY
+
+        ON ACTION close
+        	EXIT DIALOG
+    END DIALOG
+END MAIN
+--------------------------------------------------------------------------------|||
+(source_file
+	(main_block
+		(open_form)
+		(display_inline)
+		(dialog_block
+			(display_block
+				(interface_option)
+				(message_interface))
+			(display_block
+				(interface_option)
+				(message_interface))
+			(interface_option)
+				(exit_flow))))
+
+
+================================================================================|||
+DIALOG 语句 2
+================================================================================|||
+MAIN
+	DIALOG ATTRIBUTES(FIELD ORDER FORM, UNBUFFERED)
+
+	    CONSTRUCT BY NAME where_clause
+	          ON cust_id, cust_name, cust_state, cust_city, cust_zip
+	          ON ACTION clear
+	          	CLEAR cust_id, cust_name, cust_state, cust_city, cust_zip
+	    END CONSTRUCT
+
+	    DISPLAY ARRAY custarr TO sr.*
+	       	BEFORE ROW
+	         	MESSAGE SFMT("Row: %1/%2", DIALOG.getCurrentRow("sr"),
+	                                DIALOG.getArrayLength("sr"))
+	    END DISPLAY
+
+    ON ACTION fetch
+        DISPLAY where_clause
+        -- Execute SQL query here to fill custarr ...
+
+    ON ACTION close
+        EXIT DIALOG
+
+    END DIALOG
+END MAIN
+--------------------------------------------------------------------------------|||
+(source_file
+	(main_block
+		(dialog_block
+			(construct_block
+				(interface_option)
+				(clear_interface))
+			(display_block
+				(interface_option)
+				(message_interface))
+			(interface_option)
+			(display_inline)
+			(comment)
+			(interface_option)
+			(exit_flow))))

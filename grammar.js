@@ -30,6 +30,7 @@ export default grammar({
 
   conflicts: ($) => [
     // [$.case_flow, $._expression]
+    [$._fgl_statement, $._interface_block],
   ],
 
   rules: {
@@ -386,7 +387,13 @@ export default grammar({
     // 函数（function）
     // main function report dialog
     _function: ($) =>
-      choice($.main_block, $.function_block, $.report_block, $.dialog_block),
+      choice(
+        $.main_block,
+        $.function_block,
+        $.report_block,
+        //$.dialog_block
+      ),
+    // dialog_block 在fgl2.5中才能实现，目前没有环境无法测试
     main_block: ($) =>
       seq(
         kw("MAIN"),

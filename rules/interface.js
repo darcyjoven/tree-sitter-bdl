@@ -8,7 +8,7 @@ export default {
     choice(
       $._window_interface,
       $._show_interface,
-      $._display_block,
+      $._display_interface,
       $.menu_block,
       $._input_interface,
       $._construct_interface,
@@ -40,7 +40,7 @@ export default {
             seq($._expression, kw("ROWS"), ",", $._expression, kw("COLUMNS")),
           ),
         ),
-        optional($._display_attribute_block),
+        optional($._interface_attribute),
       ),
     ),
   close_window: ($) =>
@@ -59,15 +59,15 @@ export default {
         1,
         seq(kw("CLEAR"), kw("WINDOW"), choice($._identifier, kw("SCREEN"))),
       ),
-      seq(kw("CLEAR"), $._identifier),
+      seq(kw("CLEAR"), commaSep1($._identifier)),
     ),
 
   _show_interface: ($) =>
     choice($.message_interface, $.error_interface, $.scroll_interface),
   message_interface: ($) =>
-    seq(kw("MESSAGE"), $._expression, optional($._display_attribute_block)),
+    seq(kw("MESSAGE"), $._expression, optional($._interface_attribute)),
   error_interface: ($) =>
-    seq(kw("ERROR"), $._expression, optional($._display_attribute_block)),
+    seq(kw("ERROR"), $._expression, optional($._interface_attribute)),
   scroll_interface: ($) =>
     seq(
       kw("SCROLL"),
@@ -76,7 +76,7 @@ export default {
       optional(seq(kw("BY"), $._expression)),
     ),
 
-  _display_block: ($) => choice($.display_inline),
+  _display_interface: ($) => choice($.display_inline, $.display_block),
   display_inline: ($) =>
     seq(
       kw("DISPLAY"),
@@ -93,7 +93,37 @@ export default {
         // DISPLAY BY NAME
         seq(kw("BY"), kw("NAME"), commaSep1($._variable)),
       ),
-      optional($._display_attribute_block),
+      optional($._interface_attribute),
+    ),
+  display_block: ($) =>
+    seq(
+      kw("DISPLAY"),
+      kw("ARRAY"),
+      alias($._variable, "array_name"),
+      kw("TO"),
+      alias(seq($._identifier, ".*"), "screen_array"),
+      optional(seq(kw("HELP"), $._expression)),
+      optional($._interface_attribute),
+      repeat($._interface_block),
+      kw("END"),
+      kw("DISPLAY"),
+    ),
+  _display_option: ($) =>
+    choice(
+      seq(kw("BEFORE"), kw("DISPLAY")),
+      seq(kw("AFTER"), kw("DISPLAY")),
+      seq(kw("ON"), kw("APPEND")),
+      seq(kw("ON"), kw("INSERT")),
+      seq(kw("ON"), kw("UPDATE")),
+      seq(kw("ON"), kw("DELETE")),
+      seq(kw("ON"), kw("EXPAND"), "(", $._variable, ")"),
+      seq(kw("ON"), kw("COLLAPSE"), "(", $._variable, ")"),
+      seq(kw("ON"), kw("DRAG_START"), "(", $._variable, ")"),
+      seq(kw("ON"), kw("DRAG_FINISH"), "(", $._variable, ")"),
+      seq(kw("ON"), kw("DRAG_ENTER"), "(", $._variable, ")"),
+      seq(kw("ON"), kw("DRAG_OVER"), "(", $._variable, ")"),
+      seq(kw("ON"), kw("DROP"), "(", $._variable, ")"),
+      seq(kw("ON"), kw("FILL"), kw("BUFFER")),
     ),
 
   menu_block: ($) =>
@@ -169,10 +199,7 @@ export default {
   // INPUT
   input_inline: ($) => $._input_header,
   input_block: ($) =>
-    prec(
-      1,
-      seq($._input_header, repeat($._input_statement_block), kw("END INPUT")),
-    ),
+    prec(1, seq($._input_header, repeat($._interface_block), kw("END INPUT"))),
   _input_header: ($) =>
     seq(
       // input by name
@@ -192,7 +219,7 @@ export default {
           commaSep1($._variable),
         ),
       ),
-      optional($._display_ctrl_attribute_block),
+      optional($._interface_attribute),
     ),
   _input_option: ($) =>
     choice(
@@ -232,6 +259,7 @@ export default {
       ),
       seq(kw("AFTER"), kw("DELETE")),
       seq(kw("BEFORE"), kw("ROW")),
+      seq(kw("AFTER"), kw("ROW")),
       seq(kw("AFTER"), kw("INPUT")),
       seq(kw("ON"), kw("ROW"), kw("CHANGE")),
       seq(kw("BEFORE"), kw("INSERT")),
@@ -244,14 +272,12 @@ export default {
       1,
       seq(
         $._input_array_header,
-        repeat($._input_statement_block),
+        repeat($._interface_block),
         kw("END"),
         kw("INPUT"),
       ),
     ),
   input_array_inline: ($) => $._input_array_header,
-  _input_statement_block: ($) =>
-    seq($.interface_option, repeat(choice($._sql_statement, $._fgl_statement))),
   _input_array_header: ($) =>
     seq(
       kw("INPUT"),
@@ -260,7 +286,7 @@ export default {
       optional(kw("WITHOUT DEFAULTS")),
       kw("FROM"),
       alias(seq($._identifier, ".", "*"), "screen_array_name"),
-      optional($._display_ctrl_attribute_block),
+      optional($._interface_attribute),
       optional(seq(kw("HELP"), $._expression)),
     ),
 
@@ -271,12 +297,7 @@ export default {
       1,
       seq(
         $._construct_header,
-        repeat(
-          seq(
-            $.interface_option,
-            repeat(choice($._sql_statement, $._fgl_statement)),
-          ),
-        ),
+        repeat($._interface_block),
         kw("END"),
         kw("CONSTRUCT"),
       ),
@@ -303,7 +324,7 @@ export default {
           alias(commaSep1($._variable), "filed_name"),
         ),
       ),
-      optional($._display_ctrl_attribute_block),
+      optional($._interface_attribute),
       optional(seq(kw("HELP"), $._expression)),
     ),
   _construct_option: ($) =>
@@ -312,10 +333,34 @@ export default {
       seq(kw("AFTER"), kw("CONSTRUCT")),
     ),
 
-  dialog_block: ($) => "dialog_block",
+  // DIALOG
+  dialog_block: ($) =>
+    seq(
+      kw("DIALOG"),
+      $._interface_attribute,
+      repeat(
+        choice(
+          $._input_interface,
+          $._construct_interface,
+          $._display_interface,
+        ),
+      ),
+      repeat($._interface_block),
+      kw("END"),
+      kw("DIALOG"),
+    ),
+  _dialog_option: ($) =>
+    choice(seq(kw("BEFORE"), kw("DIALOG")), seq(kw("AFTER"), kw("DIALOG"))),
+
   prompt_block: ($) => "prompt_block",
 
-  interface_option: ($) => choice($._input_option, $._construct_option),
+  interface_option: ($) =>
+    choice(
+      $._input_option,
+      $._construct_option,
+      $._dialog_option,
+      $._display_option,
+    ),
   interface_block_statement: ($) =>
     prec(
       1,
@@ -333,14 +378,22 @@ export default {
         ),
         seq(kw("CANCEL"), kw("DELETE")),
         seq(kw("CANCEL"), kw("INSERT")),
+        seq(kw("ACCEPT"), kw("DIALOG")),
+        seq(kw("NEXT"), kw("DIALOG")),
+        seq(kw("ACCEPT"), kw("DISPLAY")),
       ),
     ),
 
-  _display_attribute_block: ($) =>
-    seq(kw("ATTRIBUTE"), "(", commaSep1($._display_attribute), ")"),
-  _display_ctrl_attribute_block: ($) =>
+  _interface_block: ($) =>
     seq(
-      kw("ATTRIBUTES"),
+      $.interface_option,
+      repeat(
+        choice($._fgl_statement, $._sql_statement, $.interface_block_statement),
+      ),
+    ),
+  _interface_attribute: ($) =>
+    seq(
+      choice(kw("ATTRIBUTES"), kw("ATTRIBUTE")),
       "(",
       commaSep1(choice($._display_attribute, $._ctrl_atrribute)),
       ")",
