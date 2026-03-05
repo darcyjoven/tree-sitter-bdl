@@ -5,7 +5,7 @@ import { commaSep, commaSep1, datetimeQualifier, kw, PREC } from "./util.js";
 // @ts-check
 
 export default {
-  fgl_statement: ($) =>
+  _fgl_statement: ($) =>
     choice(
       $.defer_statement,
       $._flow_ctrl_statement,
@@ -16,7 +16,7 @@ export default {
       $.schema_statement,
       $.compiler_options,
       $.demo_statement,
-      $.interface_block_statement
+      $.interface_block_statement,
     ),
   // _interface_statement: $ => '_interface_statement',
   demo_statement: ($) => "ON ACTION",
@@ -130,11 +130,14 @@ export default {
         seq(
           kw("WHEN"),
           choice($._variable, $._expression),
-          repeat(choice($.fgl_statement, $.sql_statement)),
+          repeat(choice($._fgl_statement, $._sql_statement)),
         ),
       ),
       optional(
-        seq(kw("OTHERWISE"), repeat(choice($.fgl_statement, $.sql_statement))),
+        seq(
+          kw("OTHERWISE"),
+          repeat(choice($._fgl_statement, $._sql_statement)),
+        ),
       ),
       kw("END CASE"),
     ),
@@ -177,7 +180,7 @@ export default {
       kw("TO"),
       $._expression,
       optional(seq(kw("STEP"), $._expression)),
-      repeat(choice($.fgl_statement, $.sql_statement)),
+      repeat(choice($._fgl_statement, $._sql_statement)),
       kw("END FOR"),
     ),
   goto_flow: ($) =>
@@ -187,9 +190,9 @@ export default {
       kw("IF"),
       $._expression,
       kw("THEN"),
-      repeat(choice($.fgl_statement, $.sql_statement)),
+      repeat(choice($._fgl_statement, $._sql_statement)),
       optional(
-        seq(kw("ELSE"), repeat(choice($.fgl_statement, $.sql_statement))),
+        seq(kw("ELSE"), repeat(choice($._fgl_statement, $._sql_statement))),
       ),
       kw("END IF"),
     ),
@@ -199,7 +202,7 @@ export default {
     seq(
       kw("WHILE"),
       $._expression,
-      repeat(choice($.fgl_statement, $.sql_statement)),
+      repeat(choice($._fgl_statement, $._sql_statement)),
       kw("END WHILE"),
     ),
   preprocessor_statement: ($) => $._preprocessor_statement,

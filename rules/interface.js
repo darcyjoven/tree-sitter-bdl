@@ -141,8 +141,8 @@ export default {
     ),
   _menu_statement: ($) =>
     choice(
-      $.fgl_statement,
-      $.sql_statement,
+      $._fgl_statement,
+      $._sql_statement,
       alias(
         choice(
           seq(kw("NEXT"), kw("OPTION"), $._identifier),
@@ -250,7 +250,7 @@ export default {
       ),
     ),
   _input_statement_block: ($) =>
-    seq($.input_option, repeat(choice($.sql_statement, $.fgl_statement))),
+    seq($.input_option, repeat(choice($._sql_statement, $._fgl_statement))),
   input_array_inline: ($) => $._input_array_header,
   // input array
   _input_array_header: ($) =>

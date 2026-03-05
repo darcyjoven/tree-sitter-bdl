@@ -4,7 +4,7 @@ import { commaSep1, kw } from "./util.js";
 
 const rules = {
   // 定义 SQL 相关的规则
-  sql_statement: ($) =>
+  _sql_statement: ($) =>
     choice($._static_sql, $._dynamic_sql, $._io_sql, $._transactions_sql),
   // 静态SQL
   _static_sql: ($) =>
@@ -131,11 +131,11 @@ const rules = {
       optional(seq(kw("INTO"), commaSep1($._variable))),
       optional(kw("WITH REOPTIMIZATION")),
       repeat(
-        choice($.fgl_statement, $.sql_statement, $._foreach_sql_statement),
+        choice($._fgl_statement, $._sql_statement, $._foreach__sql_statement),
       ),
       kw("END FOREACH"),
     ),
-  _foreach_sql_statement: ($) =>
+  _foreach__sql_statement: ($) =>
     choice(kw("CONTINUE FOREACH"), kw("EXIT FOREACH")),
   put_sql: ($) =>
     seq(

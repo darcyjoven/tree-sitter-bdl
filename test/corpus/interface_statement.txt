@@ -17,26 +17,16 @@ END MAIN
 --------------------------------------------------------------------------------|||
 (source_file
     (main_block
-        (fgl_statement
-            (open_window))
-        (fgl_statement
-            (close_window))
-        (fgl_statement
-            (open_window))
-        (fgl_statement
-            (open_window))
-        (fgl_statement
-            (current_window))
-        (fgl_statement
-            (current_window))
-        (fgl_statement
-            (close_window))
-        (fgl_statement
-            (close_window))
-        (fgl_statement
-            (open_form))
-        (fgl_statement
-            (close_form))))
+        (open_window)
+        (close_window)
+        (open_window)
+        (open_window)
+        (current_window)
+        (current_window)
+        (close_window)
+        (close_window)
+        (open_form)
+        (close_form)))
 
 ================================================================================|||
 ATTRIBUTE 语句
@@ -48,8 +38,7 @@ END MAIN
 --------------------------------------------------------------------------------|||
 (source_file
     (main_block
-        (fgl_statement
-            (display_inline))))
+        (display_inline)))
 
 ================================================================================|||
 INLINE 语句
@@ -68,22 +57,14 @@ END MAIN
 --------------------------------------------------------------------------------|||
 (source_file
     (main_block
-        (fgl_statement
-            (display_inline))
-        (fgl_statement
-            (display_inline))
-        (fgl_statement
-            (display_inline))
-        (fgl_statement
-            (display_inline))
-        (fgl_statement
-            (display_inline))
-        (fgl_statement
-            (error_interface))
-        (fgl_statement
-            (message_interface))
-        (fgl_statement
-            (scroll_interface))))
+        (display_inline)
+        (display_inline)
+        (display_inline)
+        (display_inline)
+        (display_inline)
+        (error_interface)
+        (message_interface)
+        (scroll_interface)))
 
 ================================================================================|||
 MENU 语句
@@ -106,24 +87,18 @@ END MAIN
 --------------------------------------------------------------------------------|||
 (source_file
     (main_block
-        (fgl_statement
-            (menu_block
-                (menu_option)
-                (fgl_statement
-                    (call_flow))
-                (menu_option)
-                (fgl_statement
-                    (call_flow))
-                (menu_option)
-                (fgl_statement
-                    (call_flow))
-                (menu_option)
-                (sql_statement
-                    (load_sql
-                        (insert_sql)))
-                (menu_option)
-                (fgl_statement
-                    (exit_flow))))))
+        (menu_block
+            (menu_option)
+            (call_flow)
+            (menu_option)
+            (call_flow)
+            (menu_option)
+            (call_flow)
+            (menu_option)
+            (load_sql
+                (insert_sql))
+            (menu_option)
+            (exit_flow))))
 
 ================================================================================|||
 MENU 语句 2
@@ -146,24 +121,18 @@ END MAIN
 --------------------------------------------------------------------------------|||
 (source_file
     (main_block
-        (fgl_statement
-            (menu_block
-                (menu_option)
-                (fgl_statement
-                    (call_flow))
-                (menu_option)
-                (fgl_statement
-                    (call_flow))
-                (menu_option)
-                (fgl_statement
-                    (call_flow))
-                (menu_option)
-                (sql_statement
-                    (load_sql
-                        (insert_sql)))
-                (menu_option)
-                (fgl_statement
-                    (exit_flow))))))
+        (menu_block
+            (menu_option)
+            (call_flow)
+            (menu_option)
+            (call_flow)
+            (menu_option)
+            (call_flow)
+            (menu_option)
+            (load_sql
+                (insert_sql))
+            (menu_option)
+            (exit_flow))))
 
 
 ================================================================================|||
@@ -187,22 +156,14 @@ END MAIN
 --------------------------------------------------------------------------------|||
 (source_file
     (main_block
-        (fgl_statement
-            (compiler_options))
-        (fgl_statement
-            (open_form))
-        (fgl_statement
-            (display_inline))
-        (fgl_statement
-            (variable_statement))
-        (fgl_statement
-            (input_inline))
-        (fgl_statement
-            (if_flow
-                (fgl_statement
-                    (display_inline))
-                (fgl_statement
-                    (variable_statement))))))
+        (compiler_options)
+        (open_form)
+        (display_inline)
+        (variable_statement)
+        (input_inline)
+        (if_flow
+            (display_inline)
+            (variable_statement))))
 
 ================================================================================|||
 INPUT 语句 2
@@ -240,41 +201,25 @@ END MAIN
 --------------------------------------------------------------------------------|||
 (source_file
     (main_block
-        (fgl_statement
-            (compiler_options))
-        (fgl_statement
-            (open_form))
-        (fgl_statement
-            (display_inline))
-        (fgl_statement
-            (variable_statement))
-        (fgl_statement
-            (variable_statement))
-        (fgl_statement
-            (variable_statement))
-        (fgl_statement
-            (input_block
-                (input_option)
-                (fgl_statement
-                    (message_interface))
-                (fgl_statement
-                    (if_flow
-                        (sql_statement
-                            (select_sql))))
-                (input_option)
-                    (fgl_statement
-                        (if_flow
-                            (fgl_statement
-                                (variable_statement))))
-                (input_option)
-                    (fgl_statement
-                        (message_interface))))
-        (fgl_statement
+        (compiler_options)
+        (open_form)
+        (display_inline)
+        (variable_statement)
+        (variable_statement)
+        (variable_statement)
+        (input_block
+            (input_option)
+            (message_interface)
             (if_flow
-                (fgl_statement
-                    (display_inline))
-                (fgl_statement
-                    (variable_statement))))))
+                (select_sql))
+            (input_option)
+            (if_flow
+                (variable_statement))
+            (input_option)
+                (message_interface))
+        (if_flow
+            (display_inline)
+            (variable_statement))))
 
 ================================================================================|||
 INPUT ARRAY 语句 1
@@ -289,12 +234,9 @@ END MAIN
 --------------------------------------------------------------------------------|||
 (source_file
     (main_block
-        (fgl_statement
-            (open_form))
-        (fgl_statement
-            (display_inline))
-        (fgl_statement
-            (input_array_inline))))
+        (open_form)
+        (display_inline)
+        (input_array_inline)))
 
 
 ================================================================================|||
@@ -326,31 +268,21 @@ END MAIN
 --------------------------------------------------------------------------------|||
 (source_file
     (main_block
-        (fgl_statement
-            (open_form))
-        (fgl_statement
-            (display_inline))
-        (fgl_statement
-            (input_array_block
-                (input_option)
-                (fgl_statement
-                    (message_interface))
-                (input_option)
-                (fgl_statement
-                    (if_flow
-                        (fgl_statement
-                            (interface_block_statement))))
-                (input_option)
-                (fgl_statement
-                    (message_interface))
-                (input_option)
-                (fgl_statement
-                    (message_interface))
-                (input_option)
-                (fgl_statement
-                    (if_flow
-                        (fgl_statement
-                            (variable_statement))))))))
+        (open_form)
+        (display_inline)
+        (input_array_block
+            (input_option)
+            (message_interface)
+            (input_option)
+            (if_flow
+                (interface_block_statement))
+            (input_option)
+            (message_interface)
+            (input_option)
+            (message_interface)
+            (input_option)
+            (if_flow
+                (variable_statement)))))
 
 ================================================================================|||
 INPUT ARRAY 语句 3
@@ -368,14 +300,10 @@ END MAIN
 --------------------------------------------------------------------------------|||
 (source_file
     (main_block
-        (fgl_statement
-            (open_form))
-        (fgl_statement
-            (display_inline))
-        (fgl_statement
-            (input_array_block
-                (input_option)
-                (fgl_statement
-                    (message_interface))))))
+        (open_form)
+        (display_inline)
+        (input_array_block
+            (input_option)
+            (message_interface))))
 
 

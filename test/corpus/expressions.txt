@@ -25,25 +25,16 @@ end main
 --------------------------------------------------------------------------------|||
 (source_file
     (main_block
-        (fgl_statement
-            (variable_statement))
-        (fgl_statement
-            (variable_statement))
-        (fgl_statement
-            (variable_statement))
-        (fgl_statement
-            (variable_statement))
-        (fgl_statement
-            (variable_statement))
-        (fgl_statement
-            (variable_statement))
-        (fgl_statement
-            (variable_statement))
-        (fgl_statement
-            (variable_statement))
-        (fgl_statement
-            (variable_statement
-                (MISSING _identifier)))))
+        (variable_statement)
+        (variable_statement)
+        (variable_statement)
+        (variable_statement)
+        (variable_statement)
+        (variable_statement)
+        (variable_statement)
+        (variable_statement)
+        (variable_statement
+                (MISSING _identifier))))
 
 
 ================================================================================|||
@@ -60,14 +51,10 @@ end main
 --------------------------------------------------------------------------------|||
 (source_file
     (main_block
-        (fgl_statement
-            (variable_statement))
-        (fgl_statement
-            (variable_statement))
-        (fgl_statement
-            (variable_statement))
-        (fgl_statement
-            (variable_statement))))
+        (variable_statement)
+        (variable_statement)
+        (variable_statement)
+        (variable_statement)))
 
 ================================================================================|||
 字符串表达式
@@ -80,12 +67,9 @@ end main
 --------------------------------------------------------------------------------|||
 (source_file
     (main_block
-        (fgl_statement
-            (variable_statement))
-        (fgl_statement
-            (variable_statement))
-        (fgl_statement
-            (variable_statement))))
+        (variable_statement)
+        (variable_statement)
+        (variable_statement)))
 
 ================================================================================|||
 日期表达式
@@ -97,10 +81,8 @@ end main
 --------------------------------------------------------------------------------|||
 (source_file
     (main_block
-        (fgl_statement
-            (variable_statement))
-        (fgl_statement
-            (variable_statement))))
+        (variable_statement)
+        (variable_statement)))
 
 ================================================================================|||
 时间表达式
@@ -114,10 +96,8 @@ END MAIN
 --------------------------------------------------------------------------------|||
 (source_file
     (main_block
-        (fgl_statement
-            (variable_statement))
-        (fgl_statement
-            (variable_statement))))
+        (variable_statement)
+        (variable_statement)))
 
 ================================================================================|||
 时间间隔表达式
@@ -133,11 +113,7 @@ END MAIN
 --------------------------------------------------------------------------------|||
 (source_file
     (main_block
-        (fgl_statement
-            (variable_statement))
-        (fgl_statement
-            (variable_statement))
-        (fgl_statement
-            (variable_statement))
-        (fgl_statement
-            (variable_statement))))
+        (variable_statement)
+        (variable_statement)
+        (variable_statement)
+        (variable_statement)))

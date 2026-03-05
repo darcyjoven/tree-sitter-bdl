@@ -10,12 +10,9 @@ end main
 
 (source_file
     (main_block
-        (fgl_statement
-            (exception_statement))
-        (fgl_statement
-            (exception_statement))
-        (fgl_statement
-            (exception_statement))))
+        (exception_statement)
+        (exception_statement)
+        (exception_statement)))
 
 ================================================================================|||
 TRY/CATCH 错误处理
@@ -34,14 +31,9 @@ end main
 --------------------------------------------------------------------------------|||
 (source_file
     (main_block
-    (fgl_statement
         (exception_statement
-            (fgl_statement
-                (exception_statement
-                    (fgl_statement
-                        (variable_statement))
-                    (fgl_statement
-                        (variable_statement))))
-            (fgl_statement
-                (variable_statement))))))
+            (exception_statement
+                (variable_statement)
+                (variable_statement))
+            (variable_statement))))
     

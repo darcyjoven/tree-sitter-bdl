@@ -14,8 +14,7 @@ end function
         (variable_definition
             (variable_name)
             (data_type))
-        (fgl_statement
-            (variable_statement))))
+        (variable_statement)))
 
 ================================================================================|||
 延迟语句
@@ -30,10 +29,8 @@ end function
 
 (source_file
     (function_block
-        (fgl_statement
-            (defer_statement))
-        (fgl_statement
-            (defer_statement))))
+        (defer_statement)
+        (defer_statement)))
 
 ================================================================================|||
 Let 赋值语句
@@ -50,10 +47,8 @@ end function
 
 (source_file
     (function_block
-        (fgl_statement
-            (variable_statement))
-        (fgl_statement
-            (variable_statement))))
+        (variable_statement)
+        (variable_statement)))
 
 ================================================================================|||
 VALIDATE 验证
@@ -72,10 +67,8 @@ END MAIN
         (variable_definition
             (variable_name)
             (data_type))
-        (fgl_statement
-            (variable_statement))
-        (fgl_statement
-            (variable_statement))))
+        (variable_statement)
+        (variable_statement)))
 
 
 ================================================================================|||
@@ -97,13 +90,10 @@ END MAIN
         (variable_definition
             (variable_name)
             (data_type))
-        (fgl_statement
-            (schema_statement))
-        (fgl_statement
-            (variable_statement))
+        (schema_statement)
+        (variable_statement)
         (comment)
-        (fgl_statement
-            (variable_statement))))
+        (variable_statement)))
 
 ================================================================================|||
 Preprocessor 预定义
@@ -234,86 +224,46 @@ END FUNCTION
         (variable_definition
             (variable_name)
             (data_type))
-        (fgl_statement
+        (variable_statement)
+        (variable_statement)
+        (if_flow
             (variable_statement))
-        (fgl_statement
-            (variable_statement))
-        (fgl_statement
+        (if_flow
             (if_flow
-                (fgl_statement
-                    (variable_statement))))
-        (fgl_statement
+                (call_flow)
+                (variable_statement)
+                (return_flow))
             (if_flow
-                (fgl_statement
-                    (if_flow
-                        (fgl_statement
-                            (call_flow))
-                        (fgl_statement
-                            (variable_statement))
-                        (fgl_statement
-                            (return_flow))))
-                (fgl_statement
-                    (if_flow
-                        (fgl_statement
-                            (variable_statement))
-                        (fgl_statement
-                            (variable_statement))))
-                (fgl_statement
-                    (if_flow
-                        (fgl_statement
-                            (variable_statement))
-                        (fgl_statement
-                            (variable_statement))))
-                (fgl_statement
-                    (if_flow
-                        (fgl_statement
-                            (variable_statement))
-                        (fgl_statement
-                            (variable_statement))))
-                (fgl_statement
-                    (if_flow
-                        (fgl_statement
-                            (variable_statement))
-                        (fgl_statement
-                            (variable_statement))))
-                (fgl_statement
-                    (if_flow))
-                (fgl_statement
-                    (if_flow
-                        (fgl_statement
-                            (variable_statement))))
-                (fgl_statement
-                    (if_flow
-                        (fgl_statement
-                            (variable_statement))))
-                (fgl_statement
-                    (variable_statement))
-                (fgl_statement
-                    (variable_statement))
-                (fgl_statement
-                    (call_flow))
-                (fgl_statement
-                    (call_flow))
-                (fgl_statement
-                    (if_flow
-                        (fgl_statement
-                            (variable_statement))
-                        (fgl_statement
-                            (variable_statement))
-                        (fgl_statement
-                            (variable_statement))
-                        (fgl_statement
-                            (call_flow))
-                        (fgl_statement
-                            (variable_statement))
-                        (fgl_statement
-                            (variable_statement))
-                        (fgl_statement
-                            (call_flow))
-                        (fgl_statement
-                            (call_flow))))))
-        (fgl_statement
-            (return_flow))))
+                (variable_statement)
+                (variable_statement))
+            (if_flow
+                (variable_statement)
+                (variable_statement))
+            (if_flow
+                (variable_statement)
+                (variable_statement))
+            (if_flow
+                (variable_statement)
+                (variable_statement))
+            (if_flow)
+            (if_flow
+                (variable_statement))
+            (if_flow
+                (variable_statement))
+            (variable_statement)
+            (variable_statement)
+            (call_flow)
+            (call_flow)
+            (if_flow
+                (variable_statement)
+                (variable_statement)
+                (variable_statement)
+                (call_flow)
+                (variable_statement)
+                (variable_statement)
+                (call_flow)
+                (call_flow)))
+        (return_flow)))
 
 
 ================================================================================|||
@@ -370,48 +320,30 @@ END FUNCTION
         (variable_definition
             (variable_name)
             (data_type))
-        (fgl_statement
-            (if_flow
-                (fgl_statement
-                    (call_flow))
-                (fgl_statement
-                    (return_flow))))
+        (if_flow
+            (call_flow)
+            (return_flow))
         (comment)
-        (fgl_statement
-            (if_flow
-                (fgl_statement
-                    (call_flow))
-                (comment)
-                (fgl_statement
-                    (return_flow))))
+        (if_flow
+            (call_flow)
+            (comment)
+            (return_flow))
         (comment)
-        (fgl_statement
+        (if_flow
+            (variable_statement)
+            (comment)
+            (comment)
             (if_flow
-                (fgl_statement
-                    (variable_statement))
-                (comment)
-                (comment)
-                (fgl_statement
-                    (if_flow
-                        (fgl_statement
-                            (variable_statement))
-                        (fgl_statement
-                            (variable_statement))))
-                (comment)
-                (fgl_statement
-                    (variable_statement))
-                (comment)
-                (fgl_statement
-                    (variable_statement))
-                (comment)
-                (fgl_statement
-                    (variable_statement))
-                (comment)
-                (fgl_statement
-                    (if_flow
-                        (fgl_statement
-                            (call_flow))))))
-        (fgl_statement
-            (variable_statement))
-        (fgl_statement
-            (call_flow))))
+                (variable_statement)
+                (variable_statement))
+            (comment)
+            (variable_statement)
+            (comment)
+            (variable_statement)
+            (comment)
+            (variable_statement)
+            (comment)
+            (if_flow
+                (call_flow)))
+        (variable_statement)
+        (call_flow)))

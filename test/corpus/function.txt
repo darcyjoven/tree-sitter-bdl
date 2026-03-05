@@ -11,8 +11,7 @@ END MAIN
 (source_file
     (comment)
     (main_block
-        (fgl_statement
-            (defer_statement))))
+        (defer_statement)))
 
 ================================================================================|||
 Function 函数
@@ -33,7 +32,6 @@ end function
 (source_file
     (comment)
     (function_block
-        (fgl_statement
-            (defer_statement)))
+        (defer_statement))
     (function_block
         (comment)))

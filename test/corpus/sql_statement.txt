@@ -22,20 +22,13 @@ END MAIN
 --------------------------------------------------------------------------------|||
 (source_file
     (main_block
-        (sql_statement
-            (update_sql))
-        (sql_statement
-            (select_sql))
-        (sql_statement
-            (select_sql))
-        (sql_statement
-            (create_sql))
-        (sql_statement
-            (select_sql))
-        (fgl_statement
-            (variable_statement))
-        (sql_statement
-            (delete_sql))))
+        (update_sql)
+        (select_sql)
+        (select_sql)
+        (create_sql)
+        (select_sql)
+        (variable_statement)
+        (delete_sql)))
 
 ================================================================================|||
 INSERT 语句
@@ -49,16 +42,11 @@ END MAIN
 --------------------------------------------------------------------------------|||
 (source_file
     (main_block
-        (sql_statement
-            (insert_sql))
-        (sql_statement
-            (insert_sql))
-        (sql_statement
-            (insert_sql))
-        (sql_statement
-            (insert_sql))
-        (sql_statement
-            (select_sql))))
+        (insert_sql)
+        (insert_sql)
+        (insert_sql)
+        (insert_sql)
+        (select_sql)))
 
 
 ================================================================================|||
@@ -74,8 +62,7 @@ END MAIN
 --------------------------------------------------------------------------------|||
 (source_file
     (main_block
-        (sql_statement
-            (update_sql))))
+        (update_sql)))
 
 
 ================================================================================|||
@@ -87,8 +74,7 @@ END MAIN
 --------------------------------------------------------------------------------|||
 (source_file
     (main_block
-        (sql_statement
-            (delete_sql))))
+        (delete_sql)))
 
 
 ================================================================================|||
@@ -107,10 +93,8 @@ END MAIN
 
 (source_file
     (main_block
-        (sql_statement
-            (select_sql))
-        (sql_statement
-            (select_sql))))
+        (select_sql)
+        (select_sql)))
 
 ================================================================================|||
 SQL ... END SQL 语句
@@ -127,11 +111,9 @@ END MAIN
 
 (source_file
     (main_block
-        (sql_statement
-            (block_sql
-                (insert_sql)))
-        (sql_statement
-            (insert_sql))))
+        (block_sql
+            (insert_sql))
+        (insert_sql)))
 
 ================================================================================|||
 DDL 语句
@@ -153,16 +135,11 @@ END MAIN
 
 (source_file
     (main_block
-        (sql_statement
-            (select_sql))
-        (sql_statement
-            (create_sql))
-        (sql_statement
-            (select_sql))
-        (sql_statement
-            (alter_sql))
-        (sql_statement
-            (rename_sql))))
+        (select_sql)
+        (create_sql)
+        (select_sql)
+        (alter_sql)
+        (rename_sql)))
 
 ================================================================================|||
 动态SQL 语句
@@ -178,12 +155,9 @@ END MAIN
 
 (source_file
     (main_block
-        (sql_statement
-            (prepare_sql))
-        (sql_statement
-            (execute_sql))
-        (fgl_statement
-            (variable_statement))))
+        (prepare_sql)
+        (execute_sql)
+        (variable_statement)))
 
 ================================================================================|||
 DECLARE 语句
@@ -203,16 +177,11 @@ END MAIN
 
 (source_file
     (main_block
-        (sql_statement
-            (prepare_sql))
-        (sql_statement
-            (declare_sql))
-        (fgl_statement
-            (variable_statement))
-        (sql_statement
-            (foreach_sql
-                (fgl_statement
-                    (variable_statement))))))
+        (prepare_sql)
+        (declare_sql)
+        (variable_statement)
+        (foreach_sql
+                (variable_statement))))
 
 
 ================================================================================|||
@@ -226,9 +195,8 @@ END MAIN
 --------------------------------------------------------------------------------|||
 (source_file
     (main_block
-        (sql_statement
-            (declare_sql
-                (select_sql)))))
+        (declare_sql
+            (select_sql))))
 
 ================================================================================|||
 DECLARE 语句 3
@@ -246,14 +214,10 @@ END MAIN
 --------------------------------------------------------------------------------|||
 (source_file
     (main_block
-        (sql_statement
-            (declare_sql))
-        (fgl_statement
-            (variable_statement))
-        (sql_statement
-            (foreach_sql
-                (fgl_statement
-                    (variable_statement))))))
+        (declare_sql)
+        (variable_statement)
+        (foreach_sql
+                (variable_statement))))
 
 ================================================================================|||
 DECLARE 语句 4
@@ -271,15 +235,11 @@ END MAIN
 --------------------------------------------------------------------------------|||
 (source_file
     (main_block
-        (sql_statement
-            (declare_sql
-                (select_sql)))
-        (fgl_statement
-            (variable_statement))
-        (sql_statement
-            (foreach_sql
-                (sql_statement
-                    (update_sql))))))
+        (declare_sql
+            (select_sql))
+        (variable_statement)
+        (foreach_sql
+                (update_sql))))
 
 ================================================================================|||
 OPEN 语句
@@ -298,20 +258,13 @@ END MAIN
 --------------------------------------------------------------------------------|||
 (source_file
     (main_block
-        (sql_statement
-            (declare_sql))
-        (fgl_statement
-            (variable_statement))
-        (sql_statement
-            (open_sql))
-        (sql_statement
-            (fetch_sql))
-        (fgl_statement
-            (variable_statement))
-        (sql_statement
-            (open_sql))
-        (sql_statement
-            (fetch_sql))))
+        (declare_sql)
+        (variable_statement)
+        (open_sql)
+        (fetch_sql)
+        (variable_statement)
+        (open_sql)
+        (fetch_sql)))
 
 
 ================================================================================|||
@@ -332,24 +285,16 @@ END MAIN
 --------------------------------------------------------------------------------|||
 (source_file
     (main_block
-        (sql_statement
-            (declare_sql
-                (select_sql)))
-        (sql_statement
-            (open_sql))
-        (sql_statement
-            (fetch_sql))
-        (sql_statement
-            (fetch_sql))
-        (sql_statement
-            (fetch_sql))
-        (sql_statement
-            (fetch_sql))
-        (sql_statement
-            (fetch_sql))
+        (declare_sql
+            (select_sql))
+        (open_sql)
+        (fetch_sql)
+        (fetch_sql)
+        (fetch_sql)
+        (fetch_sql)
+        (fetch_sql)
         (comment)
-        (sql_statement
-            (fetch_sql))
+        (fetch_sql)
         (comment)))
 
 ================================================================================|||
@@ -367,17 +312,12 @@ END MAIN
 --------------------------------------------------------------------------------|||
 (source_file
     (main_block
-    (sql_statement
         (declare_sql
-            (select_sql)))
-    (sql_statement
-        (open_sql))
-    (sql_statement
-        (close_sql))
-    (sql_statement
-        (open_sql))
-    (sql_statement
-        (close_sql))))
+            (select_sql))
+        (open_sql)
+        (close_sql)
+        (open_sql)
+        (close_sql)))
 
 
 ================================================================================|||
@@ -399,21 +339,14 @@ END MAIN
 --------------------------------------------------------------------------------|||
 (source_file
     (main_block
-    (fgl_statement
         (for_flow
-            (sql_statement
-                (declare_sql
-                    (select_sql)))
-            (fgl_statement
-                (for_flow
-                    (sql_statement
-                        (open_sql))
-                    (sql_statement
-                        (fetch_sql))
-                    (sql_statement
-                        (close_sql))))
-        (fgl_statement
-            (variable_statement))))))
+            (declare_sql
+                (select_sql))
+            (for_flow
+                (open_sql)
+                (fetch_sql)
+                (close_sql))
+        (variable_statement))))
 
 ================================================================================|||
 FOREACH 语句
@@ -432,16 +365,12 @@ END MAIN
 --------------------------------------------------------------------------------|||
 (source_file
     (main_block
-        (sql_statement
-            (declare_sql
-                (select_sql)))
-        (fgl_statement
-            (variable_statement))
-        (sql_statement
-            (foreach_sql
-                (fgl_statement
-                    (variable_statement))
-                (comment)))
+        (declare_sql
+            (select_sql))
+        (variable_statement)
+        (foreach_sql
+            (variable_statement)
+            (comment))
         (comment)))
 
 ================================================================================|||
@@ -467,27 +396,17 @@ END MAIN
 --------------------------------------------------------------------------------|||
 (source_file
     (main_block
-    (sql_statement
-        (declare_sql
-            (insert_sql)))
-    (sql_statement
-        (open_sql))
-    (fgl_statement
-        (for_flow
-            (fgl_statement
-                (variable_statement))
-            (fgl_statement
-                (variable_statement))
-            (sql_statement
-                (put_sql))
-            (fgl_statement
-                (if_flow
-                    (sql_statement
-                        (flush_sql))))))
-    (sql_statement
-        (close_sql))
-    (fgl_statement
-        (variable_statement))))
+    (declare_sql
+        (insert_sql))
+    (open_sql)
+    (for_flow
+        (variable_statement)
+        (variable_statement)
+        (put_sql)
+        (if_flow
+            (flush_sql)))
+    (close_sql)
+    (variable_statement)))
 
 ================================================================================|||
 PUT/FLUSH 语句 2
@@ -511,26 +430,16 @@ END MAIN
 --------------------------------------------------------------------------------|||
 (source_file
     (main_block
-        (sql_statement
-            (declare_sql))
-        (sql_statement
-            (open_sql))
-        (fgl_statement
-            (for_flow
-                (fgl_statement
-                    (variable_statement))
-                (fgl_statement
-                    (variable_statement))
-                (sql_statement
-                    (put_sql))
-                (fgl_statement
-                    (if_flow
-                        (sql_statement
-                            (flush_sql))))))
-        (sql_statement
-            (close_sql))
-        (fgl_statement
-            (variable_statement))))
+        (declare_sql)
+        (open_sql)
+        (for_flow
+            (variable_statement)
+            (variable_statement)
+            (put_sql)
+            (if_flow
+                (flush_sql)))
+        (close_sql)
+        (variable_statement)))
 
 ================================================================================|||
 PUT/FLUSH 语句 3
@@ -553,27 +462,17 @@ END MAIN
 --------------------------------------------------------------------------------|||
 (source_file
     (main_block
-        (sql_statement
-            (declare_sql
-                (insert_sql)))
-        (sql_statement
-            (open_sql))
-        (fgl_statement
-            (variable_statement))
-        (sql_statement
-            (put_sql))
-        (sql_statement
-            (update_sql))
-        (sql_statement
-            (put_sql))
-        (sql_statement
-            (put_sql))
-        (sql_statement
-            (flush_sql))
-        (sql_statement
-            (close_sql))
-        (fgl_statement
-            (variable_statement))))
+        (declare_sql
+            (insert_sql))
+        (open_sql)
+        (variable_statement)
+        (put_sql)
+        (update_sql)
+        (put_sql)
+        (put_sql)
+        (flush_sql)
+        (close_sql)
+        (variable_statement)))
 
 ================================================================================|||
 PUT/FLUSH 语句 2
@@ -597,26 +496,16 @@ END MAIN
 --------------------------------------------------------------------------------|||
 (source_file
     (main_block
-        (sql_statement
-            (declare_sql))
-        (sql_statement
-            (open_sql))
-        (fgl_statement
-            (for_flow
-                (fgl_statement
-                    (variable_statement))
-                (fgl_statement
-                    (variable_statement))
-                (sql_statement
-                    (put_sql))
-                (fgl_statement
-                    (if_flow
-                        (sql_statement
-                            (flush_sql))))))
-        (sql_statement
-            (close_sql))
-        (fgl_statement
-            (variable_statement))))
+        (declare_sql)
+        (open_sql)
+        (for_flow
+            (variable_statement)
+            (variable_statement)
+            (put_sql)
+            (if_flow
+                (flush_sql)))
+        (close_sql)
+        (variable_statement)))
 
 ================================================================================|||
 事务 1
@@ -632,14 +521,10 @@ END MAIN
 
 (source_file
     (main_block
-        (sql_statement
-            (begin_work))
-        (sql_statement
-            (insert_sql))
-        (sql_statement
-            (update_sql))
-        (sql_statement
-            (commit_work))))
+        (begin_work)
+        (insert_sql)
+        (update_sql)
+        (commit_work)))
 
 ================================================================================|||
 事务 2
@@ -658,23 +543,15 @@ END MAIN
 
 (source_file
     (main_block
-        (sql_statement
-            (begin_work))
-        (sql_statement
-            (delete_sql))
-        (sql_statement
-            (savepoint))
-        (sql_statement
-            (insert_sql))
-        (sql_statement
-            (savepoint))
+        (begin_work)
+        (delete_sql)
+        (savepoint)
+        (insert_sql)
+        (savepoint)
         (comment)
-        (sql_statement
-            (update_sql))
-        (sql_statement
-            (rollback_work))
-        (sql_statement
-            (commit_work))))
+        (update_sql)
+        (rollback_work)
+        (commit_work)))
 
 
 ================================================================================|||
@@ -694,20 +571,13 @@ END MAIN
 --------------------------------------------------------------------------------|||
 (source_file
     (main_block
-        (fgl_statement
-            (exception_statement))
-        (sql_statement
-            (begin_work))
-        (sql_statement
-            (insert_sql))
-        (sql_statement
-            (delete_sql))
-        (fgl_statement
-            (if_flow
-                (sql_statement
-                    (rollback_work))
-                (sql_statement
-                    (commit_work))))))
+        (exception_statement)
+        (begin_work)
+        (insert_sql)
+        (delete_sql)
+        (if_flow
+            (rollback_work)
+            (commit_work))))
 
 
 ================================================================================|||
@@ -727,24 +597,15 @@ END MAIN
 --------------------------------------------------------------------------------|||
 (source_file
     (main_block
-        (sql_statement
-            (begin_work))
-        (sql_statement
-            (delete_sql))
-        (sql_statement
-            (savepoint))
-        (sql_statement
-            (insert_sql))
-        (sql_statement
-            (savepoint))
-        (sql_statement
-            (update_sql))
-        (sql_statement
-            (release_savepoint))
-        (sql_statement
-            (rollback_work))
-        (sql_statement
-            (commit_work))))
+        (begin_work)
+        (delete_sql)
+        (savepoint)
+        (insert_sql)
+        (savepoint)
+        (update_sql)
+        (release_savepoint)
+        (rollback_work)
+        (commit_work)))
 
 
 ================================================================================|||
@@ -758,10 +619,8 @@ END MAIN
 --------------------------------------------------------------------------------|||
  (source_file
     (main_block
-        (sql_statement
-            (set_isolation))
-        (sql_statement
-            (set_lock_mode))))
+        (set_isolation)
+        (set_lock_mode)))
 
 ================================================================================|||
 I/O 语句
@@ -777,18 +636,13 @@ END MAIN
 --------------------------------------------------------------------------------|||
  (source_file
     (main_block
-        (sql_statement
-            (begin_work))
-        (sql_statement
-            (delete_sql))
-        (sql_statement
-            (load_sql
-                (insert_sql)))
-        (sql_statement
-            (load_sql
-                (insert_sql)))
-        (sql_statement
-            (commit_work))))
+        (begin_work)
+        (delete_sql)
+        (load_sql
+            (insert_sql))
+        (load_sql
+            (insert_sql))
+        (commit_work)))
 
 ================================================================================|||
 I/O 语句 2
@@ -802,8 +656,6 @@ END MAIN
 --------------------------------------------------------------------------------|||
  (source_file
     (main_block
-        (fgl_statement
-            (variable_statement))
-        (sql_statement
-            (unload_sql
-                (select_sql)))))
+        (variable_statement)
+        (unload_sql
+            (select_sql))))

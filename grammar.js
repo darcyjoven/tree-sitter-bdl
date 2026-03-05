@@ -411,7 +411,7 @@ export default grammar({
         $.user_type_definition,
         $.variable_definition,
       ),
-    _statement: ($) => choice($.fgl_statement, $.sql_statement),
+    _statement: ($) => choice($._fgl_statement, $._sql_statement),
 
     // ============================import========================
     ...fglStatement,
