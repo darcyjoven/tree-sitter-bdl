@@ -91,15 +91,15 @@ MENU 语句
 
 MAIN
     MENU
-        ON ACTION new 
+        ON ACTION new
             CALL newFile()
-        ON ACTION open 
+        ON ACTION open
             CALL openFile()
-        ON ACTION save 
+        ON ACTION save
             CALL saveFile()
-        ON ACTION import 
-            LOAD FROM "infile.dat" INSERT INTO table 
-        ON ACTION quit 
+        ON ACTION import
+            LOAD FROM "infile.dat" INSERT INTO table
+        ON ACTION quit
             EXIT PROGRAM
     END MENU
 END MAIN
@@ -138,7 +138,7 @@ MAIN
         COMMAND KEY ( CONTROL-S ) "Save" "Save Current File" HELP 103
             CALL saveFile()
         COMMAND "Import"
-            LOAD FROM "infile.dat" INSERT INTO table 
+            LOAD FROM "infile.dat" INSERT INTO table
         COMMAND KEY ( CONTROL-Q ) "Quit" "Quit Program" HELP 201
             EXIT PROGRAM
     END MENU
@@ -211,7 +211,7 @@ INPUT 语句 2
 MAIN
     OPTIONS INPUT WRAP
     OPEN FORM f FROM "form1"
-    DISPLAY FORM f 
+    DISPLAY FORM f
 
     LET custrec.id = ARG_VAL(1)
     LET upd = (custrec.id < 0)
@@ -221,10 +221,10 @@ MAIN
         BEFORE INPUT
             MESSAGE "Enter customer information..."
             IF upd THEN
-                SELECT fname, lname INTO custrec.fname, customer.lname 
+                SELECT fname, lname INTO custrec.fname, customer.lname
                     FROM customer WHERE customer.id = custrec.id
             END IF
-        AFTER FIELD fname 
+        AFTER FIELD fname
             IF FIELD_TOUCHED(custrec.fname) AND custrec.fname IS NULL THEN
                 LET custrec.lname = NULL
             END IF
@@ -275,3 +275,107 @@ END MAIN
                     (display_inline))
                 (fgl_statement
                     (variable_statement))))))
+
+================================================================================|||
+INPUT ARRAY 语句 1
+================================================================================|||
+
+MAIN
+    OPEN FORM f FROM "custlist"
+    DISPLAY FORM f
+
+    INPUT ARRAY custarr WITHOUT DEFAULTS FROM sr_cust.*
+END MAIN
+--------------------------------------------------------------------------------|||
+(source_file
+    (main_block
+        (fgl_statement
+            (open_form))
+        (fgl_statement
+            (display_inline))
+        (fgl_statement
+            (input_array_inline))))
+
+
+================================================================================|||
+INPUT ARRAY 语句 2
+================================================================================|||
+
+MAIN
+    OPEN FORM f1 FROM "custlist"
+    DISPLAY FORM f1
+
+    INPUT ARRAY custarr WITHOUT DEFAULTS FROM sr_cust.*
+        ATTRIBUTES (COUNT=size, MAXCOUNT=50, UNBUFFERED, INSERT ROW=allow_insert)
+        BEFORE INPUT
+            MESSAGE "Editing the customer table"
+        BEFORE INSERT
+            IF arr_curr()=4 THEN
+                cancel insert
+            END IF
+        BEFORE FIELD fname
+            MESSAGE "Enter First Name"
+        BEFORE FIELD lname
+            MESSAGE "Enter Last Name"
+        AFTER FIELD lname
+            IF custarr[arr_curr()].lname IS NULL THEN
+                LET custarr[arr_curr()].fname = NULL
+            END IF
+    END INPUT
+END MAIN
+--------------------------------------------------------------------------------|||
+(source_file
+    (main_block
+        (fgl_statement
+            (open_form))
+        (fgl_statement
+            (display_inline))
+        (fgl_statement
+            (input_array_block
+                (input_option)
+                (fgl_statement
+                    (message_interface))
+                (input_option)
+                (fgl_statement
+                    (if_flow
+                        (fgl_statement
+                            (interface_block_statement))))
+                (input_option)
+                (fgl_statement
+                    (message_interface))
+                (input_option)
+                (fgl_statement
+                    (message_interface))
+                (input_option)
+                (fgl_statement
+                    (if_flow
+                        (fgl_statement
+                            (variable_statement))))))))
+
+================================================================================|||
+INPUT ARRAY 语句 3
+================================================================================|||
+MAIN
+    OPEN FORM f FROM "custlist"
+    DISPLAY FORM f
+
+    INPUT ARRAY custarr WITHOUT DEFAULTS FROM sr_cust.*
+                    ATTRIBUTES ( UNBUFFERED )
+        ON ROW CHANGE
+            MESSAGE "Row #"||arr_curr()||" has been updated."
+    END INPUT
+END MAIN
+--------------------------------------------------------------------------------|||
+(source_file
+    (main_block
+        (fgl_statement
+            (open_form))
+        (fgl_statement
+            (display_inline))
+        (fgl_statement
+            (input_array_block
+                (input_option)
+                (fgl_statement
+                    (message_interface))))))
+
+

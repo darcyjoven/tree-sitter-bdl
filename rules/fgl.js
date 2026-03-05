@@ -16,6 +16,7 @@ export default {
       $.schema_statement,
       $.compiler_options,
       $.demo_statement,
+      $.interface_block_statement
     ),
   // _interface_statement: $ => '_interface_statement',
   demo_statement: ($) => "ON ACTION",

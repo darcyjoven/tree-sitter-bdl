@@ -10,7 +10,7 @@ export default {
       $._show_interface,
       $._display_block,
       $.menu_block,
-      $._input_inteface,
+      $._input_interface,
       $.construct_block,
       $.dialog_block,
       $.prompt_block,
@@ -158,19 +158,20 @@ export default {
       ),
     ),
 
-  _input_inteface: ($) =>
-    choice($.input_inline, $.input_block, $.input_array_block),
+  _input_interface: ($) =>
+    choice(
+      $.input_array_block,
+      $.input_block,
+      $.input_array_inline,
+      $.input_inline,
+    ),
 
   input_inline: ($) => $._input_header,
 
   input_block: ($) =>
     prec(
       1,
-      seq(
-        $._input_header,
-        repeat(seq($.input_option, repeat($._input_statement))),
-        kw("END INPUT"),
-      ),
+      seq($._input_header, repeat($._input_statement_block), kw("END INPUT")),
     ),
   _input_header: ($) =>
     seq(
@@ -193,7 +194,8 @@ export default {
       ),
       optional($._display_ctrl_attribute_block),
     ),
-  input_option: ($) =>
+  input_option: ($) => $._input_option,
+  _input_option: ($) =>
     choice(
       seq(kw("BEFORE"), kw("INPUT")),
       seq(kw("AFTER"), kw("INPUT")),
@@ -229,31 +231,59 @@ export default {
         ),
         ")",
       ),
-    ),
-  _input_statement: ($) =>
-    choice(
-      $.fgl_statement,
-      $.sql_statement,
-      alias(
-        choice(
-          seq(kw("ACCEPT"), kw("INPUT")),
-          seq(
-            kw("NEXT"),
-            kw("FIELD"),
-            choice(
-              kw("CURRENT"),
-              kw("NEXT"),
-              kw("PREVIOUS"),
-              alias($._identifier, "field_name"),
-            ),
-          ),
-        ),
-        $.input_statement,
-      ),
+      seq(kw("AFTER"), kw("DELETE")),
+      seq(kw("BEFORE"), kw("ROW")),
+      seq(kw("AFTER"), kw("INPUT")),
+      seq(kw("ON"), kw("ROW"), kw("CHANGE")),
+      seq(kw("BEFORE"), kw("INSERT")),
+      seq(kw("AFTER"), kw("INSERT")),
     ),
 
-  input_array_block: ($) => "input_array_block",
+  input_array_block: ($) =>
+    prec(
+      1,
+      seq(
+        $._input_array_header,
+        repeat($._input_statement_block),
+        kw("END"),
+        kw("INPUT"),
+      ),
+    ),
+  _input_statement_block: ($) =>
+    seq($.input_option, repeat(choice($.sql_statement, $.fgl_statement))),
+  input_array_inline: ($) => $._input_array_header,
   // input array
+  _input_array_header: ($) =>
+    seq(
+      kw("INPUT"),
+      kw("ARRAY"),
+      alias($._variable, "array_name"),
+      optional(kw("WITHOUT DEFAULTS")),
+      kw("FROM"),
+      alias(seq($._identifier, ".", "*"), "screen_array_name"),
+      optional($._display_ctrl_attribute_block),
+      optional(seq(kw("HELP"), $._expression)),
+    ),
+
+  interface_block_statement: ($) =>
+    prec(
+      1,
+      choice(
+        seq(kw("ACCEPT"), kw("INPUT")),
+        seq(
+          kw("NEXT"),
+          kw("FIELD"),
+          choice(
+            kw("CURRENT"),
+            kw("NEXT"),
+            kw("PREVIOUS"),
+            alias($._identifier, "field_name"),
+          ),
+        ),
+        seq(kw("CANCEL"), kw("DELETE")),
+        seq(kw("CANCEL"), kw("INSERT")),
+      ),
+    ),
 
   construct_block: ($) => "construct_block",
   dialog_block: ($) => "dialog_block",
