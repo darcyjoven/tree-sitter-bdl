@@ -26,13 +26,18 @@ export default {
   // 标识符
   identifier: ($) => $._identifier,
   // 允许连字符
-  _identifier: (_) => /[a-zA-Z_][a-zA-Z0-9_-]*/,
+  _identifier: (_) => /[a-zA-Z_][a-zA-Z0-9_]*/,
   // 整数
   _natural_number: (_) => /\d+/,
   // 字面值
   literal: ($) => $._literal,
   _literal: ($) =>
-    choice($._string_literal, $._number_literal, $._datetime_literal),
+    choice(
+      $._string_literal,
+      $._number_literal,
+      $._datetime_literal,
+      $._other_literal,
+    ),
   _string_literal: (_) =>
     choice(
       token(
@@ -95,7 +100,7 @@ export default {
         datetimeQualifier,
       ),
     ),
-  _other_literal: (_) => choice(kw("NULL"), kw("TODAY")),
+  _other_literal: (_) => choice(kw("NULL"), kw("TODAY"), kw("CURRENT")),
   // 作用域
   scope: ($) => choice(kw("PRIVATE"), kw("PUBLIC")),
   // 变量/方法名

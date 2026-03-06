@@ -124,7 +124,7 @@ export default {
   case_flow: ($) =>
     seq(
       kw("CASE"),
-      alias(optional($._variable), "case_vairable"),
+      alias(optional($._expression), "case_vairable"),
       repeat($.when_flow),
       optional($.otherwise_flow),
       kw("END CASE"),
@@ -148,6 +148,7 @@ export default {
         kw("CONSTRUCT"),
         kw("INPUT"),
         kw("DIALOG"),
+        kw("DISPLAY"),
       ),
     ),
   exit_flow: ($) =>
@@ -284,14 +285,14 @@ export default {
         ),
       ),
       prec.left(PREC.comparative, seq($._expression, "=", $._expression)),
-      prec.left(PREC.comparative, seq($._expression, ":=", $._expression)),
-      prec.left(PREC.comparative, seq($._expression, "==", $._expression)),
-      prec.left(PREC.comparative, seq($._expression, "!=", $._expression)),
-      prec.left(PREC.comparative, seq($._expression, "<>", $._expression)),
+      prec.left(PREC.comparative, seq($._expression, ":", "=", $._expression)),
+      prec.left(PREC.comparative, seq($._expression, "=", "=", $._expression)),
+      prec.left(PREC.comparative, seq($._expression, "!", "=", $._expression)),
+      prec.left(PREC.comparative, seq($._expression, "<", ">", $._expression)),
       prec.left(PREC.comparative, seq($._expression, "<", $._expression)),
-      prec.left(PREC.comparative, seq($._expression, "<=", $._expression)),
+      prec.left(PREC.comparative, seq($._expression, "<", "=", $._expression)),
       prec.left(PREC.comparative, seq($._expression, ">", $._expression)),
-      prec.left(PREC.comparative, seq($._expression, ">=", $._expression)),
+      prec.left(PREC.comparative, seq($._expression, ">", "=", $._expression)),
     ),
   _numberic_expression: ($) =>
     choice(
@@ -301,9 +302,13 @@ export default {
       ),
       prec.left(PREC.additive, seq($._expression, "+", $._expression)),
       prec.left(PREC.additive, seq($._expression, "-", $._expression)),
+      prec(PREC.unary, seq("-", $._expression)),
       prec.left(PREC.multiplicative, seq($._expression, "*", $._expression)),
       prec.left(PREC.multiplicative, seq($._expression, "/", $._expression)),
-      prec.left(PREC.multiplicative, seq($._expression, "**", $._expression)),
+      prec.left(
+        PREC.multiplicative,
+        seq($._expression, "*", "*", $._expression),
+      ),
       prec.left(
         PREC.multiplicative,
         seq($._expression, kw("MOD"), $._expression),
@@ -312,7 +317,7 @@ export default {
   _string_expression: ($) =>
     choice(
       // seq(kw("COLEMN"), choice(seq("(", $._expression, ")"), $._expression)),
-      prec.left(-1, seq($._expression, "||", $._expression)),
+      prec.left(-1, seq($._expression, "|", "|", $._expression)),
       prec.left(-1, seq($._expression, ",", $._expression)),
       prec.right(PREC.ascii, seq($._expression, kw("USING"), $._expression)),
       prec.left(PREC.ascii, seq($._expression, kw("CLIPPED"))),

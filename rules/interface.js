@@ -78,24 +78,37 @@ export default {
 
   _display_interface: ($) => choice($.display_inline, $.display_block),
   display_inline: ($) =>
-    seq(
-      kw("DISPLAY"),
-      choice(
-        // DISPLAY FORM
-        seq(kw("FORM"), $._identifier),
-        // DISPLAY text AT
-        seq(
-          $._expression,
-          optional(seq(kw("AT"), $._expression, ",", $._expression)),
+    choice(
+      seq(
+        kw("DISPLAY"),
+        choice(
+          // DISPLAY FORM
+          seq(kw("FORM"), $._identifier),
+          // DISPLAY text AT
+          seq(
+            $._expression,
+            optional(seq(kw("AT"), $._expression, ",", $._expression)),
+          ),
+          // DISPLAY .. TO ..
+          seq($._expression, kw("TO"), commaSep1($._variable)),
+          // DISPLAY BY NAME
+          seq(kw("BY"), kw("NAME"), commaSep1($._variable)),
         ),
-        // DISPLAY .. TO ..
-        seq($._expression, kw("TO"), commaSep1($._variable)),
-        // DISPLAY BY NAME
-        seq(kw("BY"), kw("NAME"), commaSep1($._variable)),
+        optional($._interface_attribute),
       ),
-      optional($._interface_attribute),
+      $._display_array_inline,
     ),
   display_block: ($) =>
+    prec(
+      1,
+      seq(
+        $._display_array_inline,
+        repeat($._interface_block),
+        kw("END"),
+        kw("DISPLAY"),
+      ),
+    ),
+  _display_array_inline: ($) =>
     seq(
       kw("DISPLAY"),
       kw("ARRAY"),
@@ -104,9 +117,6 @@ export default {
       alias(seq($._identifier, ".*"), "screen_array"),
       optional(seq(kw("HELP"), $._expression)),
       optional($._interface_attribute),
-      repeat($._interface_block),
-      kw("END"),
-      kw("DISPLAY"),
     ),
   _display_option: ($) =>
     choice(
@@ -259,6 +269,7 @@ export default {
         ),
         ")",
       ),
+      seq(kw("BEFORE"), kw("DELETE")),
       seq(kw("AFTER"), kw("DELETE")),
       seq(kw("BEFORE"), kw("ROW")),
       seq(kw("AFTER"), kw("ROW")),

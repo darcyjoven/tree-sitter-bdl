@@ -4,12 +4,12 @@
 const digit = /[0-9]/;
 
 const integerLiterals = choice(
-  seq(optional(choice("+", "-")), repeat1(digit)),
+  seq(optional("+"), repeat1(digit)),
   kw("TRUE"),
   kw("FALSE"),
 );
 const decimalLiterals = seq(
-  optional(choice("+", "-")),
+  optional("+"),
   repeat(digit),
   ".",
   repeat1(digit),

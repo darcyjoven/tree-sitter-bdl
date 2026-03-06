@@ -17,7 +17,7 @@ import programRules from "./rules/program.js";
 export default grammar({
   name: "bdl",
 
-  extras: ($) => [$.comment, /\s/],
+  extras: ($) => [$.comment, /\s/, /[\u3000]/],
 
   externals: ($) => [...sqlExternals($)],
 
