@@ -161,6 +161,8 @@ export default {
 
       // ON IDLE idle-seconds
       seq(kw("ON"), kw("IDLE"), alias($._expression, "idle_seconds")),
+      // BEFORE MENU
+      seq(kw("BEFORE"), kw("MENU")),
     ),
   _menu_key_option: ($) =>
     seq(

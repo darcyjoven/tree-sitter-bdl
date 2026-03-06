@@ -136,10 +136,7 @@ export default {
       repeat(choice($._fgl_statement, $._sql_statement)),
     ),
   otherwise_flow: ($) =>
-    seq(
-      kw("OTHERWISE"),
-      repeat(choice($._fgl_statement, $._sql_statement)),
-    ),
+    seq(kw("OTHERWISE"), repeat(choice($._fgl_statement, $._sql_statement))),
   continue_flow: ($) =>
     seq(
       kw("CONTINUE"),
@@ -280,12 +277,14 @@ export default {
         PREC.stringcomparison,
         seq(
           $._expression,
+          optional(kw("NOT")),
           kw("MATCHES"),
           $._expression,
           optional(seq(kw("ESCAPE"), $._expression)),
         ),
       ),
       prec.left(PREC.comparative, seq($._expression, "=", $._expression)),
+      prec.left(PREC.comparative, seq($._expression, ":=", $._expression)),
       prec.left(PREC.comparative, seq($._expression, "==", $._expression)),
       prec.left(PREC.comparative, seq($._expression, "!=", $._expression)),
       prec.left(PREC.comparative, seq($._expression, "<>", $._expression)),
