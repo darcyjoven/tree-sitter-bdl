@@ -29,17 +29,17 @@ static const SqlRule SQL_RULES[] = {
 #define SQL_RULE_COUNT (sizeof(SQL_RULES) / sizeof(SQL_RULES[0]))
 
 static const char *BDL_TERMINATORS[] = {
-    "ACCEPT",  "AFTER",    "ALTER",    "BEFORE",    "CALL",     "CANCEL",
-    "CASE",    "CATCH",    "CLEAR",    "CLOSE",     "COMMAND",  "COMMIT",
-    "CONNECT", "CONTINUE", "CREATE",   "CURSOR",    "DATABASE", "DECLARE",
-    "DEFINE",  "DELETE",   "DISPLAY",  "DROP",      "END",      "ERROR",
-    "EXECUTE", "EXIT",     "FETCH",    "FLUSH",     "FOR",      "FOREACH",
-    "FREE",    "GLOBALS",  "GOTO",     "HIDE",      "IF",       "INITIALIZE",
-    "INSERT",  "LABEL",    "LET",      "LOAD",      "LOCATE",   "MENU",
-    "MESSAGE", "NEXT",     "OPEN",     "OPEN",      "PREPARE",  "PUT",
-    "RELEASE", "RENAME",   "RETURN",  "ROLLBACK", "SAVEPOINT", "SCHEMA",   "SCROLL",
-    "SELECT",  "SHOW",     "SQL",      "TRY",       "TYPE",     "UNLOAD",
-    "UPDATE",  "VALIDATE", "WHENEVER", "WHILE"};
+    "ACCEPT",  "AFTER",    "ALTER",    "BEFORE",   "CALL",      "CANCEL",
+    "CASE",    "CATCH",    "CLEAR",    "CLOSE",    "COMMAND",   "COMMIT",
+    "CONNECT", "CONTINUE", "CREATE",   "CURSOR",   "DATABASE",  "DECLARE",
+    "DEFINE",  "DELETE",   "DISPLAY",  "DROP",     "END",       "ERROR",
+    "EXECUTE", "EXIT",     "FETCH",    "FLUSH",    "FOR",       "FOREACH",
+    "FREE",    "GLOBALS",  "GOTO",     "HIDE",     "IF",        "INITIALIZE",
+    "INSERT",  "LABEL",    "LET",      "LOAD",     "LOCATE",    "MENU",
+    "MESSAGE", "NEXT",     "OPEN",     "OPEN",     "PREPARE",   "PUT",
+    "RELEASE", "RENAME",   "RETURN",   "ROLLBACK", "SAVEPOINT", "SCHEMA",
+    "SCROLL",  "SELECT",   "SHOW",     "SQL",      "TRY",       "TYPE",
+    "UNLOAD",  "UPDATE",   "VALIDATE", "WHENEVER", "WHILE"};
 
 typedef struct {
   const char *first;
@@ -94,21 +94,7 @@ bool tree_sitter_bdl_external_scanner_scan(void *payload, TSLexer *lexer,
   starter[i] = '\0';
 
   int current_type = -1;
-  // if (strcmp(starter, "SELECT") == 0 && valid_symbols[SELECT_SQL])
-  //     current_type = SELECT_SQL;
-  // else if (strcmp(starter, "UPDATE") == 0 && valid_symbols[UPDATE_SQL])
-  //     current_type = UPDATE_SQL;
-  // else if (strcmp(starter, "CREATE") == 0 && valid_symbols[CREATE_TABLE_SQL])
-  // {
-  //     while (iswspace(lexer->lookahead))
-  //         lexer->advance(lexer, false);
-  //     char second[64];
-  //     scan_word(lexer, second);
-  //     if (strcmp(second, "TABLE") == 0)
-  //         current_type = CREATE_TABLE_SQL;
-  // }
 
-  //
   for (int r = 0; r < SQL_RULE_COUNT; r++) {
     const SqlRule *rule = &SQL_RULES[r];
 
@@ -133,6 +119,39 @@ bool tree_sitter_bdl_external_scanner_scan(void *payload, TSLexer *lexer,
     // ---【关键：仅在深度为0且不在引号内时，记录当前的“干净边界”】---
     if (!in_s_quote && !in_d_quote && paren_depth == 0) {
       lexer->mark_end(lexer);
+    }
+
+    // --- 新增：过滤注释。确保我们不在引号中时，直接吞掉注释 ---
+    if (!in_s_quote && !in_d_quote) {
+      // 处理行注释 --
+      if (lexer->lookahead == '-') {
+        lexer->advance(lexer, false);
+        if (lexer->lookahead == '-') {
+          while (!lexer->eof(lexer) && lexer->lookahead != '\n') {
+            lexer->advance(lexer, false);
+          }
+          continue; // 注释结束，直接进入下一轮外层循环
+        }
+        continue; // 只是一个 '-' 符号，继续正常处理
+      }
+      // 处理行注释 #
+      else if (lexer->lookahead == '#') {
+        while (!lexer->eof(lexer) && lexer->lookahead != '\n') {
+          lexer->advance(lexer, false);
+        }
+        continue;
+      }
+      // 处理块注释 { ... }
+      else if (lexer->lookahead == '{') {
+        lexer->advance(lexer, false);
+        while (!lexer->eof(lexer) && lexer->lookahead != '}') {
+          lexer->advance(lexer, false);
+        }
+        if (lexer->lookahead == '}') {
+          lexer->advance(lexer, false);
+        }
+        continue;
+      }
     }
 
     if (lexer->lookahead == '\'') {
@@ -185,29 +204,39 @@ bool tree_sitter_bdl_external_scanner_scan(void *payload, TSLexer *lexer,
         if (matched) {
           // --- 特殊处理：FOR UPDATE 不应视为 SELECT 的结束 ---
           if (current_type == SELECT_SQL && strcmp(word1, "FOR") == 0) {
-            // 保存当前位置，尝试向后探测
-            // 注意：这里由于是在匹配到 matched 后，
-            // 我们可以通过 lexer->lookahead 继续往后看
 
-            // 跳过空白
-            while (iswspace(lexer->lookahead)) {
-              lexer->advance(lexer, false);
+            // 新增：不仅跳过空白，也要跳过可能的注释，防 FOR {注释} UPDATE
+            while (!lexer->eof(lexer)) {
+              if (iswspace(lexer->lookahead)) {
+                lexer->advance(lexer, false);
+              } else if (lexer->lookahead == '#') {
+                while (!lexer->eof(lexer) && lexer->lookahead != '\n')
+                  lexer->advance(lexer, false);
+              } else if (lexer->lookahead == '{') {
+                lexer->advance(lexer, false);
+                while (!lexer->eof(lexer) && lexer->lookahead != '}')
+                  lexer->advance(lexer, false);
+                if (lexer->lookahead == '}')
+                  lexer->advance(lexer, false);
+              } else if (lexer->lookahead == '-') {
+                lexer->advance(lexer, false);
+                if (lexer->lookahead == '-') {
+                  while (!lexer->eof(lexer) && lexer->lookahead != '\n')
+                    lexer->advance(lexer, false);
+                } else {
+                  break; // 是单个 '-'，跳出
+                }
+              } else {
+                break;
+              }
             }
 
             char next_word[64];
-            // 模拟扫描下一个词（注意：此操作会移动 lexer 指针）
             scan_word(lexer, next_word);
 
             if (strcmp(next_word, "UPDATE") == 0) {
-              // 如果是 FOR UPDATE，取消匹配状态，让循环继续
               matched = false;
-              // 此时 lexer 已经停在 UPDATE 之后，
-              // 下一轮循环开头会执行 mark_end(lexer)，将 FOR UPDATE 包含进 SQL
-              // 内部
             } else {
-              // 如果不是 UPDATE，说明真的是 BDL 的 FOR 语句（如 FOR i = 1 TO
-              // ...） 我们需要结束扫描。但注意 lexer 已经走远了，
-              // 幸好我们有之前的 mark_end 记录了 word1 (FOR) 之前的位置。
               lexer->result_symbol = current_type;
               return true;
             }
@@ -217,8 +246,6 @@ bool tree_sitter_bdl_external_scanner_scan(void *payload, TSLexer *lexer,
           }
         }
 
-        // 如果没有匹配到终止符，继续循环。
-        // 此时 lexer 已经在单词之后，下一次循环开头会执行 mark_end 更新边界。
       } else {
         lexer->advance(lexer, false);
       }
