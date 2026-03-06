@@ -34,7 +34,7 @@ export default {
   _constant_statement: ($) =>
     seq(
       alias($._identifier, $.constant_name),
-      alias(optional($._data_type), $.data_type),
+      optional($._data_type),
       "=",
       $.literal,
     ),
@@ -163,7 +163,7 @@ export default {
     ),
   _record_data_type: ($) =>
     choice(
-      seq(kw("RECORD"), $._record_list, kw("END RECORD")),
+      alias(seq(kw("RECORD"), $._record_list, kw("END RECORD")), $.record_type),
       seq(
         kw("RECORD"),
         kw("LIKE"),
@@ -196,26 +196,13 @@ export default {
     choice(
       prec(
         1,
-        commaSep1(
-          seq(
-            alias($._identifier, $.variable_name),
-            alias($._data_type, $.data_type),
-          ),
-        ),
+        commaSep1(seq(alias($._identifier, $.variable_name), $._data_type)),
       ),
-      seq(
-        commaSep1(alias($._identifier, $.variable_name)),
-        alias($._data_type, $.data_type),
-      ),
+      seq(commaSep1(alias($._identifier, $.variable_name)), $._data_type),
     ),
   // record 因为有end record
   _record_list: ($) =>
-    commaSep1(
-      seq(
-        alias($._identifier, $.variable_name),
-        alias($._data_type, $.data_type),
-      ),
-    ),
+    commaSep1(seq(alias($._identifier, $.variable_name), $._data_type)),
   // 第三方导入类型
   _third_type: ($) =>
     choice($._third_base_type, $._third_ui_type, $._third_om_type),

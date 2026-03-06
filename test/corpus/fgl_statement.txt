@@ -12,8 +12,7 @@ end function
 (source_file
     (function_block
         (variable_definition
-            (variable_name)
-            (data_type))
+            (variable_name))
         (variable_statement)))
 
 ================================================================================|||
@@ -65,8 +64,7 @@ END MAIN
 (source_file
     (main_block
         (variable_definition
-            (variable_name)
-            (data_type))
+            (variable_name))
         (variable_statement)
         (variable_statement)))
 
@@ -88,8 +86,7 @@ END MAIN
 (source_file
     (main_block
         (variable_definition
-            (variable_name)
-            (data_type))
+            (variable_name))
         (schema_statement)
         (variable_statement)
         (comment)
@@ -202,28 +199,17 @@ END FUNCTION
     (function_block
         (variable_definition
             (variable_name)
-            (data_type)
             (variable_name)
-            (data_type)
             (variable_name)
-            (data_type)
             (variable_name)
-            (data_type)
             (variable_name)
-            (data_type)
             (variable_name)
-            (data_type)
             (variable_name)
-            (data_type)
             (variable_name)
-            (data_type)
             (variable_name)
-            (data_type)
-            (variable_name)
-            (data_type))
+            (variable_name))
         (variable_definition
-            (variable_name)
-            (data_type))
+            (variable_name))
         (variable_statement)
         (variable_statement)
         (if_flow
@@ -313,14 +299,11 @@ END FUNCTION
 (source_file
     (function_block
         (variable_definition
-            (variable_name)
-            (data_type))
+            (variable_name))
         (variable_definition
-            (variable_name)
-            (data_type))
+            (variable_name))
         (variable_definition
-            (variable_name)
-            (data_type))
+            (variable_name))
         (if_flow
             (call_flow)
             (return_flow))

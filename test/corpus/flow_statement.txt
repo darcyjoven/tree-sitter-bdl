@@ -114,8 +114,7 @@ END MAIN
 (source_file
     (main_block
         (variable_definition
-            (variable_name)
-            (data_type))
+            (variable_name))
         (variable_statement)
         (comment)
         (case_flow
@@ -162,8 +161,7 @@ END MAIN
         (variable_definition
             (variable_name)
             (variable_name)
-            (variable_name)
-            (data_type))
+            (variable_name))
         (variable_statement)
         (variable_statement)
         (comment)
@@ -203,11 +201,9 @@ END MAIN
 (source_file
     (main_block
         (variable_definition
-            (variable_name)
-            (data_type))
+            (variable_name))
         (variable_definition
-            (variable_name)
-            (data_type))
+            (variable_name))
         (exception_statement)
         (goto_flow)
         (label_flow)
@@ -239,8 +235,7 @@ END MAIN
 (source_file
     (main_block
         (variable_definition
-            (variable_name)
-            (data_type))
+            (variable_name))
         (variable_statement)
         (if_flow
             (variable_statement)
@@ -309,8 +304,7 @@ END MAIN
 (source_file
     (main_block
         (variable_definition
-            (variable_name)
-            (data_type))
+            (variable_name))
         (variable_statement)
         (while_flow
             (variable_statement)

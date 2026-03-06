@@ -15,12 +15,11 @@ public constant l_i = 'ok'
 (source_file
     (constant_definition
         (constant_name)
-        (data_type)
         (literal))
     (constant_definition
         (constant_name)
         (literal))
-    (constant_definition 
+    (constant_definition
         (constant_name)
         (literal)
         (constant_name)
@@ -50,24 +49,16 @@ define omb boolean,oma float
 (source_file
     (user_type_definition
         (variable_name)
-        (data_type)
-        (variable_name)
-        (data_type))
+        (variable_name))
     (user_type_definition
         (variable_name)
-        (data_type)
-        (variable_name)
-        (data_type))
+        (variable_name))
    (user_type_definition
         (variable_name)
-        (data_type)
-        (variable_name)
-        (data_type))
+        (variable_name))
     (variable_definition
         (variable_name)
-        (data_type)
-        (variable_name)
-        (data_type)))
+        (variable_name)))
 
 ================================================================================|||
 LIKE 变量定义
@@ -87,21 +78,15 @@ define l_ima01,l_ima02,ima03 string
 (source_file
     (variable_definition
         (variable_name)
-        (data_type)
         (variable_name)
-        (data_type)
-        (variable_name)
-        (data_type))
+        (variable_name))
     (variable_definition
         (variable_name)
-        (data_type)
-        (variable_name)
-        (data_type))
+        (variable_name))
     (variable_definition
         (variable_name)
         (variable_name)
-        (variable_name)
-        (data_type)))
+        (variable_name)))
 
 
 ================================================================================|||
@@ -118,13 +103,10 @@ define l_ima record
 (source_file
     (variable_definition
         (variable_name)
-        (data_type
+        (record_type
             (variable_name)
-            (data_type)
             (variable_name)
-            (data_type)
-            (variable_name)
-            (data_type))))
+            (variable_name))))
 
 ================================================================================|||
 结构体定义
@@ -149,29 +131,18 @@ DEFINE
 (source_file
     (variable_definition
         (variable_name)
-        (data_type
+        (record_type
             (variable_name)
-            (data_type)
             (variable_name)
-            (data_type)
             (variable_name)
-            (data_type)
             (variable_name)
-            (data_type)
             (variable_name)
-            (data_type)
             (variable_name)
-            (data_type)
             (variable_name)
-            (data_type)
             (variable_name)
-            (data_type)
             (variable_name)
-            (data_type)
             (variable_name)
-            (data_type)
-            (variable_name)
-            (data_type))))
+            (variable_name))))
 
 ================================================================================|||
 结构体定义 2
@@ -182,7 +153,7 @@ DEFINE  l_apb02  LIKE apb_file.apb02,
         l_apb081 LIKE apb_file.apb081,
         l_apb09  LIKE apb_file.apb09,
         l_apb23  LIKE apb_file.apb23,
-        l_apb24  LIKE apb_file.apb24,    
+        l_apb24  LIKE apb_file.apb24,
         l_apb10  LIKE apb_file.apb10,
         l_apb101 LIKE apb_file.apb101,
         p_apa01  LIKE apa_file.apa01,
@@ -193,25 +164,14 @@ DEFINE g_apk    RECORD LIKE apk_file.*
 (source_file
     (variable_definition
         (variable_name)
-        (data_type) 
         (variable_name)
-        (data_type) 
         (variable_name)
-        (data_type) 
         (variable_name)
-        (data_type) 
         (variable_name)
-        (data_type)
         (variable_name)
-        (data_type) 
         (variable_name)
-        (data_type) 
         (variable_name)
-        (data_type) 
         (variable_name)
-        (data_type) 
-        (variable_name)
-        (data_type))
+        (variable_name))
     (variable_definition
-        (variable_name)
-        (data_type)))
+        (variable_name)))
