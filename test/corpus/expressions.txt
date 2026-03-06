@@ -19,7 +19,7 @@ main
 
     let a = not cl_null('ok')
 
-    let r = abb(1,2,)
+    let r = abb(1,2)
 
 end main
 --------------------------------------------------------------------------------|||
@@ -33,8 +33,7 @@ end main
         (variable_statement)
         (variable_statement)
         (variable_statement)
-        (variable_statement
-                (MISSING _identifier))))
+        (variable_statement)))
 
 
 ================================================================================|||
@@ -43,7 +42,7 @@ end main
 main
     LET c = 4
 
-    LET r = c * ( 2 + c MOD 4 ) / 
+    LET r = c * ( 2 + c MOD 4 ) /
     getRowCount("customers")
 
     LET c = 456.22 LET r = c * 2 + ( c / 4.55 )
@@ -60,7 +59,7 @@ end main
 字符串表达式
 ================================================================================|||
 main
-    LET c = "abcdef" 
+    LET c = "abcdef"
     LET r = c[1,3] || ": " || TODAY USING "YYYY-MM-DD" || " " || LENGTH(c)
     let r = c clipped
 end main

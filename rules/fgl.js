@@ -97,6 +97,7 @@ export default {
   _flow_ctrl_statement: ($) =>
     choice(
       $.call_flow,
+      $.run_flow,
       $.return_flow,
       $.case_flow,
       $.continue_flow,
@@ -117,6 +118,27 @@ export default {
       ")",
       optional(
         seq(kw("RETURNING"), alias(commaSep1($._variable), "func_returns")),
+      ),
+    ),
+  run_flow: ($) =>
+    prec(
+      PREC.call,
+      seq(
+        // 给 run_flow 一个较高的优先级
+        kw("RUN"),
+        alias($._expression, "run_command"),
+
+        // 使用 optional 包装
+        optional(kw("IN", choice(kw("FORM"), kw("LINE")), kw("MODE"))),
+
+        optional(
+          choice(
+            // 这里的 seq 参数要分开
+            seq(kw("RETURNING"), alias($._variable, "func_returns")),
+            // 修正：kw("WITHOUT") 和 kw("WAITING") 是平级的两个参数
+            seq(kw("WITHOUT"), kw("WAITING")),
+          ),
+        ),
       ),
     ),
   return_flow: ($) =>

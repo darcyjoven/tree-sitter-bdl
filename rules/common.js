@@ -100,7 +100,13 @@ export default {
         datetimeQualifier,
       ),
     ),
-  _other_literal: (_) => choice(kw("NULL"), kw("TODAY"), kw("CURRENT")),
+  _other_literal: ($) =>
+    choice(
+      kw("NULL"),
+      kw("TODAY"),
+      kw("CURRENT"),
+      seq(kw("ASCII"), $._expression),
+    ),
   // 作用域
   scope: ($) => choice(kw("PRIVATE"), kw("PUBLIC")),
   // 变量/方法名

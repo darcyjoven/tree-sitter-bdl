@@ -140,9 +140,10 @@ export default {
     seq(
       kw("MENU"),
       optional(alias($._expression, "menu_title")),
-      optional(alias($._display_attribute, "attribute")),
+      optional(alias($._interface_attribute, "attribute")),
       repeat(seq($.menu_option, repeat($._menu_statement))),
-      kw("END MENU"),
+      kw("END"),
+      kw("MENU"),
     ),
   menu_option: ($) =>
     choice(
@@ -232,6 +233,7 @@ export default {
         ),
       ),
       optional($._interface_attribute),
+      optional(seq(kw("HELP"), $._expression)),
     ),
   _input_option: ($) =>
     choice(

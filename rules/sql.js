@@ -61,7 +61,7 @@ const rules = {
         ),
         optional(seq(kw("INTO"), commaSep1($._variable))),
       ),
-      seq(kw("EXECUTE IMMEDIATE"), $._expression),
+      seq(kw("EXECUTE"), kw("IMMEDIATE"), $._expression),
     ),
   // 当作fgl处理
   // free_sql: ($) => seq(kw("FREE"), $._identifier),
@@ -182,7 +182,9 @@ const rules = {
     prec(1, seq(kw("RELEASE SAVEPOINT"), $._identifier)),
   set_isolation: ($) =>
     seq(
-      kw("SET ISOLATION TO"),
+      kw("SET"),
+      kw("ISOLATION"),
+      kw("TO"),
       choice(
         kw("DIRTY READ"),
         seq(
@@ -196,7 +198,10 @@ const rules = {
     ),
   set_lock_mode: ($) =>
     seq(
-      kw("SET LOCK MODE TO"),
+      kw("SET"),
+      kw("LOCK"),
+      kw("MODE"),
+      kw("TO"),
       choice(kw("NOT WAIT"), seq(kw("WAIT"), $._expression)),
     ),
 };

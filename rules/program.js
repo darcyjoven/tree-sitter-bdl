@@ -114,8 +114,10 @@ export default {
     choice(
       // "CONNECT TO dbspec [USER username USING password]",
       seq(
-        kw("CONNECT TO"),
-        alias($._unquoted_string, "dbname"),
+        kw("CONNECT"),
+        kw("TO"),
+        alias(choice($._unquoted_string, kw("DEFAULT")), "dbname"),
+        optional(seq(kw("AS"), alias($._unquoted_string, "session_name"))),
         optional(
           seq(
             kw("USER"),
@@ -124,6 +126,7 @@ export default {
             alias($._unquoted_string, "password"),
           ),
         ),
+        optional(seq(kw("WITH"), kw("CONCURRENT"), kw("TRANSACTION"))),
       ),
       // "DATABASE { dbname[@dbserver] | variable | string } [EXCLUSIVE]",
       seq(
@@ -140,6 +143,23 @@ export default {
       ),
       // "SCHEMA  dbname",
       seq(kw("SCHEMA"), alias($._identifier, "dbname")),
+      // DISCONNECT
+      seq(
+        kw("DISCONNECT"),
+        choice(kw("ALL"), kw("CURRENT"), $._string_literal, $._variable),
+      ),
+      // SET CONNECTION
+      seq(
+        kw("SET"),
+        kw("CONNECTION"),
+        choice(
+          seq(
+            choice($._string_literal, kw("DEFAULT")),
+            optional(kw("DORMANT")),
+          ),
+          seq(kw("CURRENT"), kw("DORMANT")),
+        ),
+      ),
     ),
 
   //============================================================

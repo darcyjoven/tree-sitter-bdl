@@ -163,7 +163,10 @@ export default {
     ),
   _record_data_type: ($) =>
     choice(
-      alias(seq(kw("RECORD"), $._record_list, kw("END RECORD")), $.record_type),
+      alias(
+        seq(kw("RECORD"), $._variable_list, kw("END RECORD")),
+        $.record_type,
+      ),
       seq(
         kw("RECORD"),
         kw("LIKE"),
