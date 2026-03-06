@@ -192,14 +192,10 @@ export default {
       seq(kw("ARRAY"), "[", "]", kw("OF"), alias($._identifier, "java_type")),
     ),
   // 系列类型，用于type record define
-  _variable_list: ($) =>
-    choice(
-      prec(
-        1,
-        commaSep1(seq(alias($._identifier, $.variable_name), $._data_type)),
-      ),
-      seq(commaSep1(alias($._identifier, $.variable_name)), $._data_type),
-    ),
+  // 允许混合定义 define l_a,l_b string, l_c string
+  _variable_list: ($) => commaSep1($._variable_declaration_group),
+  _variable_declaration_group: ($) =>
+    seq(commaSep1(alias($._identifier, $.variable_name)), $._data_type),
   // record 因为有end record
   _record_list: ($) =>
     commaSep1(seq(alias($._identifier, $.variable_name), $._data_type)),
