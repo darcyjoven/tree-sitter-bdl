@@ -26,6 +26,7 @@ export default grammar({
   conflicts: ($) => [
     // [$.case_flow, $._expression]
     [$._fgl_statement, $._interface_block],
+    [$.input_array_inline, $.input_array_block],
   ],
 
   rules: {

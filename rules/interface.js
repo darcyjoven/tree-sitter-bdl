@@ -282,7 +282,7 @@ export default {
 
   // INPUT ARRAR
   input_array_block: ($) =>
-    prec(
+    prec.dynamic(
       1,
       seq(
         $._input_array_header,

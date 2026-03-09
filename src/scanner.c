@@ -1,7 +1,30 @@
 #include "tree_sitter/parser.h"
+#include <stdarg.h>
 #include <stdbool.h>
+#include <stdio.h>
 #include <string.h>
 #include <wctype.h>
+
+// 你的代理函数
+int printfLog(const char *format, ...) {
+
+  return 0;
+
+  int done;
+  va_list arg;
+
+  // 1. 初始化 va_list，使其指向第一个变长参数
+  va_start(arg, format);
+
+  // 2. 将 va_list 传递给 vprintf（这是核心步骤）
+  // 注意：不能直接调用 printf(format, arg)，那是不行的
+  done = vprintf(format, arg);
+
+  // 4. 清理工作
+  va_end(arg);
+
+  return done; // 返回打印的字符总数，保持与 printf 行为一致
+}
 
 enum TokenType {
   INSERT_SQL,
@@ -85,7 +108,6 @@ bool tree_sitter_bdl_external_scanner_scan(void *payload, TSLexer *lexer,
   if (!is_word_char(lexer->lookahead))
     return false;
 
-  // 探测起始词
   int i = 0;
   while (is_word_char(lexer->lookahead) && i < 63) {
     starter[i++] = (char)towupper(lexer->lookahead);
@@ -94,29 +116,27 @@ bool tree_sitter_bdl_external_scanner_scan(void *payload, TSLexer *lexer,
   starter[i] = '\0';
 
   int current_type = -1;
-
   for (int r = 0; r < SQL_RULE_COUNT; r++) {
-    const SqlRule *rule = &SQL_RULES[r];
-
-    // 没匹配到退出
-    if (strcmp(starter, rule->keword) != 0)
-      continue;
-    // 关键字未定义退出
-    if (!valid_symbols[rule->type])
-      continue;
-    current_type = rule->type;
+    if (strcmp(starter, SQL_RULES[r].keword) == 0 &&
+        valid_symbols[SQL_RULES[r].type]) {
+      current_type = SQL_RULES[r].type;
+      break;
+    }
   }
 
   if (current_type == -1)
     return false;
 
-  // 3. 核心循环：寻找边界
+  // --- DEBUG: 开始解析 SQL ---
+  printfLog("[SQL Start] Detected Keyword: %s (Type: %d)\n", starter,
+            current_type);
+
   int paren_depth = 0;
   bool in_s_quote = false;
   bool in_d_quote = false;
 
   while (!lexer->eof(lexer)) {
-    // ---【关键：仅在深度为0且不在引号内时，记录当前的“干净边界”】---
+    // 只有在顶层且不在引号内时，记录“干净”的结束边界
     if (!in_s_quote && !in_d_quote && paren_depth == 0) {
       lexer->mark_end(lexer);
     }
@@ -172,39 +192,77 @@ bool tree_sitter_bdl_external_scanner_scan(void *payload, TSLexer *lexer,
         lexer->advance(lexer, false);
       } else if (paren_depth == 0 && is_word_char(lexer->lookahead)) {
 
-        // 探测接下来的单词，但注意：我们已经在上面 mark_end 了
         char word1[64];
         scan_word(lexer, word1);
 
-        // 检查单词终止
+        // --- DEBUG: 扫描到单词 ---
+        // printfLog("  [Word] Checking: %s\n", word1);
+
         bool matched = false;
+        // 检查单单词终止符
         for (int i = 0; i < TERM_COUNT; i++) {
           if (strcmp(word1, BDL_TERMINATORS[i]) == 0) {
+            printfLog("    [Match] Single Terminator: %s\n", word1);
             matched = true;
             break;
           }
         }
 
-        // 检查短语终止
+        // 检查短语终止符
         if (!matched) {
+          bool possible_phrase = false;
+
+          // 1. 先扫描一遍，看看 word1 是否有可能是任何一个短语的开头
           for (int i = 0; i < PHRASE_COUNT; i++) {
             if (strcmp(word1, PHRASE_TERMINATORS[i].first) == 0) {
-              while (iswspace(lexer->lookahead))
-                lexer->advance(lexer, false);
-              char word2[64];
-              scan_word(lexer, word2);
-              if (strcmp(word2, PHRASE_TERMINATORS[i].second) == 0) {
-                matched = true;
-                break;
+              possible_phrase = true;
+              break; // 只要确认它是短语开头之一，就跳出循环
+            }
+          }
+
+          // 2. 如果 word1 是短语开头，我们去取 word2（只取一次！）
+          if (possible_phrase) {
+            // 暂时保存位置，尝试匹配第二个词
+            while (iswspace(lexer->lookahead)) {
+              lexer->advance(lexer, false);
+            }
+
+            char word2[64];
+            word2[0] = '\0';         // 养成好习惯，初始化字符串
+            scan_word(lexer, word2); // 整个过程只消耗一次流来获取 word2
+
+            // 3. 拿着固定的 word1 和 word2 去匹配具体的终止符
+            for (int i = 0; i < PHRASE_COUNT; i++) {
+              if (strcmp(word1, PHRASE_TERMINATORS[i].first) == 0) {
+                printfLog("    [Matching] Phrase Terminator 2nd: %s vs %s \n",
+                          word2, PHRASE_TERMINATORS[i].second);
+
+                if (strcmp(word2, PHRASE_TERMINATORS[i].second) == 0) {
+                  printfLog("    [Match] Phrase: %s %s\n", word1, word2);
+                  matched = true;
+
+                  // 注意：如果你使用的是 Tree-sitter，这里可能需要调用
+                  // lexer->mark_end(lexer); 来标记 token 结束的准确位置。
+
+                  break;
+                }
               }
             }
+
+            // 重要提示：如果走到了这里 matched 依然是 false (比如遇到了 "ON
+            // SOMETHING")， 输入流已经被你消耗掉了 word2。 在 Tree-sitter
+            // 中，如果你最终 scanner 返回 false，状态会自动回滚，这没问题。
+            // 但如果是你自己手写的 Lexer，你可能需要实现一个 "unget"
+            // 或者状态回退的机制。
           }
         }
 
         if (matched) {
-          // --- 特殊处理：FOR UPDATE 不应视为 SELECT 的结束 ---
+          // 特殊处理 FOR UPDATE
           if (current_type == SELECT_SQL && strcmp(word1, "FOR") == 0) {
-
+            // 这里简化处理，逻辑同你之前代码
+            printfLog(
+                "    [Special] Found FOR, checking if it's FOR UPDATE...\n");
             // 新增：不仅跳过空白，也要跳过可能的注释，防 FOR {注释} UPDATE
             while (!lexer->eof(lexer)) {
               if (iswspace(lexer->lookahead)) {
@@ -241,11 +299,12 @@ bool tree_sitter_bdl_external_scanner_scan(void *payload, TSLexer *lexer,
               return true;
             }
           } else {
+            printfLog("[SQL End] Triggered by terminator. Returning type %d\n",
+                      current_type);
             lexer->result_symbol = current_type;
             return true;
           }
         }
-
       } else {
         lexer->advance(lexer, false);
       }
@@ -254,6 +313,7 @@ bool tree_sitter_bdl_external_scanner_scan(void *payload, TSLexer *lexer,
     }
   }
 
+  printfLog("[SQL End] Reached EOF. Returning type %d\n", current_type);
   lexer->mark_end(lexer);
   lexer->result_symbol = current_type;
   return true;
