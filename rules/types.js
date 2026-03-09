@@ -222,7 +222,13 @@ export default {
     seq(
       kw("UI"),
       ".",
-      choice(kw("WINDOW"), kw("FORM"), kw("COMBOBOX"), kw("DRAGDROP")),
+      choice(
+        kw("WINDOW"),
+        kw("FORM"),
+        kw("COMBOBOX"),
+        kw("DRAGDROP"),
+        kw("DIALOG"),
+      ),
     ),
   _third_om_type: ($) =>
     seq(

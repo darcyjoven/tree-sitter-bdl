@@ -148,17 +148,19 @@ const rules = {
   _io_sql: ($) => choice($.unload_sql, $.load_sql),
   load_sql: ($) =>
     seq(
-      kw("LOAD FROM"),
-      $._string_literal,
+      kw("LOAD"),
+      kw("FROM"),
+      choice($._string_literal, $._variable),
       optional(seq(kw("DELIMITER"), $._string_literal)),
-      choice($.insert_sql, $._string_literal),
+      choice($.insert_sql, $._string_literal, $._variable),
     ),
   unload_sql: ($) =>
     seq(
-      kw("UNLOAD TO"),
-      $._string_literal,
+      kw("UNLOAD"),
+      kw("TO"),
+      choice($._string_literal, $._variable),
       optional(seq(kw("DELIMITER"), $._string_literal)),
-      choice($.select_sql, $._string_literal),
+      choice($.select_sql, $._string_literal, $._variable),
     ),
   _transactions_sql: ($) =>
     choice(

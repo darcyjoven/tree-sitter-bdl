@@ -16,6 +16,7 @@ export default {
       $.compiler_options,
       $.demo_statement,
       $.interface_block_statement,
+      $._report_statement,
     ),
   // _interface_statement: $ => '_interface_statement',
   demo_statement: ($) => "ON ACTION",
@@ -114,7 +115,10 @@ export default {
       kw("CALL"),
       alias($._variable, "func_name"),
       "(",
-      alias(commaSep($._expression), "func_params"),
+      alias(
+        commaSep(choice($._expression, seq("[", commaSep($._expression), "]"))),
+        "func_params",
+      ),
       ")",
       optional(
         seq(kw("RETURNING"), alias(commaSep1($._variable), "func_returns")),
@@ -347,4 +351,53 @@ export default {
     ),
   _function_expression: ($) =>
     seq($._variable, "(", commaSep($._expression), ")"),
+  // REPORT语句
+  _report_statement: ($) =>
+    choice(
+      $.terminate_report,
+      $.finish_report,
+      $.output_report,
+      $.start_report,
+    ),
+  terminate_report: ($) =>
+    seq(kw("TERMINATE"), kw("REPORT"), alias($._identifier, "report_name")),
+  finish_report: ($) =>
+    seq(kw("FINISH"), kw("REPORT"), alias($._identifier, "report_name")),
+  output_report: ($) =>
+    seq(
+      kw("OUTPUT"),
+      kw("TO"),
+      kw("REPORT"),
+      alias($._identifier, "report_name"),
+      "(",
+      commaSep($._expression),
+      ")",
+    ),
+  start_report: ($) =>
+    seq(
+      kw("START"),
+      kw("REPORT"),
+      alias($._identifier, "report_routine"),
+      optional(seq(kw("TO"), $._report_to_clause)),
+      optional(seq(kw("WITH"), commaSep1($._report_dimension_option))),
+    ),
+  _report_to_clause: ($) =>
+    choice(
+      $._variable,
+      kw("SCREEN"),
+      kw("PRINTER"),
+      seq(kw("FILE"), $._expression),
+      seq(kw("PIPE"), $._expression),
+      seq(kw("XML"), kw("HANDLER")),
+      seq(kw("OUTPUT"), $._expression),
+    ),
+  _report_dimension_option: ($) =>
+    choice(
+      seq(kw("LEFT"), kw("MARGIN"), $._expression),
+      seq(kw("RIGHT"), kw("MARGIN"), $._expression),
+      seq(kw("TOP"), kw("MARGIN"), $._expression),
+      seq(kw("BOTTOM"), kw("MARGIN"), $._expression),
+      seq(kw("PAGE"), kw("LENGTH"), $._expression),
+      seq(kw("TOP"), kw("OF"), kw("PAGE")),
+    ),
 };

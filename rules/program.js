@@ -1,6 +1,6 @@
 /// <reference types="tree-sitter-cli/dsl" />
 
-import { commaSep, kw } from "./util.js";
+import { commaSep, commaSep1, kw } from "./util.js";
 // @ts-check
 
 export default {
@@ -23,85 +23,93 @@ export default {
   compiler_options: ($) =>
     seq(
       kw("OPTIONS"),
-      choice(
-        // Controlling semantics of AND / OR operators
-        kw("SHORT CIRCUIT"),
-        // Defining the position of reserved lines
-        // OPTIONS { MENU LINE line-value| MESSAGE LINE line-value| COMMENT LINE {OFF|line-value}| PROMPT LINE line-value| ERROR LINE line-value| FORM LINE line-value}
+      commaSep1(
         choice(
-          seq(kw("MENU LINE"), $._natural_number),
-          seq(kw("MESSAGE LINE"), $._natural_number),
-          seq(kw("COMMENT LINE"), choice(kw("OFF"), $._natural_number)),
-          seq(kw("PROMPT LINE"), $._natural_number),
-          seq(kw("ERROR LINE"), $._natural_number),
-          seq(kw("FORM LINE"), $._natural_number),
-        ),
-        // Defining default TTY attributes
-        // OPTIONS { INPUT | DISPLAY } ATTRIBUTES ({FORM|WINDOW|attributes)
-        seq(
-          choice(kw("INPUT"), kw("DISPLAY")),
-          kw("ATTRIBUTES"),
-          "(",
+          // Controlling semantics of AND / OR operators
+          kw("SHORT CIRCUIT"),
+          // Defining the position of reserved lines
+          // OPTIONS { MENU LINE line-value| MESSAGE LINE line-value| COMMENT LINE {OFF|line-value}| PROMPT LINE line-value| ERROR LINE line-value| FORM LINE line-value}
           choice(
-            kw("FORM"),
-            kw("WINDOW"),
+            seq(kw("MENU LINE"), $._natural_number),
+            seq(kw("MESSAGE LINE"), $._natural_number),
+            seq(kw("COMMENT LINE"), choice(kw("OFF"), $._natural_number)),
+            seq(kw("PROMPT LINE"), $._natural_number),
+            seq(kw("ERROR LINE"), $._natural_number),
+            seq(kw("FORM LINE"), $._natural_number),
+          ),
+          // Defining default TTY attributes
+          // OPTIONS { INPUT | DISPLAY } ATTRIBUTES ({FORM|WINDOW|attributes)
+          seq(
+            choice(kw("INPUT"), kw("DISPLAY")),
+            kw("ATTRIBUTES"),
+            "(",
             choice(
-              kw("BLACK"),
-              kw("BLUE"),
-              kw("CYAN"),
-              kw("GREEN"),
-              kw("MAGENTA"),
-              kw("RED"),
-              kw("WHITE"),
-              kw("YELLO"),
-              kw("BOLD"),
-              kw("DIM"),
-              kw("INVISIBLE"),
-              kw("NORMAL"),
-              kw("REVERSE"),
-              kw("BLINK"),
-              kw("UNDERLINE"),
+              kw("FORM"),
+              kw("WINDOW"),
+              choice(
+                kw("BLACK"),
+                kw("BLUE"),
+                kw("CYAN"),
+                kw("GREEN"),
+                kw("MAGENTA"),
+                kw("RED"),
+                kw("WHITE"),
+                kw("YELLO"),
+                kw("BOLD"),
+                kw("DIM"),
+                kw("INVISIBLE"),
+                kw("NORMAL"),
+                kw("REVERSE"),
+                kw("BLINK"),
+                kw("UNDERLINE"),
+              ),
             ),
+            ")",
           ),
-          ")",
-        ),
-        // Defining the field input loop
-        // OPTIONS INPUT [NO] WRAP
-        seq(kw("INPUT"), optional(kw("NO")), kw("WRAP")),
-        // Defining field tabbing order
-        // FIELD ORDER { CONSTRAINED | UNCONSTRAINED | FORM }
-        seq(
-          kw("FIELD ORDER"),
-          choice(kw("CONSTRAINED"), kw("UNCONSTRAINED"), kw("FORM")),
-        ),
-        // Application termination
-        // ON TERMINATE SIGNAL CALL function
-        seq(kw("ON TERMINATE SIGNAL CALL"), alias($._identifier, "func_name")),
-        // Front-end termination
-        // ON CLOSE APPLICATION CALL function
-        seq(kw("ON CLOSE APPLICATION CALL"), alias($._identifier, "func_name")),
-        // Defining the message file
-        // HELP FILE filename
-        seq(kw("HELP FILE"), alias($._unquoted_string, "file_name")),
-        // Defining control keys
-        seq(
-          choice(
-            kw("INSERT"),
-            kw("DELETE"),
-            kw("NEXT"),
-            kw("PREVIOUS"),
-            kw("ACCEPT"),
-            kw("HELP"),
+          // Defining the field input loop
+          // OPTIONS INPUT [NO] WRAP
+          seq(kw("INPUT"), optional(kw("NO")), kw("WRAP")),
+          // Defining field tabbing order
+          // FIELD ORDER { CONSTRAINED | UNCONSTRAINED | FORM }
+          seq(
+            kw("FIELD ORDER"),
+            choice(kw("CONSTRAINED"), kw("UNCONSTRAINED"), kw("FORM")),
           ),
-          kw("KEY"),
-          alias($._unquoted_string, "key_name"),
+          // Application termination
+          // ON TERMINATE SIGNAL CALL function
+          seq(
+            kw("ON TERMINATE SIGNAL CALL"),
+            alias($._identifier, "func_name"),
+          ),
+          // Front-end termination
+          // ON CLOSE APPLICATION CALL function
+          seq(
+            kw("ON CLOSE APPLICATION CALL"),
+            alias($._identifier, "func_name"),
+          ),
+          // Defining the message file
+          // HELP FILE filename
+          seq(kw("HELP FILE"), alias($._unquoted_string, "file_name")),
+          // Defining control keys
+          seq(
+            choice(
+              kw("INSERT"),
+              kw("DELETE"),
+              kw("NEXT"),
+              kw("PREVIOUS"),
+              kw("ACCEPT"),
+              kw("HELP"),
+            ),
+            kw("KEY"),
+            alias($._unquoted_string, "key_name"),
+          ),
+          // Setting default screen modes for sub-programs
+          // RUN IN {FORM|LINE} MODE
+          seq(kw("RUN IN"), choice(kw("FORM"), kw("LINE")), kw("MODE")),
+          // Enabling/disabling SQL interruption
+          // SQL INTERRUPT { ON | OFF }
+          seq(kw("SQL INTERRUPT"), choice(kw("ON"), kw("OFF"))),
         ),
-        // Setting default screen modes for sub-programs
-        // RUN IN {FORM|LINE} MODE
-        seq(kw("RUN IN"), choice(kw("FORM"), kw("LINE")), kw("MODE")),
-        // Enabling/disabling SQL interruption
-        // SQL INTERRUPT { ON | OFF }
-        seq(kw("SQL INTERRUPT"), choice(kw("ON"), kw("OFF"))),
       ),
     ),
   import_statement: ($) =>
@@ -177,7 +185,7 @@ export default {
     seq(
       kw("MAIN"),
       seq(repeat($._top_declaration), repeat($._statement)),
-      kw("END MAIN"),
+      seq(kw("END"), kw("MAIN")),
     ),
   function_block: ($) =>
     seq(
