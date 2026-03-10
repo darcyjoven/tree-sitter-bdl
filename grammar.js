@@ -29,6 +29,7 @@ export default grammar({
     // [$.case_flow, $._expression]
     // [$._fgl_statement, $._interface_block],
     [$.input_array_inline, $.input_array_block],
+    [$.prompt_block, $.prompt_inline],
   ],
 
   rules: {

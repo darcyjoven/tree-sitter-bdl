@@ -368,7 +368,7 @@ export default {
 
   _prompt_interface: ($) => choice($.prompt_inline, $.prompt_block),
   prompt_block: ($) =>
-    prec(
+    prec.dynamic(
       1,
       seq(
         $._prompt_header,
