@@ -1,6 +1,6 @@
 /// <reference types="tree-sitter-cli/dsl" />
 
-import { commaSep1, datetimeQualifier, kw } from "./util.js";
+import { commaSep1, dotSep1, datetimeQualifier, kw } from "./util.js";
 // @ts-check
 
 export default {
@@ -195,7 +195,13 @@ export default {
         kw("OF"),
         $._data_type,
       ),
-      seq(kw("ARRAY"), "[", "]", kw("OF"), alias($._identifier, "java_type")),
+      seq(
+        kw("ARRAY"),
+        "[",
+        "]",
+        kw("OF"),
+        alias($._third_java_type, "java_type"),
+      ),
     ),
   // 系列类型，用于type record define
   // 允许混合定义 define l_a,l_b string, l_c string
@@ -207,7 +213,12 @@ export default {
   //   commaSep1(seq(alias($._identifier, $.variable_name), $._data_type)),
   // 第三方导入类型
   _third_type: ($) =>
-    choice($._third_base_type, $._third_ui_type, $._third_om_type),
+    choice(
+      $._third_base_type,
+      $._third_ui_type,
+      $._third_om_type,
+      $._third_java_type,
+    ),
   _third_base_type: ($) =>
     seq(
       kw("BASE"),
@@ -216,7 +227,7 @@ export default {
         kw("APPLICATION"),
         kw("CHANNEL"),
         kw("STRINGBUFFER "),
-        kw("STRINGTOKENIZER"),
+        seq(kw("STRINGTOKENIZER"), optional(seq(".", kw("CREATE")))),
         kw("TYPEINFO"),
         kw("MESSAGESERVER"),
       ),
@@ -246,4 +257,5 @@ export default {
         kw("XMLREADER"),
       ),
     ),
+  _third_java_type: ($) => dotSep1($._identifier),
 };

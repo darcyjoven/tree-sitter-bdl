@@ -347,6 +347,10 @@ export default {
         PREC.multiplicative,
         seq($._expression, kw("MOD"), $._expression),
       ),
+      prec.right(
+        PREC.ascii,
+        seq($._expression, kw("UNITS"), datetimeQualifier),
+      ),
     ),
   _string_expression: ($) =>
     choice(

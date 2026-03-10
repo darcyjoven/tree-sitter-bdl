@@ -30,6 +30,7 @@ export default grammar({
     // [$._fgl_statement, $._interface_block],
     [$.input_array_inline, $.input_array_block],
     [$.prompt_block, $.prompt_inline],
+    [$._data_type, $._third_java_type],
   ],
 
   rules: {

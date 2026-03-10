@@ -129,7 +129,7 @@ export default {
       seq(kw("ON"), kw("EXPAND"), "(", $._variable, ")"),
       seq(kw("ON"), kw("COLLAPSE"), "(", $._variable, ")"),
       seq(kw("ON"), kw("DRAG_START"), "(", $._variable, ")"),
-      seq(kw("ON"), kw("DRAG_FINISH"), "(", $._variable, ")"),
+      seq(kw("ON"), kw("DRAG_FINISHED"), "(", $._variable, ")"),
       seq(kw("ON"), kw("DRAG_ENTER"), "(", $._variable, ")"),
       seq(kw("ON"), kw("DRAG_OVER"), "(", $._variable, ")"),
       seq(kw("ON"), kw("DROP"), "(", $._variable, ")"),
@@ -421,10 +421,7 @@ export default {
     ),
 
   _interface_block: ($) =>
-    seq(
-      $.interface_option,
-      repeat(choice($._fgl_statement, $._sql_statement)),
-    ),
+    seq($.interface_option, repeat(choice($._fgl_statement, $._sql_statement))),
   _interface_attribute: ($) =>
     seq(
       choice(kw("ATTRIBUTES"), kw("ATTRIBUTE")),

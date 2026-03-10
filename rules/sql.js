@@ -15,6 +15,8 @@ const rules = {
   create_sql: ($) => seq(kw("CREATE"), $._sql_body),
   alter_sql: ($) => seq(kw("ALTER"), $._sql_body),
   drop_sql: ($) => seq(kw("DROP"), $._sql_body),
+  unlock_sql: ($) =>
+    seq(kw("UNLOCK"), kw("TABLE"), alias($._identifier, "table_name")),
   _static_sql: ($) =>
     choice(
       $.select_sql,
@@ -26,6 +28,7 @@ const rules = {
       $.drop_sql,
       $.block_sql,
       $.rename_sql,
+      $.unlock_sql,
     ),
   block_sql: ($) => seq(kw("SQL"), $._static_sql, kw("END"), kw("SQL")),
   rename_sql: ($) =>

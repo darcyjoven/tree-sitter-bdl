@@ -26,10 +26,10 @@ static const char *BDL_TERMINATORS[] = {
     "EXIT",    "FETCH",    "FLUSH",    "FOR",      "FOREACH",    "FREE",
     "GLOBALS", "GOTO",     "HIDE",     "IF",       "INITIALIZE", "INSERT",
     "INPUT",   "LABEL",    "LET",      "LOAD",     "LOCATE",     "MENU",
-    "MESSAGE", "NEXT",     "OPEN",     "OPEN",     "PREPARE",    "PUT",
-    "RELEASE", "RENAME",   "RETURN",   "ROLLBACK", "SAVEPOINT",  "SCHEMA",
-    "SCROLL",  "SELECT",   "SHOW",     "SQL",      "TRY",        "UNLOAD",
-    "UPDATE",  "VALIDATE", "WHENEVER", "WHILE"};
+    "MESSAGE", "NEXT",     "OPEN",     "OPEN",     "PREPARE",    "PROMPT",
+    "PUT",     "RELEASE",  "RENAME",   "RETURN",   "ROLLBACK",   "SAVEPOINT",
+    "SCHEMA",  "SCROLL",   "SELECT",   "SHOW",     "SQL",        "TRY",
+    "UNLOAD",  "UPDATE",   "VALIDATE", "WHENEVER", "WHILE"};
 
 typedef struct {
   const char *first;

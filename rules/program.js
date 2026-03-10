@@ -140,12 +140,9 @@ export default {
       seq(
         optional(kw("DESCRIBE")),
         kw("DATABASE"),
-        choice(
-          seq(
-            alias($._identifier, "dbname"),
-            optional(seq("@", alias($._identifier, "dbserver"))),
-          ),
-          alias($._string_literal, "dbname"),
+        seq(
+          alias(choice($._variable, $._string_literal), "dbname"),
+          optional(seq("@", alias($._identifier, "dbserver"))),
         ),
         optional(kw("EXCLUSIVE")),
       ),

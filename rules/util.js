@@ -73,6 +73,18 @@ function commaSep(rule) {
   return optional(commaSep1(rule));
 }
 
+/**
+ * Creates a rule to match one or more of the rules separated by a comma
+ * 用逗号将1个或者多个规则拼接
+ *
+ * @param {Rule} rule
+ *
+ * @returns {SeqRule}
+ */
+function dotSep1(rule) {
+  return seq(rule, repeat(seq(".", rule)));
+}
+
 function makeToken(/** @type {string} */ word) {
   return token(
     prec(
@@ -109,6 +121,7 @@ export {
   datetimeQualifier,
   commaSep,
   commaSep1,
+  dotSep1,
   kw,
   PREC,
   multiplicativeOperators,

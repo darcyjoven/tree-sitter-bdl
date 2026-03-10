@@ -106,6 +106,7 @@ export default {
       kw("TODAY"),
       kw("CURRENT"),
       seq(kw("ASCII"), $._expression),
+      seq($._number_literal, kw("SPACES")),
     ),
   // 作用域
   scope: ($) => choice(kw("PRIVATE"), kw("PUBLIC")),
