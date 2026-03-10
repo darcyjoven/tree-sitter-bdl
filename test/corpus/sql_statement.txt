@@ -673,7 +673,7 @@ END MAIN
 CASE 语句
 ================================================================================|||
 MAIN
-    SELECT CASE WHEN a = 1 THEN 1 ELSE 0 END CASE FROM t
+    SELECT CASE WHEN a = 1 THEN 1 ELSE 0 END  FROM t
 END MAIN
 --------------------------------------------------------------------------------|||
 (source_file
@@ -684,7 +684,7 @@ END MAIN
 CASE 语句 2
 ================================================================================|||
 MAIN
-    SELECT CASE WHEN a = 1 THEN CASE WHEN b = 1 THEN 1 ELSE 0 END CASE ELSE 0 END CASE FROM t
+    SELECT CASE WHEN a = 1 THEN CASE WHEN b = 1 THEN 1 ELSE 0 END ELSE 0 END FROM t
 END MAIN
 --------------------------------------------------------------------------------|||
 (source_file
@@ -695,7 +695,7 @@ END MAIN
 CASE 语句 3
 ================================================================================|||
 MAIN
-    SELECT CASE WHEN a = 1 THEN 1 END CASE FROM t WHERE a = 1
+    SELECT CASE WHEN a = 1 THEN 1 END FROM t WHERE a = 1
 END MAIN
 --------------------------------------------------------------------------------|||
 (source_file
@@ -706,7 +706,7 @@ END MAIN
 CASE 语句 4
 ================================================================================|||
 MAIN
-    SeLeCt CaSe WhEn a = 1 ThEn 1 EnD   CaSe FrOm t
+    SeLeCt CaSe WhEn a = 1 ThEn 1 EnD  FrOm t
 END MAIN
 --------------------------------------------------------------------------------|||
 (source_file
@@ -717,9 +717,87 @@ END MAIN
 CASE 语句 5
 ================================================================================|||
 MAIN
-    SELECT CASE WHEN a = 1 THEN 1 END　CASE FROM t
+    SELECT CASE WHEN a = 1 THEN 1 END FROM t
 END MAIN
 --------------------------------------------------------------------------------|||
 (source_file
     (main_block
         (select_sql)))
+
+================================================================================|||
+CASE 语句 6 (单层 case...end)
+================================================================================|||
+MAIN
+    SELECT
+        CASE a
+            WHEN 1 THEN 'one'
+            ELSE 'other'
+        END
+    FROM mytable;
+END MAIN
+--------------------------------------------------------------------------------|||
+(source_file
+    (main_block
+        (select_sql)))
+
+================================================================================|||
+CASE 语句 7 (二层嵌套 case...end case)
+================================================================================|||
+MAIN
+    SELECT
+        CASE a
+            WHEN 1 THEN
+                CASE b
+                    WHEN 2 THEN 'two'
+                    ELSE 'other'
+                END
+            ELSE 'default'
+        END
+    FROM mytable;
+END MAIN
+--------------------------------------------------------------------------------|||
+(source_file
+    (main_block
+        (select_sql)))
+
+================================================================================|||
+CASE 语句 8 (三层嵌套与 end if)
+================================================================================|||
+MAIN
+    SELECT
+        CASE a
+            WHEN 1 THEN
+                CASE b
+                    WHEN 2 THEN
+                        CASE c
+                            WHEN 3 THEN 'three'
+                        END
+                    ELSE 'other'
+                END
+            ELSE 'default'
+        END
+    FROM mytable;
+END MAIN
+--------------------------------------------------------------------------------|||
+(source_file
+    (main_block
+        (select_sql)))
+
+================================================================================|||
+CASE 语句 9 (文件结尾未匹配 end)
+================================================================================|||
+MAIN
+    SELECT * from dual
+    case
+        when '1'
+         let a = 1
+    end case
+END MAIN
+
+--------------------------------------------------------------------------------|||
+(source_file
+    (main_block
+        (select_sql)
+        (case_flow
+            (when_flow
+                (variable_statement)))))

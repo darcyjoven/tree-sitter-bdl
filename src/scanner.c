@@ -7,23 +7,13 @@
 
 // 你的代理函数
 int printfLog(const char *format, ...) {
-
   return 0;
-
   int done;
   va_list arg;
-
-  // 1. 初始化 va_list，使其指向第一个变长参数
   va_start(arg, format);
-
-  // 2. 将 va_list 传递给 vprintf（这是核心步骤）
-  // 注意：不能直接调用 printf(format, arg)，那是不行的
   done = vprintf(format, arg);
-
-  // 4. 清理工作
   va_end(arg);
-
-  return done; // 返回打印的字符总数，保持与 printf 行为一致
+  return done;
 }
 
 enum TokenType { SQL_BODY, ERROR_SENTINEL };
@@ -45,6 +35,7 @@ typedef struct {
   const char *first;
   const char *second;
 } Phrase;
+
 static const Phrase PHRASE_TERMINATORS[] = {
     {"ON", "ACTION"},      {"ON", "APPEND"},    {"ON", "CHANGE"},
     {"ON", "COLLAPSE"},    {"ON", "DELETE"},    {"ON", "DRAG_ENTER"},
@@ -60,7 +51,6 @@ static const Phrase PHRASE_TERMINATORS[] = {
 // --- 辅助工具 ---
 static bool is_word_char(int32_t c) { return iswalnum(c) || c == '_'; }
 
-// 模拟读取单词但不影响主循环的 mark_end
 static void scan_word(TSLexer *lexer, char *buf) {
   int i = 0;
   while (is_word_char(lexer->lookahead) && i < 63) {
@@ -88,32 +78,6 @@ static bool handle_parens(TSLexer *lexer, int *paren_depth,
   return false;
 }
 
-// 维护 SQL 内部 CASE 深度，并处理 END CASE 组合
-static bool update_case_state(const char *word, int *case_depth,
-                              bool *pending_case_end) {
-  if (*pending_case_end) {
-    if (strcmp(word, "CASE") == 0) {
-      // end case
-      *pending_case_end = false;
-      return true;
-    }
-    *pending_case_end = false;
-  }
-
-  if (strcmp(word, "CASE") == 0) {
-    (*case_depth)++;
-    return true;
-  }
-  if (strcmp(word, "END") == 0 && *case_depth > 0) {
-    (*case_depth)--;
-    *pending_case_end = true;
-    return true;
-  }
-
-  return false;
-}
-
-// 单关键字终止符判定
 static bool match_single_terminator(const char *word) {
   for (int i = 0; i < TERM_COUNT; i++) {
     if (strcmp(word, BDL_TERMINATORS[i]) == 0)
@@ -122,7 +86,6 @@ static bool match_single_terminator(const char *word) {
   return false;
 }
 
-// 短语终止符判定（如 ON ACTION）
 static bool match_phrase_terminator(TSLexer *lexer, const char *word1) {
   bool possible_phrase_start = false;
   for (int i = 0; i < PHRASE_COUNT; i++) {
@@ -147,11 +110,9 @@ static bool match_phrase_terminator(TSLexer *lexer, const char *word1) {
       return true;
     }
   }
-
   return false;
 }
 
-// 终止符判定并处理 FOR UPDATE 排除
 static bool match_terminator(TSLexer *lexer, const char *word1) {
   bool matched = match_single_terminator(word1);
   if (!matched)
@@ -217,7 +178,6 @@ static bool skip_whitespace_and_comments(TSLexer *lexer,
   return false;
 }
 
-// 处理单双引号切换
 static bool handle_quotes(TSLexer *lexer, bool *in_s_quote, bool *in_d_quote,
                           bool *last_was_whitespace) {
   if (lexer->lookahead == '\'') {
@@ -237,6 +197,22 @@ static bool handle_quotes(TSLexer *lexer, bool *in_s_quote, bool *in_d_quote,
   return false;
 }
 
+// 判定是否为 BDL 语句块关键字（即 end 之后如果出现这些，则发生截断）
+static bool is_bdl_block_keyword(const char *word) {
+  // 涵盖 "case, if, function 等任何关键字"
+  if (strcmp(word, "FUNCTION") == 0)
+    return true;
+  return match_single_terminator(word);
+}
+
+// 定义用于追踪嵌套深度的栈最大容量与栈帧结构
+#define MAX_CASE_DEPTH 128
+typedef struct {
+  int depth; // 深度
+  // Tree-sitter 没有自由设定偏移的方法，其物理位置的回退依靠控制 mark_end
+  // 的调用时机实现。
+} CaseFrame;
+
 bool tree_sitter_bdl_external_scanner_scan(void *payload, TSLexer *lexer,
                                            const bool *valid_symbols) {
   if (valid_symbols[ERROR_SENTINEL])
@@ -245,36 +221,86 @@ bool tree_sitter_bdl_external_scanner_scan(void *payload, TSLexer *lexer,
   if (!valid_symbols[SQL_BODY])
     return false;
 
-  // 1. 跳过前置空白，并标记当前位置为 token 开始
   while (iswspace(lexer->lookahead))
     lexer->advance(lexer, true);
 
   lexer->mark_end(lexer);
 
-  int paren_depth = 0; // 括号深度：用于处理 (SELECT ...)
-  int case_depth = 0;  // SQL 内部 CASE 深度：用于处理 CASE WHEN ... END
+  int paren_depth = 0;
+
+  // 初始化栈结构以维护每层 CASE 的深度，满足空间 O(k) 要求
+  CaseFrame case_stack[MAX_CASE_DEPTH];
+  int case_top = 0;
+
   bool in_s_quote = false;
   bool in_d_quote = false;
   bool last_was_whitespace = true;
   bool pending_case_end = false;
 
   while (!lexer->eof(lexer)) {
-    // 只有在最外层（非嵌套、非引号内）时，才可能标记有效的 SQL 结束边界
-    if (!in_s_quote && !in_d_quote && paren_depth == 0 && case_depth == 0) {
+    // 只有在非嵌套（包含 CASE 的非嵌套）时才更新物理游标。
+    // 这保证了在进入 CASE 层级后，最后一次的安全点永远停留在 CASE 开始之前。
+    if (!in_s_quote && !in_d_quote && paren_depth == 0 && case_top == 0) {
       lexer->mark_end(lexer);
     }
 
-    // --- 1. 处理空白和注释 ---
     if (skip_whitespace_and_comments(lexer, &last_was_whitespace, in_s_quote,
                                      in_d_quote)) {
       continue;
     }
 
-    // --- 2. 处理引号 ---
+    // --- 优先处理处于 Pending 状态的 END ---
+    if (pending_case_end) {
+      if (is_word_char(lexer->lookahead)) {
+        bool can_be_terminator = last_was_whitespace;
+        char word1[64];
+        scan_word(lexer, word1);
+        last_was_whitespace = false;
+
+        if (is_bdl_block_keyword(word1)) {
+          // 【核心逻辑】：遇到 END <CASE/IF/FUNCTION 等>。
+          // 立即终止，不调用 mark_end，直接返回。
+          // Tree-sitter 强制截断到最外层 CASE 前的历史记录点 (exclusive)。
+          lexer->result_symbol = SQL_BODY;
+          return true;
+        }
+
+        // 遇到普通 END，其后接的是非块状关键字（例如 FROM, WHERE），属于合法
+        // SQL CASE。
+        pending_case_end = false;
+        if (case_top > 0)
+          case_top--; // 闭合当前层栈顶，恢复正常层级
+
+        // 继续对刚扫到的 word1 正常入栈与判定检查
+        if (strcmp(word1, "CASE") == 0) {
+          if (case_top < MAX_CASE_DEPTH) {
+            case_stack[case_top].depth = case_top + 1;
+            case_top++;
+          }
+        } else if (strcmp(word1, "END") == 0 && case_top > 0) {
+          pending_case_end = true;
+        }
+
+        if (can_be_terminator && paren_depth == 0 && case_top == 0 &&
+            !pending_case_end) {
+          if (match_terminator(lexer, word1)) {
+            lexer->result_symbol = SQL_BODY;
+            return true;
+          }
+        }
+        continue; // 此词已走完判断，跳入下个循环
+      } else {
+        // END 后接非字母词（例如逗号，括号等），认定为合法 SQL CASE。
+        pending_case_end = false;
+        if (case_top > 0)
+          case_top--;
+      }
+    }
+
     if (handle_quotes(lexer, &in_s_quote, &in_d_quote, &last_was_whitespace)) {
       continue;
     }
-    // --- 3. 处理核心语法结构 ---
+
     if (!in_s_quote && !in_d_quote) {
       if (handle_parens(lexer, &paren_depth, &last_was_whitespace)) {
         continue;
@@ -286,12 +312,20 @@ bool tree_sitter_bdl_external_scanner_scan(void *payload, TSLexer *lexer,
         scan_word(lexer, word1);
         last_was_whitespace = false;
 
-        bool is_internal_case_logic =
-            update_case_state(word1, &case_depth, &pending_case_end);
+        // --- 追踪 CASE 层级 ---
+        if (strcmp(word1, "CASE") == 0) {
+          if (case_top < MAX_CASE_DEPTH) {
+            case_stack[case_top].depth = case_top + 1; // 新 case 入栈，记录深度
+            case_top++;
+          }
+        } else if (strcmp(word1, "END") == 0 && case_top > 0) {
+          // 只打标记，延后到下一个非空 token 判明真身
+          pending_case_end = true;
+        }
 
-        // 判定是否作为结束符触发
-        if (can_be_terminator && paren_depth == 0 && case_depth == 0 &&
-            !is_internal_case_logic) {
+        // --- 常规 SQL_BODY 终止符判定 ---
+        if (can_be_terminator && paren_depth == 0 && case_top == 0 &&
+            !pending_case_end) {
           if (match_terminator(lexer, word1)) {
             lexer->result_symbol = SQL_BODY;
             return true;
@@ -313,7 +347,6 @@ bool tree_sitter_bdl_external_scanner_scan(void *payload, TSLexer *lexer,
   return true;
 }
 
-// 占位函数...
 void *tree_sitter_bdl_external_scanner_create() { return NULL; }
 void tree_sitter_bdl_external_scanner_destroy(void *p) {}
 unsigned tree_sitter_bdl_external_scanner_serialize(void *p, char *b) {
