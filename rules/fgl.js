@@ -78,7 +78,14 @@ export default {
   exception_statement: ($) =>
     choice(
       seq(kw("WHENEVER"), $._exception_classes, $._exception_action),
-      seq(kw("TRY"), $._statement, kw("CATCH"), $._statement, kw("END TRY")),
+      seq(
+        kw("TRY"),
+        repeat($._statement),
+        alias(kw("CATCH"), $.catch_statement),
+        repeat($._statement),
+        kw("END"),
+        kw("TRY"),
+      ),
     ),
   _exception_classes: ($) =>
     choice(

@@ -145,11 +145,11 @@ const rules = {
       optional(seq(kw("INTO"), commaSep1($._variable))),
       optional(kw("WITH REOPTIMIZATION")),
       repeat(
-        choice($._fgl_statement, $._sql_statement, $._foreach__sql_statement),
+        choice($._fgl_statement, $._sql_statement, $._foreach_sql_statement),
       ),
       kw("END FOREACH"),
     ),
-  _foreach__sql_statement: ($) =>
+  _foreach_sql_statement: ($) =>
     choice(kw("CONTINUE FOREACH"), kw("EXIT FOREACH")),
   put_sql: ($) =>
     seq(
