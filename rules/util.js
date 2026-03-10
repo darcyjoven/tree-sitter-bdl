@@ -72,6 +72,20 @@ function commaSep1(rule) {
 function commaSep(rule) {
   return optional(commaSep1(rule));
 }
+
+function makeToken(/** @type {string} */ word) {
+  return token(
+    prec(
+      10,
+      new RegExp(
+        word
+          .split("")
+          .map((c) => `[${c.toLowerCase()}${c.toUpperCase()}]`)
+          .join(""),
+      ),
+    ),
+  );
+}
 /**
  * 将多词短语转为不区分大小写的 Tree-sitter 序列
  * @param {string} phrase - 例如 "end function"
@@ -80,20 +94,6 @@ function commaSep(rule) {
 function kw(phrase) {
   const words = phrase.split(/\s+/);
   const _alias = phrase.replaceAll(" ", "_");
-
-  // 统一生成不区分大小写的 token
-  const makeToken = (/** @type {string} */ word) =>
-    token(
-      prec(
-        10,
-        new RegExp(
-          word
-            .split("")
-            .map((c) => `[${c.toLowerCase()}${c.toUpperCase()}]`)
-            .join(""),
-        ),
-      ),
-    );
 
   // 如果是多词短语如 "HELP FILE"，由 seq 拼接
   if (words.length > 1) {

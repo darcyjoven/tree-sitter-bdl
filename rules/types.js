@@ -19,10 +19,12 @@ export default {
     choice(
       seq(
         kw("GLOBALS"),
-        choice(
-          $.constant_definition,
-          $.user_type_definition,
-          $.variable_definition,
+        repeat(
+          choice(
+            $.constant_definition,
+            $.user_type_definition,
+            $.variable_definition,
+          ),
         ),
         kw("END GLOBALS"),
       ),
@@ -187,8 +189,9 @@ export default {
         $._data_type,
       ),
       seq(
-        kw("DYNAMIC ARRAY"),
-        optional(seq(kw("WITH DIMENSION"), /[1-3]/)),
+        kw("DYNAMIC"),
+        kw("ARRAY"),
+        optional(seq(kw("WITH"), kw("DIMENSION"), /[1-3]/)),
         kw("OF"),
         $._data_type,
       ),
@@ -200,8 +203,8 @@ export default {
   _variable_declaration_group: ($) =>
     seq(commaSep1(alias($._identifier, $.variable_name)), $._data_type),
   // record 因为有end record
-  _record_list: ($) =>
-    commaSep1(seq(alias($._identifier, $.variable_name), $._data_type)),
+  // _record_list: ($) =>
+  //   commaSep1(seq(alias($._identifier, $.variable_name), $._data_type)),
   // 第三方导入类型
   _third_type: ($) =>
     choice($._third_base_type, $._third_ui_type, $._third_om_type),

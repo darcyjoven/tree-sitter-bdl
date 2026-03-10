@@ -4,8 +4,9 @@ import { commaSep1, kw } from "./util.js";
 
 const rules = {
   // 定义 SQL 相关的规则
-  _sql_statement: ($) =>
+  _sql_statement_content: ($) =>
     choice($._static_sql, $._dynamic_sql, $._io_sql, $._transactions_sql),
+  _sql_statement: ($) => seq($._sql_statement_content, optional(";")),
   // 静态SQL
   _static_sql: ($) =>
     choice(
@@ -19,7 +20,7 @@ const rules = {
       $.block_sql,
       $.rename_sql,
     ),
-  block_sql: ($) => seq(kw("SQL"), $._static_sql, kw("END SQL")),
+  block_sql: ($) => seq(kw("SQL"), $._static_sql, kw("END"), kw("SQL")),
   rename_sql: ($) =>
     seq(
       kw("RENAME"),
@@ -68,12 +69,15 @@ const rules = {
   declare_sql: ($) =>
     seq(
       kw("DECLARE"),
-      $._identifier,
+      alias($._identifier, "cursor_name"),
       optional(kw("SCROLL")),
       kw("CURSOR"),
-      optional(kw("WITH HOLD")),
+      optional(seq(kw("WITH"), kw("HOLD"))),
       choice(
-        seq(kw("FOR"), choice($._static_sql, $._identifier)),
+        seq(
+          kw("FOR"),
+          alias(choice($._static_sql, prec(2, $._identifier)), "sql"),
+        ),
         seq(kw("FROM"), $._expression),
       ),
     ),

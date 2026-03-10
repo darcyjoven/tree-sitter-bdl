@@ -4,7 +4,7 @@ import { commaSep, commaSep1, datetimeQualifier, kw, PREC } from "./util.js";
 // @ts-check
 
 export default {
-  _fgl_statement: ($) =>
+  _fgl_statement_content: ($) =>
     choice(
       $.defer_statement,
       $._flow_ctrl_statement,
@@ -18,6 +18,7 @@ export default {
       $.interface_block_statement,
       $._report_statement,
     ),
+  _fgl_statement: ($) => seq($._fgl_statement_content, optional(";")),
   // _interface_statement: $ => '_interface_statement',
   demo_statement: ($) => "ON ACTION",
   defer_statement: ($) => seq(kw("DEFER"), choice(kw("INTERRUPT"), kw("QUIT"))),

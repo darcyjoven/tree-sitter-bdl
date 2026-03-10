@@ -423,9 +423,7 @@ export default {
   _interface_block: ($) =>
     seq(
       $.interface_option,
-      repeat(
-        choice($._fgl_statement, $._sql_statement, $.interface_block_statement),
-      ),
+      repeat(choice($._fgl_statement, $._sql_statement)),
     ),
   _interface_attribute: ($) =>
     seq(

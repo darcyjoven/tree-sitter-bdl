@@ -19,13 +19,15 @@ export default grammar({
 
   extras: ($) => [$.comment, /\s/, /[\u3000]/],
 
+  // word: ($) => $._identifier,
+
   externals: ($) => [...sqlExternals($)],
 
   inline: ($) => [$._constant_statement, $.scope],
 
   conflicts: ($) => [
     // [$.case_flow, $._expression]
-    [$._fgl_statement, $._interface_block],
+    // [$._fgl_statement, $._interface_block],
     [$.input_array_inline, $.input_array_block],
   ],
 
