@@ -28,7 +28,6 @@ int printfLog(const char *format, ...) {
 
 enum TokenType { SQL_BODY, ERROR_SENTINEL };
 
-
 static const char *BDL_TERMINATORS[] = {
     "ACCEPT",  "AFTER",    "ALTER",    "BEFORE",   "CALL",       "CANCEL",
     "CASE",    "CATCH",    "CLEAR",    "CLOSE",    "COMMAND",    "COMMIT",
@@ -71,6 +70,172 @@ static void scan_word(TSLexer *lexer, char *buf) {
   buf[i] = '\0';
 }
 
+static bool handle_parens(TSLexer *lexer, int *paren_depth,
+                          bool *last_was_whitespace) {
+  if (lexer->lookahead == '(') {
+    (*paren_depth)++;
+    *last_was_whitespace = false;
+    lexer->advance(lexer, false);
+    return true;
+  }
+  if (lexer->lookahead == ')') {
+    if (*paren_depth > 0)
+      (*paren_depth)--;
+    *last_was_whitespace = false;
+    lexer->advance(lexer, false);
+    return true;
+  }
+  return false;
+}
+
+// 维护 SQL 内部 CASE 深度，并处理 END CASE 组合
+static bool update_case_state(const char *word, int *case_depth,
+                              bool *pending_case_end) {
+  if (*pending_case_end) {
+    if (strcmp(word, "CASE") == 0) {
+      *pending_case_end = false;
+      return true;
+    }
+    *pending_case_end = false;
+  }
+
+  if (strcmp(word, "CASE") == 0) {
+    (*case_depth)++;
+    return true;
+  }
+  if (strcmp(word, "END") == 0 && *case_depth > 0) {
+    (*case_depth)--;
+    *pending_case_end = true;
+    return true;
+  }
+
+  return false;
+}
+
+// 单关键字终止符判定
+static bool match_single_terminator(const char *word) {
+  for (int i = 0; i < TERM_COUNT; i++) {
+    if (strcmp(word, BDL_TERMINATORS[i]) == 0)
+      return true;
+  }
+  return false;
+}
+
+// 短语终止符判定（如 ON ACTION）
+static bool match_phrase_terminator(TSLexer *lexer, const char *word1) {
+  bool possible_phrase_start = false;
+  for (int i = 0; i < PHRASE_COUNT; i++) {
+    if (strcmp(word1, PHRASE_TERMINATORS[i].first) == 0) {
+      possible_phrase_start = true;
+      break;
+    }
+  }
+
+  if (!possible_phrase_start)
+    return false;
+
+  while (iswspace(lexer->lookahead))
+    lexer->advance(lexer, false);
+
+  char word2[64];
+  scan_word(lexer, word2);
+
+  for (int i = 0; i < PHRASE_COUNT; i++) {
+    if (strcmp(word1, PHRASE_TERMINATORS[i].first) == 0 &&
+        strcmp(word2, PHRASE_TERMINATORS[i].second) == 0) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+// 终止符判定并处理 FOR UPDATE 排除
+static bool match_terminator(TSLexer *lexer, const char *word1) {
+  bool matched = match_single_terminator(word1);
+  if (!matched)
+    matched = match_phrase_terminator(lexer, word1);
+
+  if (!matched)
+    return false;
+
+  if (strcmp(word1, "FOR") == 0) {
+    while (iswspace(lexer->lookahead))
+      lexer->advance(lexer, false);
+
+    char next_word[64];
+    scan_word(lexer, next_word);
+    if (strcmp(next_word, "UPDATE") == 0)
+      return false;
+  }
+
+  return true;
+}
+
+static bool skip_whitespace_and_comments(TSLexer *lexer,
+                                         bool *last_was_whitespace,
+                                         bool in_s_quote, bool in_d_quote) {
+  if (iswspace(lexer->lookahead)) {
+    *last_was_whitespace = true;
+    lexer->advance(lexer, false);
+    return true;
+  }
+
+  if (in_s_quote || in_d_quote)
+    return false;
+
+  if (lexer->lookahead == '-') {
+    lexer->advance(lexer, false);
+    if (lexer->lookahead == '-') {
+      while (!lexer->eof(lexer) && lexer->lookahead != '\n') {
+        lexer->advance(lexer, false);
+      }
+      *last_was_whitespace = true;
+      return true;
+    }
+    *last_was_whitespace = false;
+    return true;
+  } else if (lexer->lookahead == '#') {
+    while (!lexer->eof(lexer) && lexer->lookahead != '\n') {
+      lexer->advance(lexer, false);
+    }
+    *last_was_whitespace = true;
+    return true;
+  } else if (lexer->lookahead == '{') {
+    lexer->advance(lexer, false);
+    while (!lexer->eof(lexer) && lexer->lookahead != '}') {
+      lexer->advance(lexer, false);
+    }
+    if (lexer->lookahead == '}') {
+      lexer->advance(lexer, false);
+    }
+    *last_was_whitespace = true;
+    return true;
+  }
+
+  return false;
+}
+
+// 处理单双引号切换
+static bool handle_quotes(TSLexer *lexer, bool *in_s_quote, bool *in_d_quote,
+                          bool *last_was_whitespace) {
+  if (lexer->lookahead == '\'') {
+    if (!*in_d_quote)
+      *in_s_quote = !*in_s_quote;
+    *last_was_whitespace = false;
+    lexer->advance(lexer, false);
+    return true;
+  }
+  if (lexer->lookahead == '"') {
+    if (!*in_s_quote)
+      *in_d_quote = !*in_d_quote;
+    *last_was_whitespace = false;
+    lexer->advance(lexer, false);
+    return true;
+  }
+  return false;
+}
+
 bool tree_sitter_bdl_external_scanner_scan(void *payload, TSLexer *lexer,
                                            const bool *valid_symbols) {
   if (valid_symbols[ERROR_SENTINEL])
@@ -85,8 +250,8 @@ bool tree_sitter_bdl_external_scanner_scan(void *payload, TSLexer *lexer,
 
   lexer->mark_end(lexer);
 
-  int paren_depth = 0;   // 括号深度：用于处理 (SELECT ...)
-  int case_depth = 0;    // SQL 内部 CASE 深度：用于处理 CASE WHEN ... END
+  int paren_depth = 0; // 括号深度：用于处理 (SELECT ...)
+  int case_depth = 0;  // SQL 内部 CASE 深度：用于处理 CASE WHEN ... END
   bool in_s_quote = false;
   bool in_d_quote = false;
   bool last_was_whitespace = true;
@@ -99,153 +264,36 @@ bool tree_sitter_bdl_external_scanner_scan(void *payload, TSLexer *lexer,
     }
 
     // --- 1. 处理空白和注释 ---
-    if (iswspace(lexer->lookahead)) {
-      last_was_whitespace = true;
-      lexer->advance(lexer, false);
+    if (skip_whitespace_and_comments(lexer, &last_was_whitespace, in_s_quote,
+                                     in_d_quote)) {
       continue;
     }
 
-    if (!in_s_quote && !in_d_quote) {
-      // 行注释 --
-      if (lexer->lookahead == '-') {
-        lexer->advance(lexer, false);
-        if (lexer->lookahead == '-') {
-          while (!lexer->eof(lexer) && lexer->lookahead != '\n') {
-            lexer->advance(lexer, false);
-          }
-          last_was_whitespace = true;
-          continue;
-        }
-        last_was_whitespace = false;
-        continue;
-      }
-      // 行注释 #
-      else if (lexer->lookahead == '#') {
-        while (!lexer->eof(lexer) && lexer->lookahead != '\n') {
-          lexer->advance(lexer, false);
-        }
-        last_was_whitespace = true;
-        continue;
-      }
-      // 块注释 { ... }
-      else if (lexer->lookahead == '{') {
-        lexer->advance(lexer, false);
-        while (!lexer->eof(lexer) && lexer->lookahead != '}') {
-          lexer->advance(lexer, false);
-        }
-        if (lexer->lookahead == '}') {
-          lexer->advance(lexer, false);
-        }
-        last_was_whitespace = true;
-        continue;
-      }
-    }
-
     // --- 2. 处理引号 ---
-    if (lexer->lookahead == '\'') {
-      if (!in_d_quote) in_s_quote = !in_s_quote;
-      last_was_whitespace = false;
-      lexer->advance(lexer, false);
-    } else if (lexer->lookahead == '"') {
-      if (!in_s_quote) in_d_quote = !in_d_quote;
-      last_was_whitespace = false;
-      lexer->advance(lexer, false);
+    if (handle_quotes(lexer, &in_s_quote, &in_d_quote, &last_was_whitespace)) {
+      continue;
     }
     // --- 3. 处理核心语法结构 ---
-    else if (!in_s_quote && !in_d_quote) {
-      if (lexer->lookahead == '(') {
-        paren_depth++;
-        last_was_whitespace = false;
-        lexer->advance(lexer, false);
-      } else if (lexer->lookahead == ')') {
-        if (paren_depth > 0) paren_depth--;
-        last_was_whitespace = false;
-        lexer->advance(lexer, false);
-      } else if (is_word_char(lexer->lookahead)) {
+    if (!in_s_quote && !in_d_quote) {
+      if (handle_parens(lexer, &paren_depth, &last_was_whitespace)) {
+        continue;
+      }
 
+      if (is_word_char(lexer->lookahead)) {
         bool can_be_terminator = last_was_whitespace;
         char word1[64];
         scan_word(lexer, word1);
         last_was_whitespace = false;
 
-        bool is_internal_case_logic = false;
-
-        if (pending_case_end) {
-          if (strcmp(word1, "CASE") == 0) {
-            pending_case_end = false;
-            is_internal_case_logic = true;
-          } else {
-            pending_case_end = false;
-          }
-        }
-
-        if (!is_internal_case_logic && strcmp(word1, "CASE") == 0) {
-          case_depth++;
-          is_internal_case_logic = true;
-        } else if (!is_internal_case_logic && strcmp(word1, "END") == 0) {
-          if (case_depth > 0) {
-            case_depth--;
-            pending_case_end = true;
-            is_internal_case_logic = true;
-          }
-        }
+        bool is_internal_case_logic =
+            update_case_state(word1, &case_depth, &pending_case_end);
 
         // 判定是否作为结束符触发
-        if (can_be_terminator && paren_depth == 0 && case_depth == 0 && !is_internal_case_logic) {
-          bool matched = false;
-
-          // 检查单单词终止符
-          for (int i = 0; i < TERM_COUNT; i++) {
-            if (strcmp(word1, BDL_TERMINATORS[i]) == 0) {
-              matched = true;
-              break;
-            }
-          }
-
-          // 检查短语终止符 (如 ON ACTION)
-          if (!matched) {
-            bool possible_phrase_start = false;
-            for (int i = 0; i < PHRASE_COUNT; i++) {
-              if (strcmp(word1, PHRASE_TERMINATORS[i].first) == 0) {
-                possible_phrase_start = true;
-                break;
-              }
-            }
-
-            if (possible_phrase_start) {
-              // 暂时不 mark_end，尝试向后窥探第二个词
-              while (iswspace(lexer->lookahead)) lexer->advance(lexer, false);
-              char word2[64];
-              scan_word(lexer, word2);
-
-              for (int i = 0; i < PHRASE_COUNT; i++) {
-                if (strcmp(word1, PHRASE_TERMINATORS[i].first) == 0 &&
-                    strcmp(word2, PHRASE_TERMINATORS[i].second) == 0) {
-                  matched = true;
-                  break;
-                }
-              }
-            }
-          }
-
-          if (matched) {
-            // 特殊排除: SQL 里的 FOR UPDATE 不是 BDL 的终止符
-            if (strcmp(word1, "FOR") == 0) {
-              // 简单过滤空白探测下一个词
-              while (iswspace(lexer->lookahead)) lexer->advance(lexer, false);
-              char next_word[64];
-              scan_word(lexer, next_word);
-              if (strcmp(next_word, "UPDATE") == 0) {
-                // 是 SQL 内部的 FOR UPDATE，不结束
-              } else {
-                lexer->result_symbol = SQL_BODY;
-                return true;
-              }
-            } else {
-              // 匹配到终止符，且满足空白边界和深度要求，返回 SQL_BODY
-              lexer->result_symbol = SQL_BODY;
-              return true;
-            }
+        if (can_be_terminator && paren_depth == 0 && case_depth == 0 &&
+            !is_internal_case_logic) {
+          if (match_terminator(lexer, word1)) {
+            lexer->result_symbol = SQL_BODY;
+            return true;
           }
         }
       } else {
