@@ -8,6 +8,13 @@ const rules = {
     choice($._static_sql, $._dynamic_sql, $._io_sql, $._transactions_sql),
   _sql_statement: ($) => seq($._sql_statement_content, optional(";")),
   // 静态SQL
+  select_sql: ($) => seq(kw("SELECT"), $._sql_body),
+  insert_sql: ($) => seq(kw("INSERT"), $._sql_body),
+  delete_sql: ($) => seq(kw("DELETE"), $._sql_body),
+  update_sql: ($) => seq(kw("UPDATE"), $._sql_body),
+  create_sql: ($) => seq(kw("CREATE"), $._sql_body),
+  alter_sql: ($) => seq(kw("ALTER"), $._sql_body),
+  drop_sql: ($) => seq(kw("DROP"), $._sql_body),
   _static_sql: ($) =>
     choice(
       $.select_sql,
@@ -76,7 +83,10 @@ const rules = {
       choice(
         seq(
           kw("FOR"),
-          alias(choice($._static_sql, prec(2, $._identifier)), "sql"),
+          alias(
+            choice($.select_sql, $.insert_sql, prec(2, $._identifier)),
+            "sql",
+          ),
         ),
         seq(kw("FROM"), $._expression),
       ),
@@ -212,13 +222,7 @@ const rules = {
     ),
 };
 const externals = ($) => [
-  $.insert_sql,
-  $.update_sql,
-  $.select_sql,
-  $.delete_sql,
-  $.create_sql,
-  $.alter_sql,
-  $.drop_sql,
+  $._sql_body,
   $.error_sentinel, // 用于错误恢复的哨兵
 ];
 

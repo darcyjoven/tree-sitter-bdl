@@ -26,30 +26,8 @@ int printfLog(const char *format, ...) {
   return done; // 返回打印的字符总数，保持与 printf 行为一致
 }
 
-enum TokenType {
-  INSERT_SQL,
-  UPDATE_SQL,
-  SELECT_SQL,
-  DELETE_SQL,
-  CREATE_SQL,
-  ALTER_SQL,
-  DROP_SQL,
-  ERROR_SENTINEL
-};
+enum TokenType { SQL_BODY, ERROR_SENTINEL };
 
-typedef struct {
-  const char *keword;
-  enum TokenType type;
-} SqlRule;
-
-// --- 配置区 ---
-
-static const SqlRule SQL_RULES[] = {
-    {"SELECT", SELECT_SQL}, {"INSERT", INSERT_SQL}, {"DELETE", DELETE_SQL},
-    {"UPDATE", UPDATE_SQL}, {"CREATE", CREATE_SQL}, {"ALTER", ALTER_SQL},
-    {"DROP", DROP_SQL},
-};
-#define SQL_RULE_COUNT (sizeof(SQL_RULES) / sizeof(SQL_RULES[0]))
 
 static const char *BDL_TERMINATORS[] = {
     "ACCEPT",  "AFTER",    "ALTER",    "BEFORE",   "CALL",       "CANCEL",
@@ -98,38 +76,14 @@ bool tree_sitter_bdl_external_scanner_scan(void *payload, TSLexer *lexer,
   if (valid_symbols[ERROR_SENTINEL])
     return false;
 
+  if (!valid_symbols[SQL_BODY])
+    return false;
+
   // 1. 跳过前置空白
   while (iswspace(lexer->lookahead))
     lexer->advance(lexer, true);
 
-  // 2. 识别起始词
   lexer->mark_end(lexer);
-  char starter[64];
-  if (!is_word_char(lexer->lookahead))
-    return false;
-
-  int i = 0;
-  while (is_word_char(lexer->lookahead) && i < 63) {
-    starter[i++] = (char)towupper(lexer->lookahead);
-    lexer->advance(lexer, false);
-  }
-  starter[i] = '\0';
-
-  int current_type = -1;
-  for (int r = 0; r < SQL_RULE_COUNT; r++) {
-    if (strcmp(starter, SQL_RULES[r].keword) == 0 &&
-        valid_symbols[SQL_RULES[r].type]) {
-      current_type = SQL_RULES[r].type;
-      break;
-    }
-  }
-
-  if (current_type == -1)
-    return false;
-
-  // --- DEBUG: 开始解析 SQL ---
-  printfLog("[SQL Start] Detected Keyword: %s (Type: %d)\n", starter,
-            current_type);
 
   int paren_depth = 0;
   bool in_s_quote = false;
@@ -258,12 +212,9 @@ bool tree_sitter_bdl_external_scanner_scan(void *payload, TSLexer *lexer,
         }
 
         if (matched) {
-          // 特殊处理 FOR UPDATE
-          if (current_type == SELECT_SQL && strcmp(word1, "FOR") == 0) {
-            // 这里简化处理，逻辑同你之前代码
-            printfLog(
-                "    [Special] Found FOR, checking if it's FOR UPDATE...\n");
-            // 新增：不仅跳过空白，也要跳过可能的注释，防 FOR {注释} UPDATE
+          // 特殊处理 FOR UPDATE：SQL 里的 FOR UPDATE 不能作为终止符
+          if (strcmp(word1, "FOR") == 0) {
+            // 不仅跳过空白，也要跳过可能的注释，防 FOR {注释} UPDATE
             while (!lexer->eof(lexer)) {
               if (iswspace(lexer->lookahead)) {
                 lexer->advance(lexer, false);
@@ -295,13 +246,11 @@ bool tree_sitter_bdl_external_scanner_scan(void *payload, TSLexer *lexer,
             if (strcmp(next_word, "UPDATE") == 0) {
               matched = false;
             } else {
-              lexer->result_symbol = current_type;
+              lexer->result_symbol = SQL_BODY;
               return true;
             }
           } else {
-            printfLog("[SQL End] Triggered by terminator. Returning type %d\n",
-                      current_type);
-            lexer->result_symbol = current_type;
+            lexer->result_symbol = SQL_BODY;
             return true;
           }
         }
@@ -313,9 +262,8 @@ bool tree_sitter_bdl_external_scanner_scan(void *payload, TSLexer *lexer,
     }
   }
 
-  printfLog("[SQL End] Reached EOF. Returning type %d\n", current_type);
   lexer->mark_end(lexer);
-  lexer->result_symbol = current_type;
+  lexer->result_symbol = SQL_BODY;
   return true;
 }
 

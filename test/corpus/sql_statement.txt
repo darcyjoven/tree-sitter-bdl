@@ -195,8 +195,7 @@ END MAIN
 --------------------------------------------------------------------------------|||
 (source_file
     (main_block
-        (declare_sql
-            (select_sql))))
+        (declare_sql)))
 
 ================================================================================|||
 DECLARE 语句 3
@@ -235,11 +234,26 @@ END MAIN
 --------------------------------------------------------------------------------|||
 (source_file
     (main_block
-        (declare_sql
-            (select_sql))
+        (declare_sql)
         (variable_statement)
         (foreach_sql
                 (update_sql))))
+
+================================================================================|||
+DECLARE 语句 5
+================================================================================|||
+
+MAIN
+    DECLARE c1 CURSOR FOR s1
+
+    DECLARE sql_cur1 CURSOR FOR sql_pre1
+END MAIN
+
+--------------------------------------------------------------------------------|||
+(source_file
+    (main_block
+        (declare_sql)
+        (declare_sql)))
 
 ================================================================================|||
 OPEN 语句
@@ -285,8 +299,7 @@ END MAIN
 --------------------------------------------------------------------------------|||
 (source_file
     (main_block
-        (declare_sql
-            (select_sql))
+        (declare_sql)
         (open_sql)
         (fetch_sql)
         (fetch_sql)
@@ -312,8 +325,7 @@ END MAIN
 --------------------------------------------------------------------------------|||
 (source_file
     (main_block
-        (declare_sql
-            (select_sql))
+        (declare_sql)
         (open_sql)
         (close_sql)
         (open_sql)
@@ -340,8 +352,7 @@ END MAIN
 (source_file
     (main_block
         (for_flow
-            (declare_sql
-                (select_sql))
+            (declare_sql)
             (for_flow
                 (open_sql)
                 (fetch_sql)
@@ -365,8 +376,7 @@ END MAIN
 --------------------------------------------------------------------------------|||
 (source_file
     (main_block
-        (declare_sql
-            (select_sql))
+        (declare_sql)
         (variable_statement)
         (foreach_sql
             (variable_statement)
@@ -396,8 +406,7 @@ END MAIN
 --------------------------------------------------------------------------------|||
 (source_file
     (main_block
-    (declare_sql
-        (insert_sql))
+    (declare_sql)
     (open_sql)
     (for_flow
         (variable_statement)
@@ -462,8 +471,7 @@ END MAIN
 --------------------------------------------------------------------------------|||
 (source_file
     (main_block
-        (declare_sql
-            (insert_sql))
+        (declare_sql)
         (open_sql)
         (variable_statement)
         (put_sql)

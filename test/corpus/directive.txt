@@ -45,7 +45,7 @@ OPTIONS HELP FILE w2133 OPTIONS DELETE key crontrol-k
 
 --------------------------------------------------------------------------------|||
 (source_file
-     (compiler_options)
+    (compiler_options)
     (compiler_options))
 
 ================================================================================|||
