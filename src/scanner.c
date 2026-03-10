@@ -93,6 +93,7 @@ static bool update_case_state(const char *word, int *case_depth,
                               bool *pending_case_end) {
   if (*pending_case_end) {
     if (strcmp(word, "CASE") == 0) {
+      // end case
       *pending_case_end = false;
       return true;
     }
