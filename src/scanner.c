@@ -89,13 +89,24 @@ bool tree_sitter_bdl_external_scanner_scan(void *payload, TSLexer *lexer,
   bool in_s_quote = false;
   bool in_d_quote = false;
 
+  // 【核心优化1】：记录上一个处理的单元是否是“空白边界”（含前置跳过、纯空白、以及注释）
+  // 初始为 true，因为前面已经跳过了前置空白，此时我们正处在一个空白边界上
+  bool last_was_whitespace = true;
+
   while (!lexer->eof(lexer)) {
     // 只有在顶层且不在引号内时，记录“干净”的结束边界
     if (!in_s_quote && !in_d_quote && paren_depth == 0) {
       lexer->mark_end(lexer);
     }
 
-    // --- 新增：过滤注释。确保我们不在引号中时，直接吞掉注释 ---
+    // --- 1. 显式处理空白符 ---
+    if (iswspace(lexer->lookahead)) {
+      last_was_whitespace = true;
+      lexer->advance(lexer, false);
+      continue;
+    }
+
+    // --- 2. 处理注释（过滤注释，跳过注释后相当于遇到空白边界） ---
     if (!in_s_quote && !in_d_quote) {
       // 处理行注释 --
       if (lexer->lookahead == '-') {
@@ -104,15 +115,19 @@ bool tree_sitter_bdl_external_scanner_scan(void *payload, TSLexer *lexer,
           while (!lexer->eof(lexer) && lexer->lookahead != '\n') {
             lexer->advance(lexer, false);
           }
-          continue; // 注释结束，直接进入下一轮外层循环
+          last_was_whitespace = true; // 注释结束相当于一个空白边界
+          continue;
         }
-        continue; // 只是一个 '-' 符号，继续正常处理
+        // 如果只是一个 '-' 符号（如减号运算），它不属于空白边界
+        last_was_whitespace = false;
+        continue; // 刚才已经 advance 了单减号，直接进入下一轮外层循环
       }
       // 处理行注释 #
       else if (lexer->lookahead == '#') {
         while (!lexer->eof(lexer) && lexer->lookahead != '\n') {
           lexer->advance(lexer, false);
         }
+        last_was_whitespace = true;
         continue;
       }
       // 处理块注释 { ... }
@@ -124,140 +139,140 @@ bool tree_sitter_bdl_external_scanner_scan(void *payload, TSLexer *lexer,
         if (lexer->lookahead == '}') {
           lexer->advance(lexer, false);
         }
+        last_was_whitespace = true;
         continue;
       }
     }
 
+    // --- 3. 处理字符串引号 ---
     if (lexer->lookahead == '\'') {
       if (!in_d_quote)
         in_s_quote = !in_s_quote;
+      last_was_whitespace = false;
       lexer->advance(lexer, false);
+      continue;
     } else if (lexer->lookahead == '"') {
       if (!in_s_quote)
         in_d_quote = !in_d_quote;
+      last_was_whitespace = false;
       lexer->advance(lexer, false);
-    } else if (!in_s_quote && !in_d_quote) {
+      continue;
+    }
+
+    // --- 4. 处理括号和内容单词 ---
+    if (!in_s_quote && !in_d_quote) {
       if (lexer->lookahead == '(') {
         paren_depth++;
+        last_was_whitespace = false;
         lexer->advance(lexer, false);
       } else if (lexer->lookahead == ')') {
         if (paren_depth > 0)
           paren_depth--;
+        last_was_whitespace = false;
         lexer->advance(lexer, false);
-      } else if (paren_depth == 0 && is_word_char(lexer->lookahead)) {
+      } else if (is_word_char(lexer->lookahead)) {
+
+        // 【核心优化2】：只有在单词前面存在空白（或处于开头/注释后）时，才允许当作终止符
+        bool can_be_terminator = last_was_whitespace;
 
         char word1[64];
         scan_word(lexer, word1);
 
-        // --- DEBUG: 扫描到单词 ---
-        // printfLog("  [Word] Checking: %s\n", word1);
+        // 扫描完当前单词后，光标停留在单词后的字符上。对下一个 Token 来说，它前面的紧挨着的是个单词，不再是空白
+        last_was_whitespace = false;
 
-        bool matched = false;
-        // 检查单单词终止符
-        for (int i = 0; i < TERM_COUNT; i++) {
-          if (strcmp(word1, BDL_TERMINATORS[i]) == 0) {
-            printfLog("    [Match] Single Terminator: %s\n", word1);
-            matched = true;
-            break;
-          }
-        }
-
-        // 检查短语终止符
-        if (!matched) {
-          bool possible_phrase = false;
-
-          // 1. 先扫描一遍，看看 word1 是否有可能是任何一个短语的开头
-          for (int i = 0; i < PHRASE_COUNT; i++) {
-            if (strcmp(word1, PHRASE_TERMINATORS[i].first) == 0) {
-              possible_phrase = true;
-              break; // 只要确认它是短语开头之一，就跳出循环
+        // 【核心优化3】：加入了 can_be_terminator 条件拦截
+        if (paren_depth == 0 && can_be_terminator) {
+          bool matched = false;
+          // 检查单单词终止符
+          for (int i = 0; i < TERM_COUNT; i++) {
+            if (strcmp(word1, BDL_TERMINATORS[i]) == 0) {
+              matched = true;
+              break;
             }
           }
 
-          // 2. 如果 word1 是短语开头，我们去取 word2（只取一次！）
-          if (possible_phrase) {
-            // 暂时保存位置，尝试匹配第二个词
-            while (iswspace(lexer->lookahead)) {
-              lexer->advance(lexer, false);
-            }
+          // 检查短语终止符
+          if (!matched) {
+            bool possible_phrase = false;
 
-            char word2[64];
-            word2[0] = '\0';         // 养成好习惯，初始化字符串
-            scan_word(lexer, word2); // 整个过程只消耗一次流来获取 word2
-
-            // 3. 拿着固定的 word1 和 word2 去匹配具体的终止符
             for (int i = 0; i < PHRASE_COUNT; i++) {
               if (strcmp(word1, PHRASE_TERMINATORS[i].first) == 0) {
-                printfLog("    [Matching] Phrase Terminator 2nd: %s vs %s \n",
-                          word2, PHRASE_TERMINATORS[i].second);
-
-                if (strcmp(word2, PHRASE_TERMINATORS[i].second) == 0) {
-                  printfLog("    [Match] Phrase: %s %s\n", word1, word2);
-                  matched = true;
-
-                  // 注意：如果你使用的是 Tree-sitter，这里可能需要调用
-                  // lexer->mark_end(lexer); 来标记 token 结束的准确位置。
-
-                  break;
-                }
-              }
-            }
-
-            // 重要提示：如果走到了这里 matched 依然是 false (比如遇到了 "ON
-            // SOMETHING")， 输入流已经被你消耗掉了 word2。 在 Tree-sitter
-            // 中，如果你最终 scanner 返回 false，状态会自动回滚，这没问题。
-            // 但如果是你自己手写的 Lexer，你可能需要实现一个 "unget"
-            // 或者状态回退的机制。
-          }
-        }
-
-        if (matched) {
-          // 特殊处理 FOR UPDATE：SQL 里的 FOR UPDATE 不能作为终止符
-          if (strcmp(word1, "FOR") == 0) {
-            // 不仅跳过空白，也要跳过可能的注释，防 FOR {注释} UPDATE
-            while (!lexer->eof(lexer)) {
-              if (iswspace(lexer->lookahead)) {
-                lexer->advance(lexer, false);
-              } else if (lexer->lookahead == '#') {
-                while (!lexer->eof(lexer) && lexer->lookahead != '\n')
-                  lexer->advance(lexer, false);
-              } else if (lexer->lookahead == '{') {
-                lexer->advance(lexer, false);
-                while (!lexer->eof(lexer) && lexer->lookahead != '}')
-                  lexer->advance(lexer, false);
-                if (lexer->lookahead == '}')
-                  lexer->advance(lexer, false);
-              } else if (lexer->lookahead == '-') {
-                lexer->advance(lexer, false);
-                if (lexer->lookahead == '-') {
-                  while (!lexer->eof(lexer) && lexer->lookahead != '\n')
-                    lexer->advance(lexer, false);
-                } else {
-                  break; // 是单个 '-'，跳出
-                }
-              } else {
+                possible_phrase = true;
                 break;
               }
             }
 
-            char next_word[64];
-            scan_word(lexer, next_word);
+            if (possible_phrase) {
+              while (iswspace(lexer->lookahead)) {
+                lexer->advance(lexer, false);
+              }
 
-            if (strcmp(next_word, "UPDATE") == 0) {
-              matched = false;
+              char word2[64];
+              word2[0] = '\0';
+              scan_word(lexer, word2);
+
+              for (int i = 0; i < PHRASE_COUNT; i++) {
+                if (strcmp(word1, PHRASE_TERMINATORS[i].first) == 0 &&
+                    strcmp(word2, PHRASE_TERMINATORS[i].second) == 0) {
+                  matched = true;
+                  break;
+                }
+              }
+            }
+          }
+
+          if (matched) {
+            // 特殊处理 FOR UPDATE：SQL 里的 FOR UPDATE 不能作为终止符
+            if (strcmp(word1, "FOR") == 0) {
+              while (!lexer->eof(lexer)) {
+                if (iswspace(lexer->lookahead)) {
+                  lexer->advance(lexer, false);
+                } else if (lexer->lookahead == '#') {
+                  while (!lexer->eof(lexer) && lexer->lookahead != '\n')
+                    lexer->advance(lexer, false);
+                } else if (lexer->lookahead == '{') {
+                  lexer->advance(lexer, false);
+                  while (!lexer->eof(lexer) && lexer->lookahead != '}')
+                    lexer->advance(lexer, false);
+                  if (lexer->lookahead == '}')
+                    lexer->advance(lexer, false);
+                } else if (lexer->lookahead == '-') {
+                  lexer->advance(lexer, false);
+                  if (lexer->lookahead == '-') {
+                    while (!lexer->eof(lexer) && lexer->lookahead != '\n')
+                      lexer->advance(lexer, false);
+                  } else {
+                    break;
+                  }
+                } else {
+                  break;
+                }
+              }
+
+              char next_word[64];
+              scan_word(lexer, next_word);
+
+              if (strcmp(next_word, "UPDATE") == 0) {
+                matched = false;
+              } else {
+                lexer->result_symbol = SQL_BODY;
+                return true;
+              }
             } else {
               lexer->result_symbol = SQL_BODY;
               return true;
             }
-          } else {
-            lexer->result_symbol = SQL_BODY;
-            return true;
           }
         }
       } else {
+        // 遇到其他未知字符（如 + * / 等算数运算符），直接跳过并取消空白状态
+        last_was_whitespace = false;
         lexer->advance(lexer, false);
       }
     } else {
+      // 在引号内时
+      last_was_whitespace = false;
       lexer->advance(lexer, false);
     }
   }
