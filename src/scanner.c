@@ -90,6 +90,7 @@ bool tree_sitter_bdl_external_scanner_scan(void *payload, TSLexer *lexer,
   bool in_s_quote = false;
   bool in_d_quote = false;
   bool last_was_whitespace = true;
+  bool pending_case_end = false;
 
   while (!lexer->eof(lexer)) {
     // 只有在最外层（非嵌套、非引号内）时，才可能标记有效的 SQL 结束边界
@@ -169,17 +170,23 @@ bool tree_sitter_bdl_external_scanner_scan(void *payload, TSLexer *lexer,
 
         bool is_internal_case_logic = false;
 
-        // 【新增逻辑】：维护 SQL 内部的 CASE 深度
-        if (strcmp(word1, "CASE") == 0) {
-          // 只有在非终止状态下遇到的 CASE 才增加深度
-          // 或者简单的累加，并在判定匹配时检查 depth == 0
+        if (pending_case_end) {
+          if (strcmp(word1, "CASE") == 0) {
+            pending_case_end = false;
+            is_internal_case_logic = true;
+          } else {
+            pending_case_end = false;
+          }
+        }
+
+        if (!is_internal_case_logic && strcmp(word1, "CASE") == 0) {
           case_depth++;
           is_internal_case_logic = true;
-        } else if (strcmp(word1, "END") == 0) {
-          // TODO 这里要考虑END CASE 的情况，END CASE 不能作为SQL
+        } else if (!is_internal_case_logic && strcmp(word1, "END") == 0) {
           if (case_depth > 0) {
             case_depth--;
-            is_internal_case_logic = true; // 标记为内部 END，不触发终止
+            pending_case_end = true;
+            is_internal_case_logic = true;
           }
         }
 
