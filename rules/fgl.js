@@ -141,7 +141,7 @@ export default {
         alias($._expression, "run_command"),
 
         // 使用 optional 包装
-        optional(kw("IN", choice(kw("FORM"), kw("LINE")), kw("MODE"))),
+        optional(seq(kw("IN"), choice(kw("FORM"), kw("LINE")), kw("MODE"))),
 
         optional(
           choice(
@@ -197,7 +197,7 @@ export default {
         kw("CONSTRUCT"),
         kw("REPORT"),
         kw("DISPLAY"),
-        kw("PROGRAM"),
+        seq(kw("PROGRAM"), optional($._expression)),
         kw("INPUT"),
         kw("DIALOG"),
       ),
