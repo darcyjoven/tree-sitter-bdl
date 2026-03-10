@@ -59,18 +59,36 @@ const rules = {
       seq(
         kw("EXECUTE"),
         $._identifier,
-        optional(
+        choice(
           seq(
-            kw("USING"),
-            commaSep1(
+            optional(seq(kw("INTO"), commaSep1($._variable))),
+            optional(
               seq(
-                $._expression,
-                optional(choice(kw("IN"), kw("OUT"), kw("INOUT"))),
+                kw("USING"),
+                commaSep1(
+                  seq(
+                    $._expression,
+                    optional(choice(kw("IN"), kw("OUT"), kw("INOUT"))),
+                  ),
+                ),
               ),
             ),
           ),
+          seq(
+            optional(
+              seq(
+                kw("USING"),
+                commaSep1(
+                  seq(
+                    $._expression,
+                    optional(choice(kw("IN"), kw("OUT"), kw("INOUT"))),
+                  ),
+                ),
+              ),
+            ),
+            optional(seq(kw("INTO"), commaSep1($._variable))),
+          ),
         ),
-        optional(seq(kw("INTO"), commaSep1($._variable))),
       ),
       seq(kw("EXECUTE"), kw("IMMEDIATE"), $._expression),
     ),

@@ -36,7 +36,7 @@ export default {
         seq(
           kw("WITH"),
           choice(
-            seq(kw("FORM"), $._string_literal),
+            seq(kw("FORM"), choice($._string_literal, $._variable)),
             seq($._expression, kw("ROWS"), ",", $._expression, kw("COLUMNS")),
           ),
         ),
@@ -48,7 +48,13 @@ export default {
   current_window: ($) =>
     seq(kw("CURRENT WINDOW IS"), choice($._identifier, kw("SCREEN"))),
   open_form: ($) =>
-    seq(kw("OPEN"), kw("FORM"), $._identifier, kw("FROM"), $._string_literal),
+    seq(
+      kw("OPEN"),
+      kw("FORM"),
+      $._identifier,
+      kw("FROM"),
+      choice($._string_literal, $._variable),
+    ),
   close_form: ($) => seq(kw("CLOSE"), kw("FORM"), $._identifier),
   clear_interface: ($) =>
     choice(
