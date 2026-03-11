@@ -71,9 +71,9 @@ export default {
   _show_interface: ($) =>
     choice($.message_interface, $.error_interface, $.scroll_interface),
   message_interface: ($) =>
-    seq(kw("MESSAGE"), $._expression, optional($._interface_attribute)),
+    seq(kw("MESSAGE"), alias($._expression, "display_content"), optional($._interface_attribute)),
   error_interface: ($) =>
-    seq(kw("ERROR"), $._expression, optional($._interface_attribute)),
+    seq(kw("ERROR"), alias($._expression, "display_content"), optional($._interface_attribute)),
   scroll_interface: ($) =>
     seq(
       kw("SCROLL"),
@@ -88,17 +88,22 @@ export default {
       seq(
         kw("DISPLAY"),
         choice(
-          // DISPLAY FORM
+          // 1. DISPLAY FORM
           seq(kw("FORM"), $._identifier),
-          // DISPLAY text AT
-          seq(
-            $._expression,
-            optional(seq(kw("AT"), $._expression, ",", $._expression)),
-          ),
-          // DISPLAY .. TO ..
-          seq($._expression, kw("TO"), commaSep1($._variable)),
-          // DISPLAY BY NAME
+
+          // 2. DISPLAY BY NAME
           seq(kw("BY"), kw("NAME"), commaSep1($._variable)),
+
+          // 3. DISPLAY expressions
+          seq(
+            alias($._expression, "display_content"),
+            optional(
+              choice(
+                seq(kw("AT"), $._expression, ",", $._expression),
+                seq(kw("TO"), commaSep1($._variable)),
+              ),
+            ),
+          ),
         ),
         optional($._interface_attribute),
       ),
@@ -432,7 +437,7 @@ export default {
     seq(
       choice(kw("ATTRIBUTES"), kw("ATTRIBUTE")),
       "(",
-      commaSep1(choice($._display_attribute, $._ctrl_atrribute)),
+      commaSep1(choice($._display_attribute, $._ctrl_attribute)),
       ")",
     ),
   _display_attribute: ($) =>
@@ -467,7 +472,7 @@ export default {
       seq(kw("COMMENT"), kw("LINE"), choice(kw("OFF"), $._expression)),
       kw("BORDER"),
     ),
-  _ctrl_atrribute: ($) =>
+  _ctrl_attribute: ($) =>
     choice(
       seq(kw("ACCEPT"), optional(seq("=", $._expression))),
       seq(kw("APPEND"), kw("ROW"), optional(seq("=", $._expression))),
