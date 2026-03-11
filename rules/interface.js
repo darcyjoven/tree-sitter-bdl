@@ -71,9 +71,17 @@ export default {
   _show_interface: ($) =>
     choice($.message_interface, $.error_interface, $.scroll_interface),
   message_interface: ($) =>
-    seq(kw("MESSAGE"), alias($._expression, "display_content"), optional($._interface_attribute)),
+    seq(
+      kw("MESSAGE"),
+      alias($._expression, "display_content"),
+      optional($._interface_attribute),
+    ),
   error_interface: ($) =>
-    seq(kw("ERROR"), alias($._expression, "display_content"), optional($._interface_attribute)),
+    seq(
+      kw("ERROR"),
+      alias($._expression, "display_content"),
+      optional($._interface_attribute),
+    ),
   scroll_interface: ($) =>
     seq(
       kw("SCROLL"),
@@ -223,7 +231,10 @@ export default {
   // INPUT
   input_inline: ($) => $._input_header,
   input_block: ($) =>
-    prec(1, seq($._input_header, repeat($._interface_block), kw("END INPUT"))),
+    prec.dynamic(
+      1,
+      seq($._input_header, repeat($._interface_block), kw("END"), kw("INPUT")),
+    ),
   _input_header: ($) =>
     seq(
       // input by name
@@ -233,12 +244,12 @@ export default {
           kw("BY"),
           kw("NAME"),
           commaSep1($._variable),
-          optional(kw("WITHOUT DEFAULTS")),
+          optional(seq(kw("WITHOUT"), kw("DEFAULTS"))),
         ),
         // input .. from ..
         seq(
           commaSep1($._variable),
-          optional(kw("WITHOUT DEFAULTS")),
+          optional(seq(kw("WITHOUT"), kw("DEFAULTS"))),
           kw("FROM"),
           commaSep1($._variable),
         ),
@@ -420,7 +431,7 @@ export default {
             kw("CURRENT"),
             kw("NEXT"),
             kw("PREVIOUS"),
-            alias($._identifier, "field_name"),
+            alias($._variable, "field_name"),
           ),
         ),
         seq(kw("CANCEL"), kw("DELETE")),

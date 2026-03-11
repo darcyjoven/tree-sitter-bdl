@@ -19,7 +19,12 @@ export default {
       $.schema_statement,
       $.preprocessor_statement,
     ),
-
+  _option_line: ($) =>
+    choice(
+      $._natural_number,
+      seq(kw("FIRST"), optional(seq("+", $._natural_number))),
+      seq(kw("LAST"), optional(seq("-", $._natural_number))),
+    ),
   compiler_options: ($) =>
     seq(
       kw("OPTIONS"),
@@ -30,12 +35,12 @@ export default {
           // Defining the position of reserved lines
           // OPTIONS { MENU LINE line-value| MESSAGE LINE line-value| COMMENT LINE {OFF|line-value}| PROMPT LINE line-value| ERROR LINE line-value| FORM LINE line-value}
           choice(
-            seq(kw("MENU LINE"), $._natural_number),
-            seq(kw("MESSAGE LINE"), $._natural_number),
-            seq(kw("COMMENT LINE"), choice(kw("OFF"), $._natural_number)),
-            seq(kw("PROMPT LINE"), $._natural_number),
-            seq(kw("ERROR LINE"), $._natural_number),
-            seq(kw("FORM LINE"), $._natural_number),
+            seq(kw("MENU LINE"), $._option_line),
+            seq(kw("MESSAGE LINE"), $._option_line),
+            seq(kw("COMMENT LINE"), choice(kw("OFF"), $._option_line)),
+            seq(kw("PROMPT LINE"), $._option_line),
+            seq(kw("ERROR LINE"), $._option_line),
+            seq(kw("FORM LINE"), $._option_line),
           ),
           // Defining default TTY attributes
           // OPTIONS { INPUT | DISPLAY } ATTRIBUTES ({FORM|WINDOW|attributes)
@@ -84,8 +89,11 @@ export default {
           // Front-end termination
           // ON CLOSE APPLICATION CALL function
           seq(
-            kw("ON CLOSE APPLICATION CALL"),
-            alias($._identifier, "func_name"),
+            kw("ON CLOSE APPLICATION"),
+            choice(
+              seq(kw("CALL"), alias($._identifier, "func_name")),
+              kw("STOP"),
+            ),
           ),
           // Defining the message file
           // HELP FILE filename
