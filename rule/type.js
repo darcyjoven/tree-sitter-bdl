@@ -15,7 +15,7 @@ export default {
   identifier: (/** @type {any} */ $) => /[a-zA-Z_][a-zA-Z0-9_]*/,
   // 字面值
   literal: (/** @type {any} */ $) =>
-    choice($.string, $.number, $.datetime, $.buildin),
+    choice($.string, $.number, $.datetime, $.buildin, $.boolean),
   // 字符串
   string: (/** @type {any} */ $) =>
     choice(
@@ -62,6 +62,7 @@ export default {
         ),
       ),
     ),
+  boolean: (/** @type {any} */ $) => choice(kw("TRUE"), kw("FALSE")),
   number: (/** @type {any} */ $) =>
     token(choice(integerLiterals, decimalLiterals)),
   _qual1_2: (/** @type {any} */ $) =>

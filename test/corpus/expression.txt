@@ -33,11 +33,11 @@ end main
         (expression
           (expression
             (expression
-              (variable
-                (identifier)))
+              (literal
+                (boolean)))
             (expression
-              (variable
-                (identifier)))))
+              (literal
+                (boolean)))))
         (expression
           (expression
             (expression
@@ -60,11 +60,11 @@ end main
       (expression
         (expression
           (expression
-            (variable
-              (identifier)))
+            (literal
+              (boolean)))
           (expression
-            (variable
-              (identifier))))))
+            (literal
+              (boolean))))))
     (let
       (variable
         (identifier))

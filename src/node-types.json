@@ -309,6 +309,11 @@
     }
   },
   {
+    "type": "boolean",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "branch",
     "named": true,
     "fields": {
@@ -3737,6 +3742,10 @@
       "multiple": false,
       "required": true,
       "types": [
+        {
+          "type": "boolean",
+          "named": true
+        },
         {
           "type": "buildin",
           "named": true
@@ -7291,6 +7300,10 @@
     "named": false
   },
   {
+    "type": "FALSE",
+    "named": false
+  },
+  {
     "type": "FETCH",
     "named": false
   },
@@ -7880,6 +7893,10 @@
   },
   {
     "type": "TRANSACTION",
+    "named": false
+  },
+  {
+    "type": "TRUE",
     "named": false
   },
   {

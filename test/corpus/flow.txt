@@ -116,8 +116,8 @@ END MAIN
     (case
       (when
         (expression
-          (variable
-            (identifier)))
+          (literal
+            (boolean)))
         (let
           (variable
             (identifier))
@@ -524,8 +524,8 @@ end main
                 (identifier)))))
         (return
           (expression
-            (variable
-              (identifier))))))))
+            (literal
+              (boolean))))))))
 
 ================================================================================
 SLEEP 语法

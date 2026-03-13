@@ -278,8 +278,8 @@ END MAIN
       (variable
         (identifier))
       (expression
-        (variable
-          (identifier))))
+        (literal
+          (boolean))))
     (input
       (variable
         (object
@@ -295,8 +295,8 @@ END MAIN
           (variable
             (identifier)))
         (expression
-          (variable
-            (identifier))))
+          (literal
+            (boolean))))
       (display
         (expression
           (variable
@@ -307,8 +307,8 @@ END MAIN
         (variable
           (identifier))
         (expression
-          (variable
-            (identifier)))))))
+          (literal
+            (boolean)))))))
 
 ================================================================================
 INPUT 语句 2
@@ -383,8 +383,8 @@ END MAIN
       (variable
         (identifier))
       (expression
-        (variable
-          (identifier))))
+        (literal
+          (boolean))))
     (input
       (variable
         (object
@@ -444,8 +444,8 @@ END MAIN
           (variable
             (identifier)))
         (expression
-          (variable
-            (identifier))))
+          (literal
+            (boolean))))
       (display
         (expression
           (variable
@@ -456,8 +456,8 @@ END MAIN
         (variable
           (identifier))
         (expression
-          (variable
-            (identifier)))))))
+          (literal
+            (boolean)))))))
 
 ================================================================================
 INPUT ARRAY 语句 1

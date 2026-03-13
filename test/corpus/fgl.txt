@@ -369,8 +369,8 @@ END FUNCTION
                 (identifier)))))
         (return
           (expression
-            (variable
-              (identifier)))))
+            (literal
+              (boolean)))))
       (if
         (expression
           (expression
@@ -774,8 +774,8 @@ END FUNCTION
               (identifier))))))
     (return
       (expression
-        (variable
-          (identifier))))))
+        (literal
+          (boolean))))))
 
 ================================================================================
 综合测试2
