@@ -1,0 +1,600 @@
+================================================================================
+CALL 函数调用
+================================================================================
+MAIN
+    CALL foo() RETURNING var1, var2 , var3
+END MAIN
+
+FUNCTION foo()
+    RETURN r1, r2 , r3
+END FUNCTION
+--------------------------------------------------------------------------------
+
+(source_file
+  (main
+    (call
+      (variable
+        (identifier))
+      (returning
+        (variable
+          (identifier))
+        (variable
+          (identifier))
+        (variable
+          (identifier)))))
+  (function
+    (identifier)
+    (return
+      (expression
+        (variable
+          (identifier)))
+      (expression
+        (variable
+          (identifier)))
+      (expression
+        (variable
+          (identifier))))))
+
+================================================================================
+CALL 函数调用 2
+================================================================================
+MAIN
+    CALL foo(var1, var2 , var3)
+END MAIN
+
+FUNCTION foo(var1, var2 , var3)
+    -- RETURN r1, r2 , r3
+END FUNCTION
+--------------------------------------------------------------------------------
+
+(source_file
+  (main
+    (call
+      (variable
+        (identifier))
+      (expression
+        (variable
+          (identifier)))
+      (expression
+        (variable
+          (identifier)))
+      (expression
+        (variable
+          (identifier)))))
+  (function
+    (identifier)
+    (identifier)
+    (identifier)
+    (identifier)
+    (comment)))
+
+================================================================================
+CALL 函数调用 3
+================================================================================
+main
+    CALL cl_err('','aap-888',1)
+end main
+--------------------------------------------------------------------------------
+
+(source_file
+  (main
+    (call
+      (variable
+        (identifier))
+      (expression
+        (literal
+          (string)))
+      (expression
+        (literal
+          (string)))
+      (expression
+        (literal
+          (number))))))
+
+================================================================================
+CASE 语法1
+================================================================================
+MAIN
+    CASE
+        WHEN true
+            let i = 0
+        WHEN "OK"
+            let j = 0
+            exit case
+        otherwise
+            CASE ok
+                when "OKJ"
+                    let k = 0
+            END CASE
+    END CASE
+
+END MAIN
+--------------------------------------------------------------------------------
+
+(source_file
+  (main
+    (case
+      (when
+        (expression
+          (variable
+            (identifier)))
+        (let
+          (variable
+            (identifier))
+          (expression
+            (literal
+              (number)))))
+      (when
+        (expression
+          (literal
+            (string)))
+        (let
+          (variable
+            (identifier))
+          (expression
+            (literal
+              (number))))
+        (exit))
+      (otherwise
+        (case
+          (expression
+            (variable
+              (identifier)))
+          (when
+            (expression
+              (literal
+                (string)))
+            (let
+              (variable
+                (identifier))
+              (expression
+                (literal
+                  (number))))))))))
+
+================================================================================
+CASE 语法2
+================================================================================
+
+MAIN
+    DEFINE v CHAR(10)
+    LET v = "C1"
+    -- CASE Syntax 1
+    CASE v
+        WHEN "C1"
+        --DISPLAY "Value is C1"
+        WHEN "C2"
+        --DISPLAY "Value is C2"
+        WHEN "C3"
+        --DISPLAY "Value is C3"
+        OTHERWISE
+        --DISPLAY "Unexpected value"
+    END CASE
+    -- CASE Syntax 2
+    CASE
+        WHEN ( v="C1" OR v="C2" )
+        --DISPLAY "Value is either C1 or C2"
+        WHEN ( v="C3" OR v="C4" )
+        --DISPLAY "Value is either C3 or C4"
+        OTHERWISE
+        --DISPLAY "Unexpected value"
+    END CASE
+END MAIN
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (main
+    (define
+      (identifier)
+      (types
+        (basic
+          (number))))
+    (let
+      (variable
+        (identifier))
+      (expression
+        (literal
+          (string))))
+    (comment)
+    (case
+      (expression
+        (variable
+          (identifier)))
+      (when
+        (expression
+          (literal
+            (string))))
+      (comment)
+      (when
+        (expression
+          (literal
+            (string))))
+      (comment)
+      (when
+        (expression
+          (literal
+            (string))))
+      (comment)
+      (otherwise)
+      (comment))
+    (comment)
+    (case
+      (when
+        (expression
+          (expression
+            (expression
+              (expression
+                (variable
+                  (identifier)))
+              (expression
+                (literal
+                  (string))))
+            (expression
+              (expression
+                (variable
+                  (identifier)))
+              (expression
+                (literal
+                  (string)))))))
+      (comment)
+      (when
+        (expression
+          (expression
+            (expression
+              (expression
+                (variable
+                  (identifier)))
+              (expression
+                (literal
+                  (string))))
+            (expression
+              (expression
+                (variable
+                  (identifier)))
+              (expression
+                (literal
+                  (string)))))))
+      (comment)
+      (otherwise)
+      (comment))))
+
+================================================================================
+FOR 语法
+================================================================================
+
+MAIN
+    DEFINE i, i_min, i_max INTEGER
+    LET i_min = 1
+    LET i_max = 10
+    --DISPLAY "Count from " || i_min || " to " || i_max
+    --DISPLAY "Counting forwards..."
+    FOR i = i_min TO i_max
+        --DISPLAY i
+    END FOR
+    --DISPLAY "... and backwards."
+    FOR i = i_max TO i_min STEP -1
+        let j = i
+    END FOR
+END MAIN
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (main
+    (define
+      (identifier)
+      (identifier)
+      (identifier)
+      (types
+        (basic)))
+    (let
+      (variable
+        (identifier))
+      (expression
+        (literal
+          (number))))
+    (let
+      (variable
+        (identifier))
+      (expression
+        (literal
+          (number))))
+    (comment)
+    (comment)
+    (for
+      (variable
+        (identifier))
+      (expression
+        (variable
+          (identifier)))
+      (expression
+        (variable
+          (identifier)))
+      (comment))
+    (comment)
+    (for
+      (variable
+        (identifier))
+      (expression
+        (variable
+          (identifier)))
+      (expression
+        (variable
+          (identifier)))
+      (expression
+        (expression
+          (literal
+            (number))))
+      (let
+        (variable
+          (identifier))
+        (expression
+          (variable
+            (identifier)))))))
+
+================================================================================
+GOTO 语法
+================================================================================
+
+MAIN
+    DEFINE exit_code INTEGER
+    DEFINE l_status INTEGER
+
+    WHENEVER ANY ERROR GOTO _error
+    GOTO _noerror
+
+LABEL _error:
+    LET l_status = STATUS
+    LET exit_code = -1
+    GOTO _exit
+
+LABEL _noerror:
+    LET exit_code = 0
+    GOTO _exit
+
+LABEL _exit:
+    --EXIT PROGRAM exit_code
+
+END MAIN
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (main
+    (define
+      (identifier)
+      (types
+        (basic)))
+    (define
+      (identifier)
+      (types
+        (basic)))
+    (whenever
+      (variable
+        (identifier)))
+    (goto
+      (identifier))
+    (label
+      (identifier))
+    (let
+      (variable
+        (identifier))
+      (expression
+        (variable
+          (identifier))))
+    (let
+      (variable
+        (identifier))
+      (expression
+        (expression
+          (literal
+            (number)))))
+    (goto
+      (identifier))
+    (label
+      (identifier))
+    (let
+      (variable
+        (identifier))
+      (expression
+        (literal
+          (number))))
+    (goto
+      (identifier))
+    (label
+      (identifier))
+    (comment)))
+
+================================================================================
+IF 语法
+================================================================================
+
+MAIN
+    DEFINE name CHAR(20)
+    LET name = "John Smith"
+    IF name MATCHES "John*" THEN
+        let name = "The name starts with [John]!"
+    ELSE
+        let name = "The name is " || name || "."
+    END IF
+END MAIN
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (main
+    (define
+      (identifier)
+      (types
+        (basic
+          (number))))
+    (let
+      (variable
+        (identifier))
+      (expression
+        (literal
+          (string))))
+    (if
+      (expression
+        (expression
+          (variable
+            (identifier)))
+        (expression
+          (literal
+            (string))))
+      (let
+        (variable
+          (identifier))
+        (expression
+          (literal
+            (string))))
+      (else
+        (let
+          (variable
+            (identifier))
+          (expression
+            (expression
+              (expression
+                (literal
+                  (string)))
+              (expression
+                (variable
+                  (identifier))))
+            (expression
+              (literal
+                (string)))))))))
+
+================================================================================
+IF 语法 2
+================================================================================
+
+main
+    IF g_cnt > 0 THEN
+        IF NOT cl_confirm('aap-331') THEN
+            CALL cl_err('','aap-888',1)
+            LET g_apa.apa14 = g_apa_t.apa14
+            RETURN FALSE
+        END IF
+    END IF
+end main
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (main
+    (if
+      (expression
+        (expression
+          (variable
+            (identifier)))
+        (expression
+          (literal
+            (number))))
+      (if
+        (expression
+          (expression
+            (variable
+              (identifier))
+            (expression
+              (literal
+                (string)))))
+        (call
+          (variable
+            (identifier))
+          (expression
+            (literal
+              (string)))
+          (expression
+            (literal
+              (string)))
+          (expression
+            (literal
+              (number))))
+        (let
+          (variable
+            (object
+              (variable
+                (identifier))
+              (identifier)))
+          (expression
+            (variable
+              (object
+                (variable
+                  (identifier))
+                (identifier)))))
+        (return
+          (expression
+            (variable
+              (identifier))))))))
+
+================================================================================
+SLEEP 语法
+================================================================================
+
+MAIN
+    --DISPLAY "Please wait 5 seconds..."
+    SLEEP 5
+    --DISPLAY "Thank you."
+END MAIN
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (main
+    (comment)
+    (sleep
+      (number))
+    (comment)))
+
+================================================================================
+WHILE 语法
+================================================================================
+
+MAIN
+    DEFINE cnt INTEGER
+    LET cnt = 1
+    WHILE cnt <= 100
+        LET cnt = cnt + 1
+        IF int_flag THEN
+            EXIT WHILE
+        END IF
+    END WHILE
+END MAIN
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (main
+    (define
+      (identifier)
+      (types
+        (basic)))
+    (let
+      (variable
+        (identifier))
+      (expression
+        (literal
+          (number))))
+    (while
+      (expression
+        (expression
+          (variable
+            (identifier)))
+        (expression
+          (literal
+            (number))))
+      (let
+        (variable
+          (identifier))
+        (expression
+          (expression
+            (variable
+              (identifier)))
+          (expression
+            (literal
+              (number)))))
+      (if
+        (expression
+          (variable
+            (identifier)))
+        (exit)))))

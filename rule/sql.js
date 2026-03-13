@@ -22,6 +22,7 @@ const rules = {
       $.open,
       $.fetch,
       $.close,
+      $.foreach,
       $.put,
       $.flush,
       $.load,
@@ -88,7 +89,14 @@ const rules = {
       seq(
         kw("EXECUTE"),
         $._cid,
-        choice(seq($._into, $._using), seq($._using, $._into)),
+        optional(
+          choice(
+            seq($._into, $._using),
+            seq($._using, $._into),
+            $._into,
+            $._using,
+          ),
+        ),
       ),
       seq(kw("EXECUTE IMMEDIATE"), $._sqlstring),
     ),
@@ -127,7 +135,7 @@ const rules = {
   foreach: (/** @type {any} */ $) =>
     seq(
       seq(
-        kw("FOREEACH"),
+        kw("FOREACH"),
         $._cid,
         optional($._using),
         optional($._into),
@@ -140,7 +148,7 @@ const rules = {
     seq(
       kw("PUT"),
       $._cid,
-      seq(kw("FROM"), commaSep1(field("params", $.variable))),
+      optional(seq(kw("FROM"), commaSep1(field("params", $.variable)))),
     ),
   flush: (/** @type {any} */ $) => seq(kw("FLUSH"), $._cid),
   load: (/** @type {any} */ $) =>
@@ -150,7 +158,7 @@ const rules = {
       optional(
         seq(kw("DELIMITER"), field("delimiter", choice($.variable, $.string))),
       ),
-      choice($.insert, $._sqlstring),
+      choice($.insert, $.select, $._sqlstring),
     ),
   unload: (/** @type {any} */ $) =>
     seq(
@@ -159,7 +167,7 @@ const rules = {
       optional(
         seq(kw("DELIMITER"), field("delimiter", choice($.variable, $.string))),
       ),
-      choice($.insert, $._sqlstring),
+      choice($.insert, $.select, $._sqlstring),
     ),
   begin: (/** @type {any} */ $) => kw("BEGIN WORK"),
   savepoint: (/** @type {any} */ $) =>
@@ -168,7 +176,7 @@ const rules = {
   rollback: (/** @type {any} */ $) =>
     seq(
       kw("ROLLBACK WORK"),
-      choice(kw("TO SAVEPOINT"), seq(kw("TO SAVEPOINT"), $._name)),
+      optional(choice(kw("TO SAVEPOINT"), seq(kw("TO SAVEPOINT"), $._name))),
     ),
   release: (/** @type {any} */ $) => seq(kw("RELEASE SAVEPOINT"), $._name),
   set: (/** @type {any} */ $) =>

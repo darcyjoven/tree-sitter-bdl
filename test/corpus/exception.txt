@@ -1,0 +1,58 @@
+================================================================================
+WHENEVER 错误处理
+================================================================================
+main
+    WHENEVER ERROR STOP
+    WHENEVER WARNING CONTINUE
+    WHENEVER NOT FOUND GOTO not_found_handler
+end main
+--------------------------------------------------------------------------------
+
+(source_file
+  (main
+    (whenever)
+    (whenever)
+    (whenever
+      (variable
+        (identifier)))))
+
+================================================================================
+TRY/CATCH 错误处理
+================================================================================
+main
+    TRY
+        TRY
+            let num_cust = 0
+        CATCH
+            let num_cust = 0
+        END TRY
+    CATCH
+        let num_cust = 0
+    END TRY
+end main
+--------------------------------------------------------------------------------
+
+(source_file
+  (main
+    (try
+      (try
+        (let
+          (variable
+            (identifier))
+          (expression
+            (literal
+              (number))))
+        (catch
+          (let
+            (variable
+              (identifier))
+            (expression
+              (literal
+                (number))))))
+      (catch
+        (let
+          (variable
+            (identifier))
+          (expression
+            (literal
+              (number))))))))

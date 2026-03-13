@@ -1,6 +1,6 @@
-================================================================================|||
+================================================================================
 Option 选项
-================================================================================|||
+================================================================================
 
 
 -- 这是一个-号注释
@@ -22,54 +22,77 @@ OPTIONS HELP FILE w2133 OPTIONS DELETE key crontrol-k
 OPTIONS RUN IN FORM MODE
 OPTIONS SQL INTERRUPT OFF
 
---------------------------------------------------------------------------------|||
-(source_file
-    (comment)
-    (compiler_options)
-    (compiler_options)
-    (compiler_options)
-    (compiler_options)
-    (comment)
-    (compiler_options)
-    (compiler_options)
-    (compiler_options)
-    (compiler_options)
-    (compiler_options)
-    (compiler_options))
+--------------------------------------------------------------------------------
 
-================================================================================|||
+(source_file
+  (comment)
+  (options
+    (number))
+  (options
+    (number))
+  (options
+    (attribute))
+  (options)
+  (comment)
+  (options
+    (variable
+      (identifier)))
+  (options
+    (variable
+      (identifier)))
+  (options
+    (variable
+      (identifier)))
+  (options
+    (identifier)
+    (identifier))
+  (options)
+  (options))
+
+================================================================================
 Option 文件名称的匹配
-================================================================================|||
+================================================================================
 
 OPTIONS HELP FILE w2133 OPTIONS DELETE key crontrol-k
 
---------------------------------------------------------------------------------|||
-(source_file
-    (compiler_options)
-    (compiler_options))
+--------------------------------------------------------------------------------
 
-================================================================================|||
+(source_file
+  (options
+    (variable
+      (identifier)))
+  (options
+    (identifier)
+    (identifier)))
+
+================================================================================
 Import 导入外部文件
-================================================================================|||
+================================================================================
 
 -- 导入外部文件
 import libso
-import fgl asoidaj.4gl
+import fgl asoidaj.gl
 import JAVA
 com.darcy.www.UTIL
 
---------------------------------------------------------------------------------|||
+--------------------------------------------------------------------------------
 
 (source_file
-    (comment)
-    (import_statement)
-    (import_statement)
-    (import_statement)
-    )
+  (comment)
+  (import
+    (identifier))
+  (import
+    (identifier)
+    (identifier))
+  (import
+    (identifier)
+    (identifier)
+    (identifier)
+    (identifier)))
 
-================================================================================|||
+================================================================================
 数据库连接
-================================================================================|||
+================================================================================
 
 CONNECT TO dbspec USER username USING password
 
@@ -80,16 +103,25 @@ schema dbname
 
 DATABASE dbname
 
---------------------------------------------------------------------------------|||
-(source_file
-    (schema_statement)
-    (schema_statement)
-    (schema_statement)
-    (schema_statement))
+--------------------------------------------------------------------------------
 
-================================================================================|||
+(source_file
+  (schema
+    (identifier)
+    (identifier)
+    (identifier))
+  (schema
+    (identifier)
+    (variable
+      (identifier)))
+  (schema
+    (identifier))
+  (schema
+    (identifier)))
+
+================================================================================
 测试字符串字面值
-================================================================================|||
+================================================================================
 
 DATABASE "dbname"
 DATABASE "dbname"" "
@@ -99,11 +131,18 @@ DATABASE "dbname
 DATABASE "dbname'"
 DATABASE 'dbname"'
 
---------------------------------------------------------------------------------|||
+--------------------------------------------------------------------------------
+
 (source_file
-    (schema_statement)
-    (schema_statement)
-    (schema_statement)
-    (schema_statement)
-    (schema_statement)
-    (schema_statement))
+  (schema
+    (string))
+  (schema
+    (string))
+  (schema
+    (string))
+  (schema
+    (string))
+  (schema
+    (string))
+  (schema
+    (string)))

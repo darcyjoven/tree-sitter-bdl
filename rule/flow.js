@@ -25,19 +25,16 @@ export default {
       "(",
       optional($._params),
       ")",
-      optional(seq(kw("RETURNING"), commaSep1(field("returning", $.variable)))),
+      optional($.returning),
     ),
+  returning: (/** @type {any} */ $) =>
+    seq(kw("RETURNING"), commaSep1(field("returning", $.variable))),
   run: (/** @type {any} */ $) =>
     seq(
       kw("RUN"),
       field("content", $.expression),
       optional(seq(kw("IN"), choice(kw("FORM"), kw("LINE")), kw("MODE"))),
-      optional(
-        choice(
-          seq(kw("RETURNING"), commaSep1(field("returnings", $.variable))),
-          seq(kw("WITHOUT WAITING")),
-        ),
-      ),
+      optional(choice($.returning, seq(kw("WITHOUT WAITING")))),
     ),
   return: (/** @type {any} */ $) =>
     seq(kw("RETURN"), commaSep(field("return", $.expression))),
@@ -115,5 +112,5 @@ export default {
       repeat($._statement),
       kw("END WHILE"),
     ),
-  sleep: (/** @type {any} */ $) => seq((kw("SLEEP"), $._scale)),
+  sleep: (/** @type {any} */ $) => seq(kw("SLEEP"), $._scale),
 };

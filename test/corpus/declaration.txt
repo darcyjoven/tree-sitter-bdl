@@ -1,6 +1,6 @@
-================================================================================|||
+================================================================================
 常量定义
-================================================================================|||
+================================================================================
 
 constant l_i string = 'ok'
 
@@ -10,29 +10,39 @@ private constant l_i = 'ok',l_j=123
 public constant l_i = 'ok'
 ,l_j=123
 
---------------------------------------------------------------------------------|||
+--------------------------------------------------------------------------------
 
 (source_file
-    (constant_definition
-        (constant_name)
-        (literal))
-    (constant_definition
-        (constant_name)
-        (literal))
-    (constant_definition
-        (constant_name)
-        (literal)
-        (constant_name)
-        (literal))
-    (constant_definition
-        (constant_name)
-        (literal)
-        (constant_name)
-        (literal)))
+  (constant
+    (identifier)
+    (types
+      (basic))
+    (literal
+      (string)))
+  (constant
+    (identifier)
+    (literal
+      (string)))
+  (constant
+    (scope)
+    (identifier)
+    (literal
+      (string))
+    (identifier)
+    (literal
+      (number)))
+  (constant
+    (scope)
+    (identifier)
+    (literal
+      (string))
+    (identifier)
+    (literal
+      (number))))
 
-================================================================================|||
+================================================================================
 类型变量定义
-================================================================================|||
+================================================================================
 
 type omb varchar(20),oma string
 type omb decimal(1,2),
@@ -44,25 +54,46 @@ type omb datetime year to month,oma interval year to hour
 private
 define omb boolean,oma float
 
---------------------------------------------------------------------------------|||
+--------------------------------------------------------------------------------
 
 (source_file
-    (user_type_definition
-        (variable_name)
-        (variable_name))
-    (user_type_definition
-        (variable_name)
-        (variable_name))
-   (user_type_definition
-        (variable_name)
-        (variable_name))
-    (variable_definition
-        (variable_name)
-        (variable_name)))
+  (type
+    (identifier)
+    (types
+      (basic
+        (number)))
+    (identifier)
+    (types
+      (basic)))
+  (type
+    (identifier)
+    (types
+      (basic
+        (number)
+        (number)))
+    (identifier)
+    (types
+      (basic)))
+  (type
+    (scope)
+    (identifier)
+    (types
+      (basic))
+    (identifier)
+    (types
+      (basic)))
+  (define
+    (scope)
+    (identifier)
+    (types
+      (basic))
+    (identifier)
+    (types
+      (basic))))
 
-================================================================================|||
+================================================================================
 LIKE 变量定义
-================================================================================|||
+================================================================================
 
 define l_oha01 varchar(20),
        l_oha02 string,
@@ -74,24 +105,41 @@ define l_ima01 like ima_file.ima01,
 define l_ima01,l_ima02,ima03 string
 
 
---------------------------------------------------------------------------------|||
+--------------------------------------------------------------------------------
+
 (source_file
-    (variable_definition
-        (variable_name)
-        (variable_name)
-        (variable_name))
-    (variable_definition
-        (variable_name)
-        (variable_name))
-    (variable_definition
-        (variable_name)
-        (variable_name)
-        (variable_name)))
+  (define
+    (identifier)
+    (types
+      (basic
+        (number)))
+    (identifier)
+    (types
+      (basic))
+    (identifier)
+    (types
+      (basic)))
+  (define
+    (identifier)
+    (types
+      (like
+        (identifier)
+        (identifier)))
+    (identifier)
+    (types
+      (like
+        (identifier)
+        (identifier))))
+  (define
+    (identifier)
+    (identifier)
+    (identifier)
+    (types
+      (basic))))
 
-
-================================================================================|||
+================================================================================
 基础类型结构体定义
-================================================================================|||
+================================================================================
 
 define l_ima record
         ima01 varchar(20),
@@ -99,18 +147,27 @@ define l_ima record
         ima03 string
     end record
 
---------------------------------------------------------------------------------|||
-(source_file
-    (variable_definition
-        (variable_name)
-        (record_type
-            (variable_name)
-            (variable_name)
-            (variable_name))))
+--------------------------------------------------------------------------------
 
-================================================================================|||
+(source_file
+  (define
+    (identifier)
+    (types
+      (record
+        (identifier)
+        (types
+          (basic
+            (number)))
+        (identifier)
+        (types
+          (basic))
+        (identifier)
+        (types
+          (basic))))))
+
+================================================================================
 结构体定义
-================================================================================|||
+================================================================================
 
 DEFINE
     tm  RECORD
@@ -127,26 +184,72 @@ DEFINE
           a       LIKE type_file.chr1
         END RECORD
 
---------------------------------------------------------------------------------|||
-(source_file
-    (variable_definition
-        (variable_name)
-        (record_type
-            (variable_name)
-            (variable_name)
-            (variable_name)
-            (variable_name)
-            (variable_name)
-            (variable_name)
-            (variable_name)
-            (variable_name)
-            (variable_name)
-            (variable_name)
-            (variable_name))))
+--------------------------------------------------------------------------------
 
-================================================================================|||
+(source_file
+  (define
+    (identifier)
+    (types
+      (record
+        (identifier)
+        (types
+          (like
+            (identifier)
+            (identifier)))
+        (identifier)
+        (types
+          (like
+            (identifier)
+            (identifier)))
+        (identifier)
+        (types
+          (like
+            (identifier)
+            (identifier)))
+        (identifier)
+        (types
+          (like
+            (identifier)
+            (identifier)))
+        (identifier)
+        (types
+          (like
+            (identifier)
+            (identifier)))
+        (identifier)
+        (types
+          (like
+            (identifier)
+            (identifier)))
+        (identifier)
+        (types
+          (like
+            (identifier)
+            (identifier)))
+        (identifier)
+        (types
+          (like
+            (identifier)
+            (identifier)))
+        (identifier)
+        (types
+          (like
+            (identifier)
+            (identifier)))
+        (identifier)
+        (types
+          (like
+            (identifier)
+            (identifier)))
+        (identifier)
+        (types
+          (like
+            (identifier)
+            (identifier)))))))
+
+================================================================================
 结构体定义 2
-================================================================================|||
+================================================================================
 
 DEFINE  l_apb02  LIKE apb_file.apb02,
         l_apb08  LIKE apb_file.apb08,
@@ -160,18 +263,62 @@ DEFINE  l_apb02  LIKE apb_file.apb02,
         l_apa32  LIKE apa_file.apa32
 DEFINE g_apk    RECORD LIKE apk_file.*
 
---------------------------------------------------------------------------------|||
+--------------------------------------------------------------------------------
+
 (source_file
-    (variable_definition
-        (variable_name)
-        (variable_name)
-        (variable_name)
-        (variable_name)
-        (variable_name)
-        (variable_name)
-        (variable_name)
-        (variable_name)
-        (variable_name)
-        (variable_name))
-    (variable_definition
-        (variable_name)))
+  (define
+    (identifier)
+    (types
+      (like
+        (identifier)
+        (identifier)))
+    (identifier)
+    (types
+      (like
+        (identifier)
+        (identifier)))
+    (identifier)
+    (types
+      (like
+        (identifier)
+        (identifier)))
+    (identifier)
+    (types
+      (like
+        (identifier)
+        (identifier)))
+    (identifier)
+    (types
+      (like
+        (identifier)
+        (identifier)))
+    (identifier)
+    (types
+      (like
+        (identifier)
+        (identifier)))
+    (identifier)
+    (types
+      (like
+        (identifier)
+        (identifier)))
+    (identifier)
+    (types
+      (like
+        (identifier)
+        (identifier)))
+    (identifier)
+    (types
+      (like
+        (identifier)
+        (identifier)))
+    (identifier)
+    (types
+      (like
+        (identifier)
+        (identifier))))
+  (define
+    (identifier)
+    (types
+      (record
+        (identifier)))))

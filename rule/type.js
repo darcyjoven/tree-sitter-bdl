@@ -63,7 +63,7 @@ export default {
       ),
     ),
   number: (/** @type {any} */ $) =>
-    token.immediate(choice(integerLiterals, decimalLiterals)),
+    token(choice(integerLiterals, decimalLiterals)),
   _qual1_2: (/** @type {any} */ $) =>
     seq(
       field("qual1", datetimeQualifier),
@@ -209,7 +209,8 @@ export default {
     seq(optional($.scope), kw("DEFINE"), $._variable_list),
 
   // 以下定义只是为了缩减常见语句长度
-  _dbname: (/** @type {any} */ $) => field("dbname", $.identifier),
+  _dbname: (/** @type {any} */ $) =>
+    field("dbname", choice($.identifier, $.string)),
   _table: (/** @type {any} */ $) => field("table", $.identifier),
   _column: (/** @type {any} */ $) => field("column", $.identifier),
   _name: (/** @type {any} */ $) => field("name", $.identifier),

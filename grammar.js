@@ -24,12 +24,10 @@ export default grammar({
   // inline: ($) => [$._constant_statement, $.scope],
 
   conflicts: ($) => [
-    [$._menu_head],
     [$.return],
     [$.display],
     [$.input],
     [$.construct],
-    [$.menu],
     [$.prompt],
     [$.exit],
     [$.start],

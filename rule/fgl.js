@@ -30,6 +30,7 @@ export default {
       $.initialize,
       $.options,
       $._flow,
+      $.hook,
     ),
   preproc: (/** @type {any} */ $) =>
     choice(
@@ -133,6 +134,7 @@ export default {
       $.variable,
       $._boolean_expression,
       $._number_expression,
+      $._string_expression,
       $._function_expression,
       $._special_expression,
     ),
@@ -325,11 +327,12 @@ export default {
     seq($._names, "(", optional($._params), ")"),
   _special_expression: (/** @type {any} */ $) =>
     choice(
+      seq("(", $.expression, ")"),
       seq(kw("ASCII"), field("right", $._scale)),
       seq(field("left", $._scale), kw("SPACES")),
     ),
   defer: (/** @type {any} */ $) =>
-    choice(kw("DEFER"), choice(kw("INTERRUPT"), kw("QUIT"))),
+    seq(kw("DEFER"), choice(kw("INTERRUPT"), kw("QUIT"))),
   let: (/** @type {any} */ $) =>
     seq(kw("LET"), $._names, "=", field("value", $.expression)),
   locate: (/** @type {any} */ $) =>
@@ -337,7 +340,10 @@ export default {
       kw("LOCATE"),
       $._names,
       kw("IN"),
-      choice(kw("MEMORY"), seq(kw("FILE"), field("value", $.variable))),
+      choice(
+        kw("MEMORY"),
+        seq(kw("FILE"), field("value", choice($.variable, $.string))),
+      ),
     ),
   validate: (/** @type {any} */ $) =>
     seq(
@@ -382,6 +388,7 @@ export default {
           seq(kw("FORM LINE"), $._option_line),
           seq(choice(kw("INPUT"), kw("DISPLAY")), $.attribute),
           kw("INPUT NO WRAP"),
+          kw("INPUT WRAP"),
           seq(
             kw("FIELD ORDER"),
             choice(kw("CONSTRAINED"), kw("UNCONSTRAINED"), kw("FORM")),
