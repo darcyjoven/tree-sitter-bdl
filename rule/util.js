@@ -3,11 +3,7 @@
 
 const digit = /[0-9]/;
 
-const integerLiterals = choice(
-  seq(optional("+"), repeat1(digit)),
-  kw("TRUE"),
-  kw("FALSE"),
-);
+const integerLiterals = seq(optional("+"), repeat1(digit));
 const decimalLiterals = seq(
   optional("+"),
   repeat(digit),
@@ -42,13 +38,6 @@ const PREC = {
   composite: -1,
 };
 
-const multiplicativeOperators = ["**", kw("MOD"), "*", "/"];
-const additiveOperators = ["+", "-"];
-const comparativeOperators = ["==", "=", "!=", "<>", "<", "<=", ">", ">="];
-const nullOperators = [
-  seq(kw("IS"), kw("NULL")),
-  seq(kw("IS"), kw("NOT"), kw("NULL")),
-];
 /**
  * Creates a rule to match one or more of the rules separated by a comma
  * 用逗号将1个或者多个规则拼接
@@ -98,20 +87,29 @@ function makeToken(/** @type {string} */ word) {
     ),
   );
 }
+
 /**
- * 将多词短语转为不区分大小写的 Tree-sitter 序列
- * @param {string} phrase - 例如 "end function"
- * @returns {Rule} Tree-sitter 规则序列
+ * 将短语转为不区分大小写的 Tree-sitter 序列 (递归优化版)
+ * @param {string} phrase - 例如 "end if" 或 "help file"
+ * @returns {Rule}
  */
 function kw(phrase) {
-  const words = phrase.split(/\s+/);
-  const _alias = phrase.replaceAll(" ", "_");
+  // 1. 统一转为大写并去除首尾空格
+  const p = phrase.toUpperCase().trim();
+  const words = p.split(/\s+/);
 
-  // 如果是多词短语如 "HELP FILE"，由 seq 拼接
+  // 2. 递归处理：如果是多词短语
   if (words.length > 1) {
-    return alias(prec(10, seq(...words.map((w) => makeToken(w)))), _alias);
+    const _alias = p.replace(/\s+/g, "_"); // "END IF" -> "END_IF"
+    return alias(
+      prec(10, seq(...words.map((w) => kw(w)))), // 递归调用 kw 处理每一个单词
+      _alias,
+    );
   }
-  return alias(token(prec(10, makeToken(words[0]))), _alias);
+
+  // 3. 基准情况：处理单个单词
+  // 使用 alias 将节点在 AST 中显示为大写单词本身
+  return alias(token(prec(10, makeToken(p))), p);
 }
 
 export {
@@ -124,8 +122,4 @@ export {
   dotSep1,
   kw,
   PREC,
-  multiplicativeOperators,
-  additiveOperators,
-  comparativeOperators,
-  nullOperators,
 };

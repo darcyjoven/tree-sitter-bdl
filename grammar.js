@@ -7,39 +7,75 @@
 /// <reference types="tree-sitter-cli/dsl" />
 // @ts-check
 
-import { rules as sqlRules, externals as sqlExternals } from "./rules/sql.js";
-import fglRules from "./rules/fgl.js";
-import interfaceRules from "./rules/interface.js";
-import commonRules from "./rules/common.js";
-import typeRules from "./rules/types.js";
-import programRules from "./rules/program.js";
+import { rules as sqlRules, externals as sqlExternals } from "./rule/sql.js";
+import { kw } from "./rule/util.js";
+import fglBlock from "./rule/fgl.js";
+import flowBlock from "./rule/flow.js";
+import interfaceBlock from "./rule/interface.js";
+import typeBlock from "./rule/type.js";
 
 export default grammar({
   name: "bdl",
-
+  // 空白符和注释
   extras: ($) => [$.comment, /\s/, /[\u3000]/],
-
-  // word: ($) => $._identifier,
 
   externals: ($) => [...sqlExternals($)],
 
-  inline: ($) => [$._constant_statement, $.scope],
+  // inline: ($) => [$._constant_statement, $.scope],
 
   conflicts: ($) => [
-    // [$.case_flow, $._expression]
-    // [$._fgl_statement, $._interface_block],
-    [$.input_array_inline, $.input_array_block],
-    [$.input_inline, $.input_block],
-    [$.prompt_block, $.prompt_inline],
-    [$._data_type, $._third_java_type],
+    [$._menu_head],
+    [$.return],
+    [$.display],
+    [$.input],
+    [$.construct],
+    [$.menu],
+    [$.prompt],
+    [$.exit],
+    [$.start],
   ],
 
   rules: {
-    ...programRules,
-    ...commonRules,
-    ...typeRules,
-    ...fglRules,
+    source_file: ($) =>
+      seq(
+        repeat(choice($.options, $.import, $.schema, $.preproc)),
+        repeat(choice($.globals, $.constant, $.type, $.define)),
+        repeat(choice($.main, $.function, $.report)),
+      ),
+    main: ($) =>
+      seq(
+        kw("MAIN"),
+        seq(repeat(choice($.constant, $.type, $.define)), repeat($._statement)),
+        seq(kw("END"), kw("MAIN")),
+      ),
+    function: ($) =>
+      seq(
+        optional($.scope),
+        kw("FUNCTION"),
+        field("name", $.identifier),
+        "(",
+        optional($._param),
+        ")",
+        seq(repeat(choice($.constant, $.type, $.define)), repeat($._statement)),
+        seq(kw("END"), kw("FUNCTION")),
+      ),
+    report: ($) =>
+      seq(
+        optional($.scope),
+        kw("REPORT"),
+        field("name", $.identifier),
+        "(",
+        optional($._param),
+        ")",
+        seq(repeat(choice($.constant, $.type, $.define)), repeat($._statement)),
+        seq(kw("END"), kw("REPORT")),
+      ),
+    // 可以出现在任何位置的语句
+    _statement: ($) => choice($._fgl, $._interface, $._sql),
     ...sqlRules,
-    ...interfaceRules,
+    ...fglBlock,
+    ...flowBlock,
+    ...interfaceBlock,
+    ...typeBlock,
   },
 });
