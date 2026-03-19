@@ -2,7 +2,17 @@
   {
     "type": "alter",
     "named": true,
-    "fields": {}
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "sql_body",
+          "named": true
+        }
+      ]
+    }
   },
   {
     "type": "array",
@@ -1218,7 +1228,17 @@
   {
     "type": "create",
     "named": true,
-    "fields": {}
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "sql_body",
+          "named": true
+        }
+      ]
+    }
   },
   {
     "type": "datetime",
@@ -1414,7 +1434,17 @@
   {
     "type": "delete",
     "named": true,
-    "fields": {}
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "sql_body",
+          "named": true
+        }
+      ]
+    }
   },
   {
     "type": "dialog",
@@ -1542,7 +1572,17 @@
   {
     "type": "drop",
     "named": true,
-    "fields": {}
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "sql_body",
+          "named": true
+        }
+      ]
+    }
   },
   {
     "type": "else",
@@ -3650,7 +3690,17 @@
   {
     "type": "insert",
     "named": true,
-    "fields": {}
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "sql_body",
+          "named": true
+        }
+      ]
+    }
   },
   {
     "type": "label",
@@ -5395,7 +5445,17 @@
   {
     "type": "select",
     "named": true,
-    "fields": {}
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "sql_body",
+          "named": true
+        }
+      ]
+    }
   },
   {
     "type": "set",
@@ -6073,7 +6133,17 @@
   {
     "type": "update",
     "named": true,
-    "fields": {}
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "sql_body",
+          "named": true
+        }
+      ]
+    }
   },
   {
     "type": "user_type",
@@ -8038,6 +8108,10 @@
   },
   {
     "type": "number",
+    "named": true
+  },
+  {
+    "type": "sql_body",
     "named": true
   },
   {

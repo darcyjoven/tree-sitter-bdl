@@ -63,13 +63,13 @@ const rules = {
       seq(kw("DISCONNECT"), $._dbname),
       seq(kw("SET CONNECTION"), seq($._dbname, kw("DORMANT"))),
     ),
-  select: (/** @type {any} */ $) => seq(kw("SELECT"), $._sql_body),
-  insert: (/** @type {any} */ $) => seq(kw("INSERT"), $._sql_body),
-  delete: (/** @type {any} */ $) => seq(kw("DELETE"), $._sql_body),
-  update: (/** @type {any} */ $) => seq(kw("UPDATE"), $._sql_body),
-  create: (/** @type {any} */ $) => seq(kw("CREATE"), $._sql_body),
-  alter: (/** @type {any} */ $) => seq(kw("ALTER"), $._sql_body),
-  drop: (/** @type {any} */ $) => seq(kw("DROP"), $._sql_body),
+  select: (/** @type {any} */ $) => seq(kw("SELECT"), $.sql_body),
+  insert: (/** @type {any} */ $) => seq(kw("INSERT"), $.sql_body),
+  delete: (/** @type {any} */ $) => seq(kw("DELETE"), $.sql_body),
+  update: (/** @type {any} */ $) => seq(kw("UPDATE"), $.sql_body),
+  create: (/** @type {any} */ $) => seq(kw("CREATE"), $.sql_body),
+  alter: (/** @type {any} */ $) => seq(kw("ALTER"), $.sql_body),
+  drop: (/** @type {any} */ $) => seq(kw("DROP"), $.sql_body),
   _static_sql: (/** @type {any} */ $) =>
     choice($.select, $.insert, $.delete, $.update, $.create, $.alter, $.drop),
   unlock: (/** @type {any} */ $) => seq(kw("UNLOCK TABLE"), $._table),
@@ -213,7 +213,7 @@ const rules = {
       ),
     ),
 };
-const externals = (/** @type {any} */ $) => [$._sql_body, $.error_sentinel];
+const externals = (/** @type {any} */ $) => [$.sql_body, $.error_sentinel];
 
 export default rules;
 export { rules, externals };

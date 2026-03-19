@@ -23,18 +23,24 @@ END MAIN
 
 (source_file
   (main
-    (update)
-    (select)
-    (select)
-    (create)
-    (select)
+    (update
+      (sql_body))
+    (select
+      (sql_body))
+    (select
+      (sql_body))
+    (create
+      (sql_body))
+    (select
+      (sql_body))
     (let
       (variable
         (identifier))
       (expression
         (variable
           (identifier))))
-    (delete)))
+    (delete
+      (sql_body))))
 
 ================================================================================
 INSERT 语句
@@ -49,11 +55,16 @@ END MAIN
 
 (source_file
   (main
-    (insert)
-    (insert)
-    (insert)
-    (insert)
-    (select)))
+    (insert
+      (sql_body))
+    (insert
+      (sql_body))
+    (insert
+      (sql_body))
+    (insert
+      (sql_body))
+    (select
+      (sql_body))))
 
 ================================================================================
 UPDATE 语句 2
@@ -69,7 +80,8 @@ END MAIN
 
 (source_file
   (main
-    (update)))
+    (update
+      (sql_body))))
 
 ================================================================================
 DELETE 语句
@@ -81,7 +93,8 @@ END MAIN
 
 (source_file
   (main
-    (delete)))
+    (delete
+      (sql_body))))
 
 ================================================================================
 SELECT 语句
@@ -99,8 +112,10 @@ END MAIN
 
 (source_file
   (main
-    (select)
-    (select)))
+    (select
+      (sql_body))
+    (select
+      (sql_body))))
 
 ================================================================================
 SQL ... END SQL 语句
@@ -118,8 +133,10 @@ END MAIN
 (source_file
   (main
     (block
-      (insert))
-    (insert)))
+      (insert
+        (sql_body)))
+    (insert
+      (sql_body))))
 
 ================================================================================
 DDL 语句
@@ -141,10 +158,14 @@ END MAIN
 
 (source_file
   (main
-    (select)
-    (create)
-    (select)
-    (alter)
+    (select
+      (sql_body))
+    (create
+      (sql_body))
+    (select
+      (sql_body))
+    (alter
+      (sql_body))
     (rename
       (identifier)
       (identifier))))
@@ -239,7 +260,8 @@ END MAIN
   (main
     (declare
       (identifier)
-      (select))))
+      (select
+        (sql_body)))))
 
 ================================================================================
 DECLARE 语句 3
@@ -304,7 +326,8 @@ END MAIN
   (main
     (declare
       (identifier)
-      (select))
+      (select
+        (sql_body)))
     (let
       (variable
         (identifier))
@@ -320,7 +343,8 @@ END MAIN
         (object
           (variable
             (identifier))))
-      (update))))
+      (update
+        (sql_body)))))
 
 ================================================================================
 DECLARE 语句 5
@@ -418,7 +442,8 @@ END MAIN
   (main
     (declare
       (identifier)
-      (select))
+      (select
+        (sql_body)))
     (open
       (identifier))
     (fetch
@@ -470,7 +495,8 @@ END MAIN
   (main
     (declare
       (identifier)
-      (select))
+      (select
+        (sql_body)))
     (open
       (identifier))
     (close
@@ -511,7 +537,8 @@ END MAIN
           (number)))
       (declare
         (identifier)
-        (select))
+        (select
+          (sql_body)))
       (for
         (variable
           (identifier))
@@ -551,7 +578,8 @@ END MAIN
   (main
     (declare
       (identifier)
-      (select))
+      (select
+        (sql_body)))
     (let
       (variable
         (identifier))
@@ -612,7 +640,8 @@ END MAIN
   (main
     (declare
       (identifier)
-      (insert))
+      (insert
+        (sql_body)))
     (open
       (identifier))
     (for
@@ -779,7 +808,8 @@ END MAIN
   (main
     (declare
       (identifier)
-      (insert))
+      (insert
+        (sql_body)))
     (open
       (identifier))
     (let
@@ -790,7 +820,8 @@ END MAIN
           (string))))
     (put
       (identifier))
-    (update)
+    (update
+      (sql_body))
     (put
       (identifier))
     (put
@@ -905,8 +936,10 @@ END MAIN
 (source_file
   (main
     (begin)
-    (insert)
-    (update)
+    (insert
+      (sql_body))
+    (update
+      (sql_body))
     (commit)))
 
 ================================================================================
@@ -927,14 +960,17 @@ END MAIN
 (source_file
   (main
     (begin)
-    (delete)
+    (delete
+      (sql_body))
     (savepoint
       (identifier))
-    (insert)
+    (insert
+      (sql_body))
     (savepoint
       (identifier))
     (comment)
-    (update)
+    (update
+      (sql_body))
     (rollback
       (identifier))
     (commit)))
@@ -959,8 +995,10 @@ END MAIN
   (main
     (whenever)
     (begin)
-    (insert)
-    (delete)
+    (insert
+      (sql_body))
+    (delete
+      (sql_body))
     (if
       (expression
         (expression
@@ -995,13 +1033,16 @@ END MAIN
 (source_file
   (main
     (begin)
-    (delete)
+    (delete
+      (sql_body))
     (savepoint
       (identifier))
-    (insert)
+    (insert
+      (sql_body))
     (savepoint
       (identifier))
-    (update)
+    (update
+      (sql_body))
     (release
       (identifier))
     (rollback)
@@ -1039,13 +1080,16 @@ END MAIN
 (source_file
   (main
     (begin)
-    (delete)
+    (delete
+      (sql_body))
     (load
       (string)
-      (insert))
+      (insert
+        (sql_body)))
     (load
       (string)
-      (insert))
+      (insert
+        (sql_body)))
     (commit)))
 
 ================================================================================
@@ -1069,7 +1113,8 @@ END MAIN
           (number))))
     (unload
       (string)
-      (select))))
+      (select
+        (sql_body)))))
 
 ================================================================================
 CASE 语句
@@ -1081,7 +1126,8 @@ END MAIN
 
 (source_file
   (main
-    (select)))
+    (select
+      (sql_body))))
 
 ================================================================================
 CASE 语句 2
@@ -1093,7 +1139,8 @@ END MAIN
 
 (source_file
   (main
-    (select)))
+    (select
+      (sql_body))))
 
 ================================================================================
 CASE 语句 3
@@ -1105,7 +1152,8 @@ END MAIN
 
 (source_file
   (main
-    (select)))
+    (select
+      (sql_body))))
 
 ================================================================================
 CASE 语句 4
@@ -1117,7 +1165,8 @@ END MAIN
 
 (source_file
   (main
-    (select)))
+    (select
+      (sql_body))))
 
 ================================================================================
 CASE 语句 5
@@ -1129,7 +1178,8 @@ END MAIN
 
 (source_file
   (main
-    (select)))
+    (select
+      (sql_body))))
 
 ================================================================================
 CASE 语句 6 (单层 case...end)
@@ -1146,7 +1196,8 @@ END MAIN
 
 (source_file
   (main
-    (select)))
+    (select
+      (sql_body))))
 
 ================================================================================
 CASE 语句 7 (二层嵌套 case...end case)
@@ -1167,7 +1218,8 @@ END MAIN
 
 (source_file
   (main
-    (select)))
+    (select
+      (sql_body))))
 
 ================================================================================
 CASE 语句 8 (三层嵌套与 end if)
@@ -1191,7 +1243,8 @@ END MAIN
 
 (source_file
   (main
-    (select)))
+    (select
+      (sql_body))))
 
 ================================================================================
 CASE 语句 9 (文件结尾未匹配 end)
@@ -1208,7 +1261,8 @@ END MAIN
 
 (source_file
   (main
-    (select)
+    (select
+      (sql_body))
     (case
       (when
         (expression

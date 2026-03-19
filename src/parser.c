@@ -333,7 +333,7 @@ enum ts_symbol_identifiers {
   aux_sym_constant_token1 = 303,
   aux_sym_type_token1 = 304,
   aux_sym_define_token1 = 305,
-  sym__sql_body = 306,
+  sym_sql_body = 306,
   sym_error_sentinel = 307,
   sym_source_file = 308,
   sym_main = 309,
@@ -810,7 +810,7 @@ static const char * const ts_symbol_names[] = {
   [aux_sym_constant_token1] = "CONSTANT",
   [aux_sym_type_token1] = "TYPE",
   [aux_sym_define_token1] = "DEFINE",
-  [sym__sql_body] = "_sql_body",
+  [sym_sql_body] = "sql_body",
   [sym_error_sentinel] = "error_sentinel",
   [sym_source_file] = "source_file",
   [sym_main] = "main",
@@ -1287,7 +1287,7 @@ static const TSSymbol ts_symbol_map[] = {
   [aux_sym_constant_token1] = aux_sym_constant_token1,
   [aux_sym_type_token1] = aux_sym_type_token1,
   [aux_sym_define_token1] = aux_sym_define_token1,
-  [sym__sql_body] = sym__sql_body,
+  [sym_sql_body] = sym_sql_body,
   [sym_error_sentinel] = sym_error_sentinel,
   [sym_source_file] = sym_source_file,
   [sym_main] = sym_main,
@@ -2682,8 +2682,8 @@ static const TSSymbolMetadata ts_symbol_metadata[] = {
     .visible = true,
     .named = false,
   },
-  [sym__sql_body] = {
-    .visible = false,
+  [sym_sql_body] = {
+    .visible = true,
     .named = true,
   },
   [sym_error_sentinel] = {
@@ -27977,7 +27977,7 @@ static const uint16_t ts_parse_table[LARGE_STATE_COUNT][SYMBOL_COUNT] = {
     [aux_sym_constant_token1] = ACTIONS(1),
     [aux_sym_type_token1] = ACTIONS(1),
     [aux_sym_define_token1] = ACTIONS(1),
-    [sym__sql_body] = ACTIONS(1),
+    [sym_sql_body] = ACTIONS(1),
     [sym_error_sentinel] = ACTIONS(1),
   },
   [STATE(1)] = {
@@ -155208,7 +155208,7 @@ static const uint16_t ts_small_parse_table[] = {
     ACTIONS(3), 1,
       sym_comment,
     ACTIONS(5140), 1,
-      sym__sql_body,
+      sym_sql_body,
   [39868] = 2,
     ACTIONS(3), 1,
       sym_comment,
@@ -155268,7 +155268,7 @@ static const uint16_t ts_small_parse_table[] = {
     ACTIONS(3), 1,
       sym_comment,
     ACTIONS(5158), 1,
-      sym__sql_body,
+      sym_sql_body,
   [39952] = 2,
     ACTIONS(3), 1,
       sym_comment,
@@ -155993,7 +155993,7 @@ static const uint16_t ts_small_parse_table[] = {
     ACTIONS(3), 1,
       sym_comment,
     ACTIONS(5422), 1,
-      sym__sql_body,
+      sym_sql_body,
   [40967] = 2,
     ACTIONS(3), 1,
       sym_comment,
@@ -156013,7 +156013,7 @@ static const uint16_t ts_small_parse_table[] = {
     ACTIONS(3), 1,
       sym_comment,
     ACTIONS(5430), 1,
-      sym__sql_body,
+      sym_sql_body,
   [40995] = 2,
     ACTIONS(3), 1,
       sym_comment,
@@ -156028,7 +156028,7 @@ static const uint16_t ts_small_parse_table[] = {
     ACTIONS(3), 1,
       sym_comment,
     ACTIONS(5436), 1,
-      sym__sql_body,
+      sym_sql_body,
   [41016] = 2,
     ACTIONS(3), 1,
       sym_comment,
@@ -156053,7 +156053,7 @@ static const uint16_t ts_small_parse_table[] = {
     ACTIONS(3), 1,
       sym_comment,
     ACTIONS(5440), 1,
-      sym__sql_body,
+      sym_sql_body,
   [41051] = 2,
     ACTIONS(3), 1,
       sym_comment,
@@ -156063,7 +156063,7 @@ static const uint16_t ts_small_parse_table[] = {
     ACTIONS(3), 1,
       sym_comment,
     ACTIONS(5444), 1,
-      sym__sql_body,
+      sym_sql_body,
   [41065] = 2,
     ACTIONS(3), 1,
       sym_comment,
@@ -160083,22 +160083,22 @@ static const TSParseActionEntry ts_parse_actions[] = {
 };
 
 enum ts_external_scanner_symbol_identifiers {
-  ts_external_token__sql_body = 0,
+  ts_external_token_sql_body = 0,
   ts_external_token_error_sentinel = 1,
 };
 
 static const TSSymbol ts_external_scanner_symbol_map[EXTERNAL_TOKEN_COUNT] = {
-  [ts_external_token__sql_body] = sym__sql_body,
+  [ts_external_token_sql_body] = sym_sql_body,
   [ts_external_token_error_sentinel] = sym_error_sentinel,
 };
 
 static const bool ts_external_scanner_states[3][EXTERNAL_TOKEN_COUNT] = {
   [1] = {
-    [ts_external_token__sql_body] = true,
+    [ts_external_token_sql_body] = true,
     [ts_external_token_error_sentinel] = true,
   },
   [2] = {
-    [ts_external_token__sql_body] = true,
+    [ts_external_token_sql_body] = true,
   },
 };
 

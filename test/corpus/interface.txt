@@ -169,7 +169,8 @@ END MAIN
         (identifier)
         (load
           (string)
-          (insert)))
+          (insert
+            (sql_body))))
       (branch
         (identifier)
         (exit)))))
@@ -235,7 +236,8 @@ END MAIN
         (string)
         (load
           (string)
-          (insert)))
+          (insert
+            (sql_body))))
       (branch
         (identifier)
         (identifier)
@@ -403,7 +405,8 @@ END MAIN
           (expression
             (variable
               (identifier)))
-          (select)))
+          (select
+            (sql_body))))
       (branch
         (identifier)
         (if
