@@ -29,7 +29,6 @@ export default grammar({
 
   externals: ($) => [...sqlExternals($)],
 
-  // inline: ($) => [$._constant_statement, $.scope],
 
   conflicts: ($) => [
     [$.return],

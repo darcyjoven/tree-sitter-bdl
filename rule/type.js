@@ -8,11 +8,21 @@ import {
   kw,
   commaSep1,
   dotSep1,
+  keywordPrefixedIdentifier,
 } from "./util.js";
 
 export default {
   // 标识符
-  identifier: (/** @type {any} */ $) => /[a-zA-Z_][a-zA-Z0-9_]*/,
+  // 分支1: 以关键字开头但严格更长的标识符(count1/counter/nextToken),
+  //        需更高优先级, 否则被更短的关键字令牌在词法阶段抢先命中。
+  // 分支2: 普通标识符。
+  identifier: (/** @type {any} */ $) =>
+    token(
+      choice(
+        prec(11, keywordPrefixedIdentifier()),
+        /[a-zA-Z_][a-zA-Z0-9_]*/,
+      ),
+    ),
   // 字面值
   literal: (/** @type {any} */ $) =>
     choice($.string, $.number, $.datetime, $.builtin, $.boolean),
@@ -249,8 +259,15 @@ export default {
   // 以下定义只是为了缩减常见语句长度
   _name: (/** @type {any} */ $) => field("name", $.identifier),
   _names: (/** @type {any} */ $) => field("name", $.variable),
+  // 键名: 标识符(CONTROL-G 等)或字符串字面值('G' / '0')
   _key: (/** @type {any} */ $) =>
-    field("key", seq($.identifier, repeat(seq("-", $.identifier)))),
+    field(
+      "key",
+      choice(
+        $.string,
+        seq($.identifier, repeat(seq("-", $.identifier))),
+      ),
+    ),
   _param: (/** @type {any} */ $) => commaSep1(field("params", $.identifier)),
   _params: (/** @type {any} */ $) =>
     commaSep1(
