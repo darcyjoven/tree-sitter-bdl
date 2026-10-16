@@ -18,7 +18,14 @@ export default {
       $.dialog,
       $.prompt,
       $.hook,
+      $.hide,
+      $.show,
     ),
+  // HIDE/SHOW OPTION <option-name>: option-name 为字符串表达式或变量
+  hide: (/** @type {any} */ $) =>
+    seq(kw("HIDE"), kw("OPTION"), field("option", choice($.string, $.variable))),
+  show: (/** @type {any} */ $) =>
+    seq(kw("SHOW"), kw("OPTION"), field("option", choice($.string, $.variable))),
   // 基础属性
   _help: (/** @type {any} */ $) => seq(kw("HELP"), field("line", $.number)),
   // 界面语句尾部: ATTRIBUTE(...) 与 HELP n 两种顺序在实码中均常见(顺序不限制)

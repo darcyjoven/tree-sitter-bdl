@@ -1274,3 +1274,88 @@ END MAIN
           (expression
             (literal
               (number))))))))
+
+================================================================================
+SET LOCK MODE TO WAIT 无秒数
+================================================================================
+MAIN
+    SET LOCK MODE TO WAIT
+    SET LOCK MODE TO WAIT 5
+END MAIN
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (main
+    (set)
+    (set
+      (number))))
+
+================================================================================
+PUT FROM 接受字面值
+================================================================================
+MAIN
+    PUT c FROM a, 'N', 12, b
+END MAIN
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (main
+    (put
+      (identifier)
+      (variable
+        (identifier))
+      (literal
+        (string))
+      (literal
+        (number))
+      (variable
+        (identifier)))))
+
+================================================================================
+FOREACH INTO 字段范围 (rec.a THRU rec.z)
+================================================================================
+MAIN
+    FOREACH cur INTO r.a THRU r.z
+        DISPLAY 1
+    END FOREACH
+END MAIN
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (main
+    (foreach
+      (identifier)
+      (variable
+        (object
+          (variable
+            (identifier))
+          (identifier)))
+      (variable
+        (object
+          (variable
+            (identifier))
+          (identifier)))
+      (display
+        (expression
+          (literal
+            (number)))))))
+
+================================================================================
+TRUNCATE 语句
+================================================================================
+MAIN
+    TRUNCATE TABLE tmp1
+    TRUNCATE tmp2
+END MAIN
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (main
+    (truncate
+      (sql_body))
+    (truncate
+      (sql_body))))

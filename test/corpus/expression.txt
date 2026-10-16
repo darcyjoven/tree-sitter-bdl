@@ -384,3 +384,30 @@ END MAIN
             (expression
               (literal
                 (datetime)))))))))
+
+================================================================================
+EXTEND 日期限定符
+================================================================================
+MAIN
+    DISPLAY EXTEND ( TODAY, YEAR TO FRACTION(4) )
+    LET t = EXTEND(today, HOUR TO FRACTION(5))
+END MAIN
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (main
+    (display
+      (expression
+        (extend
+          (expression
+            (literal
+              (builtin))))))
+    (let
+      (variable
+        (identifier))
+      (expression
+        (extend
+          (expression
+            (literal
+              (builtin))))))))

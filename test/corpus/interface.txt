@@ -1033,3 +1033,24 @@ END MAIN
         (expression
           (variable
             (identifier)))))))
+
+================================================================================
+HIDE/SHOW OPTION
+================================================================================
+MAIN
+    HIDE OPTION "insert"
+    HIDE OPTION ls_hide
+    SHOW OPTION "detail"
+END MAIN
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (main
+    (hide
+      (string))
+    (hide
+      (variable
+        (identifier)))
+    (show
+      (string))))

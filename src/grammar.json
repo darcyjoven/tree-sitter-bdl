@@ -345,6 +345,10 @@
         },
         {
           "type": "SYMBOL",
+          "name": "truncate"
+        },
+        {
+          "type": "SYMBOL",
           "name": "unlock"
         },
         {
@@ -1176,6 +1180,31 @@
         }
       ]
     },
+    "truncate": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "TOKEN",
+            "content": {
+              "type": "PREC",
+              "value": 10,
+              "content": {
+                "type": "PATTERN",
+                "value": "[tT][rR][uU][nN][cC][aA][tT][eE]"
+              }
+            }
+          },
+          "named": false,
+          "value": "TRUNCATE"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "sql_body"
+        }
+      ]
+    },
     "_static_sql": {
       "type": "CHOICE",
       "members": [
@@ -1206,6 +1235,10 @@
         {
           "type": "SYMBOL",
           "name": "drop"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "truncate"
         }
       ]
     },
@@ -2351,8 +2384,17 @@
                       "type": "FIELD",
                       "name": "params",
                       "content": {
-                        "type": "SYMBOL",
-                        "name": "variable"
+                        "type": "CHOICE",
+                        "members": [
+                          {
+                            "type": "SYMBOL",
+                            "name": "variable"
+                          },
+                          {
+                            "type": "SYMBOL",
+                            "name": "literal"
+                          }
+                        ]
                       }
                     },
                     {
@@ -2368,8 +2410,17 @@
                             "type": "FIELD",
                             "name": "params",
                             "content": {
-                              "type": "SYMBOL",
-                              "name": "variable"
+                              "type": "CHOICE",
+                              "members": [
+                                {
+                                  "type": "SYMBOL",
+                                  "name": "variable"
+                                },
+                                {
+                                  "type": "SYMBOL",
+                                  "name": "literal"
+                                }
+                              ]
                             }
                           }
                         ]
@@ -3572,8 +3623,16 @@
                       "value": "WAIT"
                     },
                     {
-                      "type": "SYMBOL",
-                      "name": "_wait_seconds"
+                      "type": "CHOICE",
+                      "members": [
+                        {
+                          "type": "SYMBOL",
+                          "name": "_wait_seconds"
+                        },
+                        {
+                          "type": "BLANK"
+                        }
+                      ]
                     }
                   ]
                 }
@@ -3606,12 +3665,75 @@
           "type": "SEQ",
           "members": [
             {
-              "type": "FIELD",
-              "name": "value",
-              "content": {
-                "type": "SYMBOL",
-                "name": "variable"
-              }
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "SEQ",
+                  "members": [
+                    {
+                      "type": "FIELD",
+                      "name": "value",
+                      "content": {
+                        "type": "SYMBOL",
+                        "name": "variable"
+                      }
+                    },
+                    {
+                      "type": "CHOICE",
+                      "members": [
+                        {
+                          "type": "ALIAS",
+                          "content": {
+                            "type": "TOKEN",
+                            "content": {
+                              "type": "PREC",
+                              "value": 10,
+                              "content": {
+                                "type": "PATTERN",
+                                "value": "[tT][hH][rR][uU]"
+                              }
+                            }
+                          },
+                          "named": false,
+                          "value": "THRU"
+                        },
+                        {
+                          "type": "ALIAS",
+                          "content": {
+                            "type": "TOKEN",
+                            "content": {
+                              "type": "PREC",
+                              "value": 10,
+                              "content": {
+                                "type": "PATTERN",
+                                "value": "[tT][hH][rR][oO][uU][gG][hH]"
+                              }
+                            }
+                          },
+                          "named": false,
+                          "value": "THROUGH"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "FIELD",
+                      "name": "to",
+                      "content": {
+                        "type": "SYMBOL",
+                        "name": "variable"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "FIELD",
+                  "name": "value",
+                  "content": {
+                    "type": "SYMBOL",
+                    "name": "variable"
+                  }
+                }
+              ]
             },
             {
               "type": "REPEAT",
@@ -3623,12 +3745,75 @@
                     "value": ","
                   },
                   {
-                    "type": "FIELD",
-                    "name": "value",
-                    "content": {
-                      "type": "SYMBOL",
-                      "name": "variable"
-                    }
+                    "type": "CHOICE",
+                    "members": [
+                      {
+                        "type": "SEQ",
+                        "members": [
+                          {
+                            "type": "FIELD",
+                            "name": "value",
+                            "content": {
+                              "type": "SYMBOL",
+                              "name": "variable"
+                            }
+                          },
+                          {
+                            "type": "CHOICE",
+                            "members": [
+                              {
+                                "type": "ALIAS",
+                                "content": {
+                                  "type": "TOKEN",
+                                  "content": {
+                                    "type": "PREC",
+                                    "value": 10,
+                                    "content": {
+                                      "type": "PATTERN",
+                                      "value": "[tT][hH][rR][uU]"
+                                    }
+                                  }
+                                },
+                                "named": false,
+                                "value": "THRU"
+                              },
+                              {
+                                "type": "ALIAS",
+                                "content": {
+                                  "type": "TOKEN",
+                                  "content": {
+                                    "type": "PREC",
+                                    "value": 10,
+                                    "content": {
+                                      "type": "PATTERN",
+                                      "value": "[tT][hH][rR][oO][uU][gG][hH]"
+                                    }
+                                  }
+                                },
+                                "named": false,
+                                "value": "THROUGH"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "FIELD",
+                            "name": "to",
+                            "content": {
+                              "type": "SYMBOL",
+                              "name": "variable"
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "type": "FIELD",
+                        "name": "value",
+                        "content": {
+                          "type": "SYMBOL",
+                          "name": "variable"
+                        }
+                      }
+                    ]
                   }
                 ]
               }
@@ -4660,6 +4845,10 @@
         {
           "type": "SYMBOL",
           "name": "_function_expression"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "extend"
         },
         {
           "type": "SYMBOL",
@@ -6022,6 +6211,55 @@
               "type": "BLANK"
             }
           ]
+        },
+        {
+          "type": "STRING",
+          "value": ")"
+        }
+      ]
+    },
+    "extend": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "TOKEN",
+            "content": {
+              "type": "PREC",
+              "value": 10,
+              "content": {
+                "type": "PATTERN",
+                "value": "[eE][xX][tT][eE][nN][dD]"
+              }
+            }
+          },
+          "named": false,
+          "value": "EXTEND"
+        },
+        {
+          "type": "STRING",
+          "value": "("
+        },
+        {
+          "type": "FIELD",
+          "name": "value",
+          "content": {
+            "type": "SYMBOL",
+            "name": "expression"
+          }
+        },
+        {
+          "type": "STRING",
+          "value": ","
+        },
+        {
+          "type": "FIELD",
+          "name": "qualifier",
+          "content": {
+            "type": "SYMBOL",
+            "name": "_datetime_qualifier_range"
+          }
         },
         {
           "type": "STRING",
@@ -10770,6 +11008,122 @@
         {
           "type": "SYMBOL",
           "name": "hook"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "hide"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "show"
+        }
+      ]
+    },
+    "hide": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "TOKEN",
+            "content": {
+              "type": "PREC",
+              "value": 10,
+              "content": {
+                "type": "PATTERN",
+                "value": "[hH][iI][dD][eE]"
+              }
+            }
+          },
+          "named": false,
+          "value": "HIDE"
+        },
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "TOKEN",
+            "content": {
+              "type": "PREC",
+              "value": 10,
+              "content": {
+                "type": "PATTERN",
+                "value": "[oO][pP][tT][iI][oO][nN]"
+              }
+            }
+          },
+          "named": false,
+          "value": "OPTION"
+        },
+        {
+          "type": "FIELD",
+          "name": "option",
+          "content": {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "string"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "variable"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "show": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "TOKEN",
+            "content": {
+              "type": "PREC",
+              "value": 10,
+              "content": {
+                "type": "PATTERN",
+                "value": "[sS][hH][oO][wW]"
+              }
+            }
+          },
+          "named": false,
+          "value": "SHOW"
+        },
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "TOKEN",
+            "content": {
+              "type": "PREC",
+              "value": 10,
+              "content": {
+                "type": "PATTERN",
+                "value": "[oO][pP][tT][iI][oO][nN]"
+              }
+            }
+          },
+          "named": false,
+          "value": "OPTION"
+        },
+        {
+          "type": "FIELD",
+          "name": "option",
+          "content": {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "string"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "variable"
+              }
+            ]
+          }
         }
       ]
     },
@@ -17677,7 +18031,7 @@
             "value": 11,
             "content": {
               "type": "PATTERN",
-              "value": "(?:[rR][eE][oO][pP][tT][iI][mM][iI][zZ][aA][tT][iI][oO][nN]|[uU][nN][cC][oO][nN][sS][tT][rR][aA][iI][nN][eE][dD]|[dD][rR][aA][gG][__][fF][iI][nN][iI][sS][hH][eE][dD]|[tT][rR][aA][nN][sS][aA][cC][tT][iI][oO][nN]|[cC][oO][nN][sS][tT][rR][aA][iI][nN][eE][dD]|[aA][pP][pP][lL][iI][cC][aA][tT][iI][oO][nN]|[cC][oO][nN][cC][uU][rR][rR][eE][nN][tT]|[dD][iI][sS][cC][oO][nN][nN][eE][cC][tT]|[cC][oO][nN][nN][eE][cC][tT][iI][oO][nN]|[rR][eE][pP][eE][aA][tT][aA][bB][lL][eE]|[iI][nN][iI][tT][iI][aA][lL][iI][zZ][eE]|[uU][nN][bB][uU][fF][fF][eE][rR][eE][dD]|[aA][tT][tT][rR][iI][bB][uU][tT][eE][sS]|[dD][rR][aA][gG][__][sS][tT][aA][rR][tT]|[dD][rR][aA][gG][__][eE][nN][tT][eE][rR]|[eE][xX][cC][lL][uU][sS][iI][vV][eE]|[iI][mM][mM][eE][dD][iI][aA][tT][eE]|[dD][eE][lL][iI][mM][iI][tT][eE][rR]|[sS][aA][vV][eE][pP][oO][iI][nN][tT]|[iI][sS][oO][lL][aA][tT][iI][oO][nN]|[cC][oO][mM][mM][iI][tT][tT][eE][dD]|[sS][tT][aA][bB][iI][lL][iI][tT][yY]|[iI][nN][tT][eE][rR][rR][uU][pP][tT]|[tT][eE][rR][mM][iI][nN][aA][tT][eE]|[rR][eE][tT][uU][rR][nN][iI][nN][gG]|[oO][tT][hH][eE][rR][wW][iI][sS][eE]|[cC][oO][nN][sS][tT][rR][uU][cC][tT]|[iI][nN][vV][iI][sS][iI][bB][lL][eE]|[uU][nN][dD][eE][rR][lL][iI][nN][eE]|[aA][tT][tT][rR][iI][bB][uU][tT][eE]|[dD][rR][aA][gG][__][oO][vV][eE][rR]|[cC][hH][aA][rR][aA][cC][tT][eE][rR]|[fF][rR][aA][cC][tT][iI][oO][nN]|[fF][uU][nN][cC][tT][iI][oO][nN]|[dD][eE][sS][cC][rR][iI][bB][eE]|[dD][aA][tT][aA][bB][aA][sS][eE]|[sS][eE][qQ][uU][eE][nN][cC][eE]|[pP][rR][eE][vV][iI][oO][uU][sS]|[aA][bB][sS][oO][lL][uU][tT][eE]|[rR][eE][lL][aA][tT][iI][vV][eE]|[rR][oO][lL][lL][bB][aA][cC][kK]|[wW][hH][eE][nN][eE][vV][eE][rR]|[sS][qQ][lL][eE][rR][rR][oO][rR]|[cC][oO][nN][tT][iI][nN][uU][eE]|[vV][aA][lL][iI][dD][aA][tT][eE]|[mM][aA][xX][cC][oO][uU][nN][tT]|[dD][eE][fF][aA][uU][lL][tT][sS]|[cC][oO][lL][lL][aA][pP][sS][eE]|[cC][oO][nN][nN][eE][cC][tT]|[dD][oO][rR][mM][aA][nN][tT]|[pP][rR][eE][pP][aA][rR][eE]|[eE][xX][eE][cC][uU][tT][eE]|[dD][eE][cC][lL][aA][rR][eE]|[cC][uU][rR][rR][eE][nN][tT]|[fF][oO][rR][eE][aA][cC][hH]|[rR][eE][lL][eE][aA][sS][eE]|[pP][rR][iI][vV][aA][tT][eE]|[wW][aA][rR][nN][iI][nN][gG]|[mM][aA][tT][cC][hH][eE][sS]|[cC][lL][iI][pP][pP][eE][dD]|[oO][pP][tT][iI][oO][nN][sS]|[cC][iI][rR][cC][uU][iI][tT]|[mM][eE][sS][sS][aA][gG][eE]|[cC][oO][mM][mM][eE][nN][tT]|[dD][iI][sS][pP][lL][aA][yY]|[wW][iI][tT][hH][oO][uU][tT]|[wW][aA][iI][tT][iI][nN][gG]|[pP][rR][oO][gG][rR][aA][mM]|[mM][aA][gG][eE][nN][tT][aA]|[rR][eE][vV][eE][rR][sS][eE]|[cC][oO][mM][mM][aA][nN][dD]|[iI][nN][fF][iI][eE][lL][dD]|[cC][oO][lL][uU][mM][nN][sS]|[mM][iI][nN][uU][tT][eE]|[sS][eE][cC][oO][nN][dD]|[sS][cC][hH][eE][mM][aA]|[sS][eE][lL][eE][cC][tT]|[iI][nN][sS][eE][rR][tT]|[dD][eE][lL][eE][tT][eE]|[uU][pP][dD][aA][tT][eE]|[cC][rR][eE][aA][tT][eE]|[uU][nN][lL][oO][cC][kK]|[rR][eE][nN][aA][mM][eE]|[cC][oO][lL][uU][mM][nN]|[sS][cC][rR][oO][lL][lL]|[cC][uU][rR][sS][oO][rR]|[uU][nN][lL][oO][aA][dD]|[uU][nN][iI][qQ][uU][eE]|[cC][oO][mM][mM][iI][tT]|[rR][eE][tT][aA][iI][nN]|[pP][uU][bB][lL][iI][cC]|[eE][sS][cC][aA][pP][eE]|[lL][oO][cC][aA][tT][eE]|[mM][eE][mM][oO][rR][yY]|[pP][rR][oO][mM][pP][tT]|[sS][iI][gG][nN][aA][lL]|[aA][cC][cC][eE][pP][tT]|[iI][mM][pP][oO][rR][tT]|[rR][eE][tT][uU][rR][nN]|[dD][iI][aA][lL][oO][gG]|[rR][eE][pP][oO][rR][tT]|[yY][eE][lL][lL][oO][wW]|[nN][oO][rR][mM][aA][lL]|[bB][oO][rR][dD][eE][rR]|[wW][iI][nN][dD][oO][wW]|[aA][pP][pP][eE][nN][dD]|[cC][aA][nN][cC][eE][lL]|[oO][pP][tT][iI][oO][nN]|[bB][eE][fF][oO][rR][eE]|[eE][xX][pP][aA][nN][dD]|[bB][uU][fF][fF][eE][rR]|[aA][cC][tT][iI][oO][nN]|[cC][hH][aA][nN][gG][eE]|[mM][oO][nN][tT][hH]|[uU][sS][iI][nN][gG]|[tT][aA][bB][lL][eE]|[aA][lL][tT][eE][rR]|[iI][nN][dD][eE][xX]|[fF][eE][tT][cC][hH]|[pP][rR][iI][oO][rR]|[fF][iI][rR][sS][tT]|[cC][lL][oO][sS][eE]|[fF][lL][uU][sS][hH]|[bB][eE][gG][iI][nN]|[dD][iI][rR][tT][yY]|[lL][oO][cC][kK][sS]|[iI][nN][oO][uU][tT]|[eE][rR][rR][oO][rR]|[fF][oO][uU][nN][dD]|[rR][aA][iI][sS][eE]|[cC][aA][tT][cC][hH]|[uU][nN][iI][tT][sS]|[dD][eE][fF][eE][rR]|[sS][hH][oO][rR][tT]|[iI][nN][pP][uU][tT]|[fF][iI][eE][lL][dD]|[oO][rR][dD][eE][rR]|[wW][hH][iI][lL][eE]|[lL][aA][bB][eE][lL]|[sS][lL][eE][eE][pP]|[sS][tT][yY][lL][eE]|[iI][mM][aA][gG][eE]|[bB][lL][aA][cC][kK]|[gG][rR][eE][eE][nN]|[wW][hH][iI][tT][eE]|[bB][lL][iI][nN][kK]|[cC][oO][uU][nN][tT]|[aA][fF][tT][eE][rR]|[cC][lL][eE][aA][rR]|[aA][rR][rR][aA][yY]|[yY][eE][aA][rR]|[hH][oO][uU][rR]|[mM][aA][iI][nN]|[uU][sS][eE][rR]|[wW][iI][tT][hH]|[lL][oO][cC][kK]|[dD][rR][oO][pP]|[fF][rR][oO][mM]|[hH][oO][lL][dD]|[oO][pP][eE][nN]|[nN][eE][xX][tT]|[lL][aA][sS][tT]|[lL][oO][aA][dD]|[wW][oO][rR][kK]|[rR][eE][aA][dD]|[mM][oO][dD][eE]|[wW][aA][iI][tT]|[iI][nN][tT][oO]|[sS][tT][oO][pP]|[cC][aA][lL][lL]|[gG][oO][tT][oO]|[nN][uU][lL][lL]|[lL][iI][kK][eE]|[qQ][uU][iI][tT]|[fF][iI][lL][eE]|[fF][rR][eE][eE]|[mM][eE][nN][uU]|[lL][iI][nN][eE]|[fF][oO][rR][mM]|[wW][rR][aA][pP]|[hH][eE][lL][pP]|[jJ][aA][vV][aA]|[cC][aA][sS][eE]|[wW][hH][eE][nN]|[eE][xX][iI][tT]|[sS][tT][eE][pP]|[tT][hH][eE][nN]|[eE][lL][sS][eE]|[tT][eE][xX][tT]|[bB][lL][uU][eE]|[cC][yY][aA][nN]|[bB][oO][lL][dD]|[aA][uU][tT][oO]|[kK][eE][eE][pP]|[fF][iI][lL][lL]|[iI][dD][lL][eE]|[rR][oO][wW][sS]|[dD][oO][wW][nN]|[nN][aA][mM][eE]|[cC][hH][aA][rR]|[dD][aA][yY]|[eE][nN][dD]|[sS][eE][tT]|[sS][qQ][lL]|[fF][oO][rR]|[pP][uU][tT]|[nN][oO][tT]|[oO][uU][tT]|[aA][nN][yY]|[tT][rR][yY]|[aA][nN][dD]|[mM][oO][dD]|[lL][eE][tT]|[oO][fF][fF]|[kK][eE][yY]|[rR][uU][nN]|[fF][gG][lL]|[rR][eE][dD]|[dD][iI][mM]|[rR][oO][wW]|[tT][oO]|[aA][sS]|[iI][nN]|[oO][rR]|[iI][sS]|[nN][oO]|[oO][nN]|[iI][fF]|[aA][tT]|[uU][pP]|[bB][yY])[A-Za-z0-9_]+"
+              "value": "(?:[rR][eE][oO][pP][tT][iI][mM][iI][zZ][aA][tT][iI][oO][nN]|[uU][nN][cC][oO][nN][sS][tT][rR][aA][iI][nN][eE][dD]|[dD][rR][aA][gG][__][fF][iI][nN][iI][sS][hH][eE][dD]|[tT][rR][aA][nN][sS][aA][cC][tT][iI][oO][nN]|[cC][oO][nN][sS][tT][rR][aA][iI][nN][eE][dD]|[aA][pP][pP][lL][iI][cC][aA][tT][iI][oO][nN]|[cC][oO][nN][cC][uU][rR][rR][eE][nN][tT]|[dD][iI][sS][cC][oO][nN][nN][eE][cC][tT]|[cC][oO][nN][nN][eE][cC][tT][iI][oO][nN]|[rR][eE][pP][eE][aA][tT][aA][bB][lL][eE]|[iI][nN][iI][tT][iI][aA][lL][iI][zZ][eE]|[uU][nN][bB][uU][fF][fF][eE][rR][eE][dD]|[aA][tT][tT][rR][iI][bB][uU][tT][eE][sS]|[dD][rR][aA][gG][__][sS][tT][aA][rR][tT]|[dD][rR][aA][gG][__][eE][nN][tT][eE][rR]|[eE][xX][cC][lL][uU][sS][iI][vV][eE]|[iI][mM][mM][eE][dD][iI][aA][tT][eE]|[dD][eE][lL][iI][mM][iI][tT][eE][rR]|[sS][aA][vV][eE][pP][oO][iI][nN][tT]|[iI][sS][oO][lL][aA][tT][iI][oO][nN]|[cC][oO][mM][mM][iI][tT][tT][eE][dD]|[sS][tT][aA][bB][iI][lL][iI][tT][yY]|[iI][nN][tT][eE][rR][rR][uU][pP][tT]|[tT][eE][rR][mM][iI][nN][aA][tT][eE]|[rR][eE][tT][uU][rR][nN][iI][nN][gG]|[oO][tT][hH][eE][rR][wW][iI][sS][eE]|[cC][oO][nN][sS][tT][rR][uU][cC][tT]|[iI][nN][vV][iI][sS][iI][bB][lL][eE]|[uU][nN][dD][eE][rR][lL][iI][nN][eE]|[aA][tT][tT][rR][iI][bB][uU][tT][eE]|[dD][rR][aA][gG][__][oO][vV][eE][rR]|[cC][hH][aA][rR][aA][cC][tT][eE][rR]|[fF][rR][aA][cC][tT][iI][oO][nN]|[fF][uU][nN][cC][tT][iI][oO][nN]|[dD][eE][sS][cC][rR][iI][bB][eE]|[dD][aA][tT][aA][bB][aA][sS][eE]|[tT][rR][uU][nN][cC][aA][tT][eE]|[sS][eE][qQ][uU][eE][nN][cC][eE]|[pP][rR][eE][vV][iI][oO][uU][sS]|[aA][bB][sS][oO][lL][uU][tT][eE]|[rR][eE][lL][aA][tT][iI][vV][eE]|[rR][oO][lL][lL][bB][aA][cC][kK]|[wW][hH][eE][nN][eE][vV][eE][rR]|[sS][qQ][lL][eE][rR][rR][oO][rR]|[cC][oO][nN][tT][iI][nN][uU][eE]|[vV][aA][lL][iI][dD][aA][tT][eE]|[mM][aA][xX][cC][oO][uU][nN][tT]|[dD][eE][fF][aA][uU][lL][tT][sS]|[cC][oO][lL][lL][aA][pP][sS][eE]|[cC][oO][nN][nN][eE][cC][tT]|[dD][oO][rR][mM][aA][nN][tT]|[pP][rR][eE][pP][aA][rR][eE]|[eE][xX][eE][cC][uU][tT][eE]|[dD][eE][cC][lL][aA][rR][eE]|[cC][uU][rR][rR][eE][nN][tT]|[fF][oO][rR][eE][aA][cC][hH]|[rR][eE][lL][eE][aA][sS][eE]|[tT][hH][rR][oO][uU][gG][hH]|[pP][rR][iI][vV][aA][tT][eE]|[wW][aA][rR][nN][iI][nN][gG]|[mM][aA][tT][cC][hH][eE][sS]|[cC][lL][iI][pP][pP][eE][dD]|[oO][pP][tT][iI][oO][nN][sS]|[cC][iI][rR][cC][uU][iI][tT]|[mM][eE][sS][sS][aA][gG][eE]|[cC][oO][mM][mM][eE][nN][tT]|[dD][iI][sS][pP][lL][aA][yY]|[wW][iI][tT][hH][oO][uU][tT]|[wW][aA][iI][tT][iI][nN][gG]|[pP][rR][oO][gG][rR][aA][mM]|[mM][aA][gG][eE][nN][tT][aA]|[rR][eE][vV][eE][rR][sS][eE]|[cC][oO][mM][mM][aA][nN][dD]|[iI][nN][fF][iI][eE][lL][dD]|[cC][oO][lL][uU][mM][nN][sS]|[mM][iI][nN][uU][tT][eE]|[sS][eE][cC][oO][nN][dD]|[sS][cC][hH][eE][mM][aA]|[sS][eE][lL][eE][cC][tT]|[iI][nN][sS][eE][rR][tT]|[dD][eE][lL][eE][tT][eE]|[uU][pP][dD][aA][tT][eE]|[cC][rR][eE][aA][tT][eE]|[uU][nN][lL][oO][cC][kK]|[rR][eE][nN][aA][mM][eE]|[cC][oO][lL][uU][mM][nN]|[sS][cC][rR][oO][lL][lL]|[cC][uU][rR][sS][oO][rR]|[uU][nN][lL][oO][aA][dD]|[uU][nN][iI][qQ][uU][eE]|[cC][oO][mM][mM][iI][tT]|[rR][eE][tT][aA][iI][nN]|[pP][uU][bB][lL][iI][cC]|[eE][sS][cC][aA][pP][eE]|[eE][xX][tT][eE][nN][dD]|[lL][oO][cC][aA][tT][eE]|[mM][eE][mM][oO][rR][yY]|[pP][rR][oO][mM][pP][tT]|[sS][iI][gG][nN][aA][lL]|[aA][cC][cC][eE][pP][tT]|[iI][mM][pP][oO][rR][tT]|[rR][eE][tT][uU][rR][nN]|[dD][iI][aA][lL][oO][gG]|[rR][eE][pP][oO][rR][tT]|[oO][pP][tT][iI][oO][nN]|[yY][eE][lL][lL][oO][wW]|[nN][oO][rR][mM][aA][lL]|[bB][oO][rR][dD][eE][rR]|[wW][iI][nN][dD][oO][wW]|[aA][pP][pP][eE][nN][dD]|[cC][aA][nN][cC][eE][lL]|[bB][eE][fF][oO][rR][eE]|[eE][xX][pP][aA][nN][dD]|[bB][uU][fF][fF][eE][rR]|[aA][cC][tT][iI][oO][nN]|[cC][hH][aA][nN][gG][eE]|[mM][oO][nN][tT][hH]|[uU][sS][iI][nN][gG]|[tT][aA][bB][lL][eE]|[aA][lL][tT][eE][rR]|[iI][nN][dD][eE][xX]|[fF][eE][tT][cC][hH]|[pP][rR][iI][oO][rR]|[fF][iI][rR][sS][tT]|[cC][lL][oO][sS][eE]|[fF][lL][uU][sS][hH]|[bB][eE][gG][iI][nN]|[dD][iI][rR][tT][yY]|[lL][oO][cC][kK][sS]|[iI][nN][oO][uU][tT]|[eE][rR][rR][oO][rR]|[fF][oO][uU][nN][dD]|[rR][aA][iI][sS][eE]|[cC][aA][tT][cC][hH]|[uU][nN][iI][tT][sS]|[dD][eE][fF][eE][rR]|[sS][hH][oO][rR][tT]|[iI][nN][pP][uU][tT]|[fF][iI][eE][lL][dD]|[oO][rR][dD][eE][rR]|[wW][hH][iI][lL][eE]|[lL][aA][bB][eE][lL]|[sS][lL][eE][eE][pP]|[sS][tT][yY][lL][eE]|[iI][mM][aA][gG][eE]|[bB][lL][aA][cC][kK]|[gG][rR][eE][eE][nN]|[wW][hH][iI][tT][eE]|[bB][lL][iI][nN][kK]|[cC][oO][uU][nN][tT]|[aA][fF][tT][eE][rR]|[cC][lL][eE][aA][rR]|[aA][rR][rR][aA][yY]|[yY][eE][aA][rR]|[hH][oO][uU][rR]|[mM][aA][iI][nN]|[uU][sS][eE][rR]|[wW][iI][tT][hH]|[lL][oO][cC][kK]|[dD][rR][oO][pP]|[fF][rR][oO][mM]|[hH][oO][lL][dD]|[oO][pP][eE][nN]|[nN][eE][xX][tT]|[lL][aA][sS][tT]|[lL][oO][aA][dD]|[wW][oO][rR][kK]|[rR][eE][aA][dD]|[mM][oO][dD][eE]|[wW][aA][iI][tT]|[iI][nN][tT][oO]|[tT][hH][rR][uU]|[sS][tT][oO][pP]|[cC][aA][lL][lL]|[gG][oO][tT][oO]|[nN][uU][lL][lL]|[lL][iI][kK][eE]|[qQ][uU][iI][tT]|[fF][iI][lL][eE]|[fF][rR][eE][eE]|[mM][eE][nN][uU]|[lL][iI][nN][eE]|[fF][oO][rR][mM]|[wW][rR][aA][pP]|[hH][eE][lL][pP]|[jJ][aA][vV][aA]|[cC][aA][sS][eE]|[wW][hH][eE][nN]|[eE][xX][iI][tT]|[sS][tT][eE][pP]|[tT][hH][eE][nN]|[eE][lL][sS][eE]|[hH][iI][dD][eE]|[sS][hH][oO][wW]|[tT][eE][xX][tT]|[bB][lL][uU][eE]|[cC][yY][aA][nN]|[bB][oO][lL][dD]|[aA][uU][tT][oO]|[kK][eE][eE][pP]|[fF][iI][lL][lL]|[iI][dD][lL][eE]|[rR][oO][wW][sS]|[dD][oO][wW][nN]|[nN][aA][mM][eE]|[cC][hH][aA][rR]|[dD][aA][yY]|[eE][nN][dD]|[sS][eE][tT]|[sS][qQ][lL]|[fF][oO][rR]|[pP][uU][tT]|[nN][oO][tT]|[oO][uU][tT]|[aA][nN][yY]|[tT][rR][yY]|[aA][nN][dD]|[mM][oO][dD]|[lL][eE][tT]|[oO][fF][fF]|[kK][eE][yY]|[rR][uU][nN]|[fF][gG][lL]|[rR][eE][dD]|[dD][iI][mM]|[rR][oO][wW]|[tT][oO]|[aA][sS]|[iI][nN]|[oO][rR]|[iI][sS]|[nN][oO]|[oO][nN]|[iI][fF]|[aA][tT]|[uU][pP]|[bB][yY])[A-Za-z0-9_]+"
             }
           },
           {

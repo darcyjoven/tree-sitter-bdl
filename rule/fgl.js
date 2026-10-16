@@ -97,6 +97,7 @@ export default {
       $._number_expression,
       $._string_expression,
       $._function_expression,
+      $.extend,
       $.infield_function,
       $._special_expression,
       $.report_aggregate,
@@ -290,6 +291,16 @@ export default {
     ),
   _function_expression: (/** @type {any} */ $) =>
     seq($._names, "(", optional($._params), ")"),
+  // EXTEND(dt-expr, qual1 TO qual2[(scale)]): 第二参数是日期格式限定符, 非普通表达式
+  extend: (/** @type {any} */ $) =>
+    seq(
+      kw("EXTEND"),
+      "(",
+      field("value", $.expression),
+      ",",
+      field("qualifier", $._datetime_qualifier_range),
+      ")",
+    ),
   _special_expression: (/** @type {any} */ $) =>
     choice(
       seq("(", $.expression, ")"),

@@ -29,6 +29,7 @@ static const char *BDL_TERMINATORS[] = {
     "MESSAGE", "NEXT",     "OPEN",     "OPEN",     "PREPARE",    "PROMPT",
     "PUT",     "RELEASE",  "RENAME",   "RETURN",   "ROLLBACK",   "SAVEPOINT",
     "SCHEMA",  "SCROLL",   "SELECT",   "SHOW",     "SQL",        "TRY",
+    "TRUNCATE",
     "UNLOAD",  "UPDATE",   "VALIDATE", "WHENEVER", "WHILE",
     // 以下为原表缺失、且不会与 SQL 语句冲突的 BDL 语句起始关键字。
     // 缺失会导致 sql_body 越过 SQL 语句吞掉后续 BDL 代码
@@ -144,7 +145,9 @@ static bool match_terminator(TSLexer *lexer, const char *word1) {
 static bool skip_whitespace_and_comments(TSLexer *lexer,
                                          bool *last_was_whitespace,
                                          bool in_s_quote, bool in_d_quote) {
-  if (iswspace(lexer->lookahead)) {
+  // U+3000 (表意空格) 在 C locale 下 iswspace() 返回 false, 需显式处理,
+  // 否则 sql_body 不把其后的关键字视为语句终止符而越界吞掉后续 BDL 代码。
+  if (iswspace(lexer->lookahead) || lexer->lookahead == 0x3000) {
     *last_was_whitespace = true;
     lexer->advance(lexer, false);
     return true;

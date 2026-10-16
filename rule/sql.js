@@ -13,6 +13,7 @@ const rules = {
       $.create,
       $.alter,
       $.drop,
+      $.truncate,
       $.unlock,
       $.block,
       $.rename,
@@ -76,8 +77,19 @@ const rules = {
   create: (/** @type {any} */ $) => seq(kw("CREATE"), $.sql_body),
   alter: (/** @type {any} */ $) => seq(kw("ALTER"), $.sql_body),
   drop: (/** @type {any} */ $) => seq(kw("DROP"), $.sql_body),
+  // TRUNCATE TABLE t / TRUNCATE t: 同 DROP 只关心边界
+  truncate: (/** @type {any} */ $) => seq(kw("TRUNCATE"), $.sql_body),
   _static_sql: (/** @type {any} */ $) =>
-    choice($.select, $.insert, $.delete, $.update, $.create, $.alter, $.drop),
+    choice(
+      $.select,
+      $.insert,
+      $.delete,
+      $.update,
+      $.create,
+      $.alter,
+      $.drop,
+      $.truncate,
+    ),
   unlock: (/** @type {any} */ $) => seq(kw("UNLOCK TABLE"), $._table),
   block: (/** @type {any} */ $) => seq(kw("SQL"), $._static_sql, kw("END SQL")),
   rename: (/** @type {any} */ $) =>
@@ -159,7 +171,10 @@ const rules = {
     seq(
       kw("PUT"),
       $._cid,
-      optional(seq(kw("FROM"), commaSep1(field("params", $.variable)))),
+      // FROM 列表可含字面值(实码 PUT ... FROM ...,'N','N',...)
+      optional(
+        seq(kw("FROM"), commaSep1(field("params", choice($.variable, $.literal)))),
+      ),
     ),
   flush: (/** @type {any} */ $) => seq(kw("FLUSH"), $._cid),
   load: (/** @type {any} */ $) =>
@@ -207,12 +222,26 @@ const rules = {
       ),
       seq(
         kw("SET LOCK MODE TO"),
-        choice(kw("NOT WAIT"), seq(kw("WAIT"), $._wait_seconds)),
+        // 秒数可省略: SET LOCK MODE TO WAIT 与 SET LOCK MODE TO WAIT 5 均合法
+        choice(kw("NOT WAIT"), seq(kw("WAIT"), optional($._wait_seconds))),
       ),
     ),
   // 基础
   _into: (/** @type {any} */ $) =>
-    seq(kw("INTO"), commaSep1(field("value", $.variable))),
+    seq(
+      kw("INTO"),
+      commaSep1(
+        choice(
+          // 字段范围: INTO rec.first THRU rec.last (等价于枚举中间全部字段)
+          seq(
+            field("value", $.variable),
+            choice(kw("THRU"), kw("THROUGH")),
+            field("to", $.variable),
+          ),
+          field("value", $.variable),
+        ),
+      ),
+    ),
   _using: (/** @type {any} */ $) =>
     seq(
       kw("USING"),
