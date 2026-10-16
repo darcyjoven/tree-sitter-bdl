@@ -337,9 +337,12 @@ export default {
         kw("TO NULL"),
         seq(
           kw("LIKE"),
-          field(
-            "format",
-            choice(seq($._table, ".", "*"), seq($._table, ".", $._column)),
+          // 与左侧变量一一对应, 允许 t.c1,t.c2,... 列表或 t.*
+          commaSep1(
+            field(
+              "format",
+              choice(seq($._table, ".", "*"), seq($._table, ".", $._column)),
+            ),
           ),
         ),
       ),

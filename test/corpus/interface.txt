@@ -20,15 +20,21 @@ END MAIN
   (main
     (window
       (identifier)
-      (string))
+      (expression
+        (literal
+          (string))))
     (window
       (identifier))
     (window
       (identifier)
-      (string))
+      (expression
+        (literal
+          (string))))
     (window
       (identifier)
-      (string))
+      (expression
+        (literal
+          (string))))
     (window
       (identifier))
     (window
@@ -39,7 +45,9 @@ END MAIN
       (identifier))
     (form
       (identifier)
-      (string))
+      (expression
+        (literal
+          (string))))
     (form
       (identifier))))
 
@@ -273,7 +281,9 @@ END MAIN
     (options)
     (form
       (identifier)
-      (string))
+      (expression
+        (literal
+          (string))))
     (display
       (identifier))
     (let
@@ -352,7 +362,9 @@ END MAIN
     (options)
     (form
       (identifier)
-      (string))
+      (expression
+        (literal
+          (string))))
     (display
       (identifier))
     (let
@@ -478,7 +490,9 @@ END MAIN
   (main
     (form
       (identifier)
-      (string))
+      (expression
+        (literal
+          (string))))
     (display
       (identifier))
     (input
@@ -519,7 +533,9 @@ END MAIN
   (main
     (form
       (identifier)
-      (string))
+      (expression
+        (literal
+          (string))))
     (display
       (identifier))
     (input
@@ -613,7 +629,9 @@ END MAIN
   (main
     (form
       (identifier)
-      (string))
+      (expression
+        (literal
+          (string))))
     (display
       (identifier))
     (input
@@ -698,7 +716,9 @@ END MAIN
   (main
     (form
       (identifier)
-      (string))
+      (expression
+        (literal
+          (string))))
     (display
       (identifier))
     (construct
@@ -784,7 +804,9 @@ END MAIN
   (main
     (form
       (identifier)
-      (string))
+      (expression
+        (literal
+          (string))))
     (display
       (identifier))
     (dialog
@@ -1054,3 +1076,36 @@ END MAIN
         (identifier)))
     (show
       (string))))
+
+================================================================================
+WITH FORM / OPEN FORM FROM 拼接表达式
+================================================================================
+MAIN
+    OPEN WINDOW w AT 4,3 WITH FORM "lib/42f/" || p_form_name
+    OPEN FORM f FROM "a/" || p_name
+END MAIN
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (main
+    (window
+      (identifier)
+      (number)
+      (number)
+      (expression
+        (expression
+          (literal
+            (string)))
+        (expression
+          (variable
+            (identifier)))))
+    (form
+      (identifier)
+      (expression
+        (expression
+          (literal
+            (string)))
+        (expression
+          (variable
+            (identifier)))))))

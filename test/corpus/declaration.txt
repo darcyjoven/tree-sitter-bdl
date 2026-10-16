@@ -322,3 +322,57 @@ DEFINE g_apk    RECORD LIKE apk_file.*
     (types
       (record
         (identifier)))))
+
+================================================================================
+INITIALIZE ... LIKE t.c1,t.c2 列表
+================================================================================
+MAIN
+    INITIALIZE a, b, c LIKE t.c1, t.c2, t.c3
+    INITIALIZE d LIKE t.*
+END MAIN
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (main
+    (initialize
+      (variable
+        (identifier))
+      (variable
+        (identifier))
+      (variable
+        (identifier))
+      (identifier)
+      (identifier)
+      (identifier)
+      (identifier)
+      (identifier)
+      (identifier))
+    (initialize
+      (variable
+        (identifier))
+      (identifier))))
+
+================================================================================
+DEFINE RECORD LIKE t.col
+================================================================================
+MAIN
+    DEFINE r1 RECORD LIKE hr_file.hr01
+    DEFINE r2 RECORD LIKE hr_file.*
+END MAIN
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (main
+    (define
+      (identifier)
+      (types
+        (record
+          (identifier)
+          (identifier))))
+    (define
+      (identifier)
+      (types
+        (record
+          (identifier))))))

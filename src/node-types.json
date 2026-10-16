@@ -3292,11 +3292,7 @@
         "required": false,
         "types": [
           {
-            "type": "string",
-            "named": true
-          },
-          {
-            "type": "variable",
+            "type": "expression",
             "named": true
           }
         ]
@@ -4172,7 +4168,7 @@
     "named": true,
     "fields": {
       "column": {
-        "multiple": false,
+        "multiple": true,
         "required": false,
         "types": [
           {
@@ -4210,7 +4206,7 @@
         ]
       },
       "table": {
-        "multiple": false,
+        "multiple": true,
         "required": false,
         "types": [
           {
@@ -5556,6 +5552,16 @@
     "type": "record",
     "named": true,
     "fields": {
+      "column": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
       "dbname": {
         "multiple": false,
         "required": false,
@@ -8233,11 +8239,7 @@
         "required": false,
         "types": [
           {
-            "type": "string",
-            "named": true
-          },
-          {
-            "type": "variable",
+            "type": "expression",
             "named": true
           }
         ]

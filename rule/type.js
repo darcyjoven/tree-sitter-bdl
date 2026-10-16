@@ -207,7 +207,8 @@ export default {
         optional(seq($._dbname, ":")),
         $._table,
         ".",
-        "*",
+        // 既可是全字段 t.* , 也可是单字段 t.col (等价于按该列类型定义)
+        choice("*", $._column),
       ),
     ),
   array: (/** @type {any} */ $) =>

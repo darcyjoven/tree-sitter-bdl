@@ -190,7 +190,8 @@ export default {
         seq(
           kw("WITH"),
           choice(
-            seq(kw("FORM"), field("form", choice($.variable, $.string))),
+            // form 可为字符串/变量/拼接表达式(如 "lib/42f/" || p_form_name)
+            seq(kw("FORM"), field("form", $.expression)),
             seq($._rows, kw("ROWS"), optional(","), $._columns, kw("COLUMNS")),
           ),
         ),
@@ -206,7 +207,7 @@ export default {
         kw("OPEN FORM"),
         $._name,
         kw("FROM"),
-        field("form", choice($.variable, $.string)),
+        field("form", $.expression),
       ),
       seq(kw("CLOSE FORM"), $._name),
     ),
