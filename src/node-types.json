@@ -34,9 +34,13 @@
       }
     },
     "children": {
-      "multiple": false,
+      "multiple": true,
       "required": true,
       "types": [
+        {
+          "type": "define_attribute",
+          "named": true
+        },
         {
           "type": "types",
           "named": true
@@ -1458,6 +1462,10 @@
           "named": true
         },
         {
+          "type": "select_in_paren",
+          "named": true
+        },
+        {
           "type": "update",
           "named": true
         }
@@ -1495,14 +1503,46 @@
       }
     },
     "children": {
-      "multiple": false,
+      "multiple": true,
       "required": false,
       "types": [
+        {
+          "type": "define_attribute",
+          "named": true
+        },
         {
           "type": "scope",
           "named": true
         }
       ]
+    }
+  },
+  {
+    "type": "define_attribute",
+    "named": true,
+    "fields": {
+      "attribute": {
+        "multiple": true,
+        "required": true,
+        "types": [
+          {
+            "type": "=",
+            "named": false
+          },
+          {
+            "type": "identifier",
+            "named": true
+          },
+          {
+            "type": "literal",
+            "named": true
+          },
+          {
+            "type": "variable",
+            "named": true
+          }
+        ]
+      }
     }
   },
   {
@@ -5149,6 +5189,16 @@
           }
         ]
       }
+    },
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "define_attribute",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -6114,6 +6164,21 @@
     }
   },
   {
+    "type": "select_in_paren",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "sql_body_in_paren",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "set",
     "named": true,
     "fields": {
@@ -6709,9 +6774,13 @@
       }
     },
     "children": {
-      "multiple": false,
+      "multiple": true,
       "required": false,
       "types": [
+        {
+          "type": "define_attribute",
+          "named": true
+        },
         {
           "type": "scope",
           "named": true
@@ -7753,7 +7822,8 @@
   },
   {
     "type": ";",
-    "named": false
+    "named": false,
+    "extra": true
   },
   {
     "type": "<",
@@ -8967,6 +9037,10 @@
   },
   {
     "type": "sql_body",
+    "named": true
+  },
+  {
+    "type": "sql_body_in_paren",
     "named": true
   },
   {

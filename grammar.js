@@ -18,7 +18,14 @@ import reportBlock from "./rule/report.js";
 export default grammar({
   name: "bdl",
   // 空白符和注释
-  extras: ($) => [$.comment, $.preproc_directive, /\s/, /[\u3000]/],
+  extras: ($) => [
+    $.comment,
+    $.preproc_directive,
+    // 语句可选的结束分号(实码普遍使用), 对语法透明
+    ";",
+    /\s/,
+    /[\u3000]/,
+  ],
 
   externals: ($) => [...sqlExternals($)],
 

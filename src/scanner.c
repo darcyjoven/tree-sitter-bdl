@@ -16,7 +16,7 @@ int printfLog(const char *format, ...) {
   return done;
 }
 
-enum TokenType { SQL_BODY, ERROR_SENTINEL };
+enum TokenType { SQL_BODY, SQL_BODY_IN_PAREN, ERROR_SENTINEL };
 
 static const char *BDL_TERMINATORS[] = {
     "ACCEPT",  "AFTER",    "ALTER",    "BEFORE",   "CALL",       "CANCEL",
@@ -224,15 +224,22 @@ bool tree_sitter_bdl_external_scanner_scan(void *payload, TSLexer *lexer,
   if (valid_symbols[ERROR_SENTINEL])
     return false;
 
-  if (!valid_symbols[SQL_BODY])
+  // SQL_BODY_IN_PAREN: 用于括号子查询 DECLARE c CURSOR FOR (SELECT ...)。
+  // 语法层已消费左括号, 故此处以括号深度 1 起始, 遇与之匹配的右括号即结束,
+  // 使外层语法能承接该 )。
+  const bool in_paren = valid_symbols[SQL_BODY_IN_PAREN];
+  if (!valid_symbols[SQL_BODY] && !in_paren)
     return false;
+
+  const enum TokenType out_symbol = in_paren ? SQL_BODY_IN_PAREN : SQL_BODY;
+  const int base_depth = in_paren ? 1 : 0;
 
   while (iswspace(lexer->lookahead))
     lexer->advance(lexer, true);
 
   lexer->mark_end(lexer);
 
-  int paren_depth = 0;
+  int paren_depth = base_depth;
 
   // 初始化栈结构以维护每层 CASE 的深度，满足空间 O(k) 要求
   CaseFrame case_stack[MAX_CASE_DEPTH];
@@ -246,7 +253,8 @@ bool tree_sitter_bdl_external_scanner_scan(void *payload, TSLexer *lexer,
   while (!lexer->eof(lexer)) {
     // 只有在非嵌套（包含 CASE 的非嵌套）时才更新物理游标。
     // 这保证了在进入 CASE 层级后，最后一次的安全点永远停留在 CASE 开始之前。
-    if (!in_s_quote && !in_d_quote && paren_depth == 0 && case_top == 0) {
+    if (!in_s_quote && !in_d_quote && paren_depth == base_depth &&
+        case_top == 0) {
       lexer->mark_end(lexer);
     }
 
@@ -267,7 +275,7 @@ bool tree_sitter_bdl_external_scanner_scan(void *payload, TSLexer *lexer,
           // 【核心逻辑】：遇到 END <CASE/IF/FUNCTION 等>。
           // 立即终止，不调用 mark_end，直接返回。
           // Tree-sitter 强制截断到最外层 CASE 前的历史记录点 (exclusive)。
-          lexer->result_symbol = SQL_BODY;
+          lexer->result_symbol = out_symbol;
           return true;
         }
 
@@ -287,10 +295,10 @@ bool tree_sitter_bdl_external_scanner_scan(void *payload, TSLexer *lexer,
           pending_case_end = true;
         }
 
-        if (can_be_terminator && paren_depth == 0 && case_top == 0 &&
+        if (can_be_terminator && paren_depth == base_depth && case_top == 0 &&
             !pending_case_end) {
           if (match_terminator(lexer, word1)) {
-            lexer->result_symbol = SQL_BODY;
+            lexer->result_symbol = out_symbol;
             return true;
           }
         }
@@ -308,6 +316,13 @@ bool tree_sitter_bdl_external_scanner_scan(void *payload, TSLexer *lexer,
     }
 
     if (!in_s_quote && !in_d_quote) {
+      // 括号子查询: 遇与起始左括号匹配的右括号即结束(不消费该右括号)
+      if (in_paren && paren_depth == base_depth && lexer->lookahead == ')') {
+        lexer->mark_end(lexer);
+        lexer->result_symbol = out_symbol;
+        return true;
+      }
+
       if (handle_parens(lexer, &paren_depth, &last_was_whitespace)) {
         continue;
       }
@@ -330,10 +345,10 @@ bool tree_sitter_bdl_external_scanner_scan(void *payload, TSLexer *lexer,
         }
 
         // --- 常规 SQL_BODY 终止符判定 ---
-        if (can_be_terminator && paren_depth == 0 && case_top == 0 &&
+        if (can_be_terminator && paren_depth == base_depth && case_top == 0 &&
             !pending_case_end) {
           if (match_terminator(lexer, word1)) {
-            lexer->result_symbol = SQL_BODY;
+            lexer->result_symbol = out_symbol;
             return true;
           }
         }
@@ -349,7 +364,7 @@ bool tree_sitter_bdl_external_scanner_scan(void *payload, TSLexer *lexer,
 
   // 到达文件末尾
   lexer->mark_end(lexer);
-  lexer->result_symbol = SQL_BODY;
+  lexer->result_symbol = out_symbol;
   return true;
 }
 

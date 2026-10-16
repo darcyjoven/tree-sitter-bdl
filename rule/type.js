@@ -162,11 +162,35 @@ export default {
     ),
   _variable_list: (/** @type {any} */ $) =>
     commaSep1(
-      seq(commaSep1(field("name", $.identifier)), field("types", $.types)),
+      seq(
+        commaSep1(field("name", $.identifier)),
+        field("types", $.types),
+        optional($.define_attribute),
+      ),
+    ),
+  // 变量/类型的属性子句(Genero Web Service 扩展, 如 XML/XSD 属性):
+  //   ATTRIBUTE( XSDBase64binary ) | ATTRIBUTE( XMLName="status", ... )
+  define_attribute: (/** @type {any} */ $) =>
+    seq(
+      choice(kw("ATTRIBUTES"), kw("ATTRIBUTE")),
+      "(",
+      commaSep1(
+        field(
+          "attribute",
+          // 值不用完整 expression(其含逗号运算符, 会与属性分隔逗号歧义)
+          choice($.identifier, seq($.identifier, "=", choice($.literal, $.variable))),
+        ),
+      ),
+      ")",
     ),
   record: (/** @type {any} */ $) =>
     choice(
-      seq(kw("RECORD"), $._variable_list, kw("END RECORD")),
+      seq(
+        kw("RECORD"),
+        optional($.define_attribute),
+        $._variable_list,
+        kw("END RECORD"),
+      ),
       seq(
         kw("RECORD"),
         kw("LIKE"),
@@ -183,6 +207,8 @@ export default {
         kw("DYNAMIC"),
         kw("ARRAY"),
         optional(seq(kw("WITH"), kw("DIMENSION"), $._dimension)),
+        // 属性可出现在 ARRAY 与 OF 之间: DYNAMIC ARRAY ATTRIBUTE(XMLList) OF t
+        optional($.define_attribute),
         kw("OF"),
         $.types,
       ),

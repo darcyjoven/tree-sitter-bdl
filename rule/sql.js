@@ -111,9 +111,14 @@ const rules = {
       optional(kw("WITH HOLD")),
       choice(
         seq(kw("FOR"), choice($._static_sql, $._cid)),
+        // 括号子查询: DECLARE c CURSOR FOR (SELECT ...)
+        seq(kw("FOR"), "(", choice($.select_in_paren, $._cid), ")"),
         seq(kw("FROM"), $._sqlstring),
       ),
     ),
+  // 括号内子查询体(使用 SQL_BODY_IN_PAREN 外部符号, 遇匹配的右括号结束)
+  select_in_paren: (/** @type {any} */ $) =>
+    seq(kw("SELECT"), $.sql_body_in_paren),
   open: (/** @type {any} */ $) => seq(kw("OPEN"), $._cid, optional($._using)),
   fetch: (/** @type {any} */ $) =>
     seq(
@@ -230,7 +235,11 @@ const rules = {
   _wait_seconds: (/** @type {any} */ $) =>
     field("seconds", choice($.variable, $.number)),
 };
-const externals = (/** @type {any} */ $) => [$.sql_body, $.error_sentinel];
+const externals = (/** @type {any} */ $) => [
+  $.sql_body,
+  $.sql_body_in_paren,
+  $.error_sentinel,
+];
 
 export default rules;
 export { rules, externals };
