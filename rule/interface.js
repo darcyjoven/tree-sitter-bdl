@@ -97,7 +97,7 @@ export default {
             kw("CURRENT"),
             kw("NEXT"),
             kw("PREVIOUS"),
-            field("filed", $.variable),
+            field("field", $.variable),
           ),
         ),
         seq(kw("CANCEL"), kw("DELETE")),
@@ -116,13 +116,13 @@ export default {
         kw("ON INSERT"),
         kw("ON UPDATE"),
         kw("ON DELETE"),
-        seq(kw("ON EXPAND"), "(", field("drag", $.variable), ")"),
-        seq(kw("ON COLLAPSE"), "(", field("drag", $.variable), ")"),
-        seq(kw("ON DRAG_START"), "(", field("drag", $.variable), ")"),
-        seq(kw("ON DRAG_FINISHED"), "(", field("drag", $.variable), ")"),
-        seq(kw("ON DRAG_ENTER"), "(", field("drag", $.variable), ")"),
-        seq(kw("ON DRAG_OVER"), "(", field("drag", $.variable), ")"),
-        seq(kw("ON DROP"), "(", field("drag", $.variable), ")"),
+        seq(kw("ON EXPAND"), "(", field("control", $.variable), ")"),
+        seq(kw("ON COLLAPSE"), "(", field("control", $.variable), ")"),
+        seq(kw("ON DRAG_START"), "(", field("control", $.variable), ")"),
+        seq(kw("ON DRAG_FINISHED"), "(", field("control", $.variable), ")"),
+        seq(kw("ON DRAG_ENTER"), "(", field("control", $.variable), ")"),
+        seq(kw("ON DRAG_OVER"), "(", field("control", $.variable), ")"),
+        seq(kw("ON DROP"), "(", field("control", $.variable), ")"),
         kw("ON FILL BUFFER"),
         seq(
           kw("COMMAND"),
@@ -166,12 +166,12 @@ export default {
       seq(
         kw("OPEN WINDOW"),
         $._name,
-        optional(seq(kw("AT"), $._scale, ",", $._scale)),
+        optional(seq(kw("AT"), $._coordinate, ",", $._coordinate)),
         seq(
           kw("WITH"),
           choice(
             seq(kw("FORM"), field("form", choice($.variable, $.string))),
-            seq($._scale, kw("ROWS"), $._scale, kw("COLUMNS")),
+            seq($._rows, kw("ROWS"), $._columns, kw("COLUMNS")),
           ),
         ),
         optional($.attribute),
@@ -212,7 +212,7 @@ export default {
           $._value,
           optional(
             choice(
-              seq(kw("AT"), $._scale, ",", $._scale),
+              seq(kw("AT"), $._coordinate, ",", $._coordinate),
               seq(kw("TO"), commaSep1(field("field", $.variable))),
             ),
           ),
@@ -221,7 +221,7 @@ export default {
           kw("ARRAY"),
           $._names,
           kw("TO"),
-          field("fields", seq($.identifier, ".*")),
+          field("record", seq($.identifier, ".*")),
           optional($._help),
         ),
       ),
@@ -257,7 +257,7 @@ export default {
           commaSep1(field("value", $.variable)),
           optional(kw("WITHOUT DEFAULTS")),
           kw("FROM"),
-          field("field", seq($.variable, ".*")),
+          field("record", seq($.variable, ".*")),
         ),
       ),
       optional($.attribute),
@@ -278,7 +278,7 @@ export default {
         seq(
           field("value", $.variable),
           kw("ON"),
-          commaSep1(field("name", $.variable)),
+          commaSep1(field("field", $.variable)),
           kw("FROM"),
           commaSep1(field("field", $.variable)),
         ),
@@ -313,4 +313,13 @@ export default {
     ),
   prompt: (/** @type {any} */ $) =>
     seq($._prompt_head, optional(seq(repeat($.branch), kw("END PROMPT")))),
+
+  // 数值操作数(变量或数字)的语义化子规则
+  // 坐标: OPEN WINDOW/DISPLAY ... AT x, y
+  _coordinate: (/** @type {any} */ $) =>
+    field("coordinate", choice($.variable, $.number)),
+  // 行数/列数: OPEN WINDOW ... WITH n ROWS, m COLUMNS
+  _rows: (/** @type {any} */ $) => field("rows", choice($.variable, $.number)),
+  _columns: (/** @type {any} */ $) =>
+    field("columns", choice($.variable, $.number)),
 };

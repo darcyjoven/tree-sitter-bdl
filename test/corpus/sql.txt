@@ -305,7 +305,7 @@ END MAIN
           (identifier))
         (expression
           (literal
-            (buildin)))))))
+            (builtin)))))))
 
 ================================================================================
 DECLARE 语句 4

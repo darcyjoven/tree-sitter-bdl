@@ -112,5 +112,9 @@ export default {
       repeat($._statement),
       kw("END WHILE"),
     ),
-  sleep: (/** @type {any} */ $) => seq(kw("SLEEP"), $._scale),
+  sleep: (/** @type {any} */ $) => seq(kw("SLEEP"), $._sleep_seconds),
+
+  // 等待秒数: SLEEP n
+  _sleep_seconds: (/** @type {any} */ $) =>
+    field("seconds", choice($.variable, $.number)),
 };

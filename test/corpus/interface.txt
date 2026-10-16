@@ -435,7 +435,7 @@ END MAIN
                 (identifier)))
             (expression
               (literal
-                (buildin))))))
+                (builtin))))))
       (branch
         (message
           (expression
@@ -592,7 +592,7 @@ END MAIN
                 (identifier)))
             (expression
               (literal
-                (buildin)))))))))
+                (builtin)))))))))
 
 ================================================================================
 INPUT ARRAY 语句 3

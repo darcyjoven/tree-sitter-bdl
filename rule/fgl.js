@@ -328,9 +328,9 @@ export default {
     ),
   _option_line: (/** @type {any} */ $) =>
     choice(
-      $._scale,
-      seq(kw("FIRST"), optional(field("scale", seq("+", $.number)))),
-      seq(kw("LAST"), optional(field("scale", seq("-", $.number)))),
+      field("line", choice($.variable, $.number)),
+      seq(kw("FIRST"), optional(field("line", seq("+", $.number)))),
+      seq(kw("LAST"), optional(field("line", seq("-", $.number)))),
     ),
   options: (/** @type {any} */ $) =>
     seq(
@@ -378,6 +378,6 @@ export default {
     seq(
       kw("IMPORT"),
       optional(choice(kw("FGL"), kw("JAVA"))),
-      field("right", seq($.identifier, repeat(seq(".", $.identifier)))),
+      field("module", seq($.identifier, repeat(seq(".", $.identifier)))),
     ),
 };

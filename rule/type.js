@@ -15,7 +15,7 @@ export default {
   identifier: (/** @type {any} */ $) => /[a-zA-Z_][a-zA-Z0-9_]*/,
   // 字面值
   literal: (/** @type {any} */ $) =>
-    choice($.string, $.number, $.datetime, $.buildin, $.boolean),
+    choice($.string, $.number, $.datetime, $.builtin, $.boolean),
   // 字符串
   string: (/** @type {any} */ $) =>
     choice(
@@ -65,7 +65,7 @@ export default {
   boolean: (/** @type {any} */ $) => choice(kw("TRUE"), kw("FALSE")),
   number: (/** @type {any} */ $) =>
     token(choice(integerLiterals, decimalLiterals)),
-  _qual1_2: (/** @type {any} */ $) =>
+  _datetime_qualifier_range: (/** @type {any} */ $) =>
     seq(
       field("qual1", datetimeQualifier),
       kw("TO"),
@@ -73,12 +73,12 @@ export default {
     ),
   datetime: (/** @type {any} */ $) =>
     choice(
-      seq(kw("CURRENT"), $._qual1_2),
-      seq(kw("DATETIME"), "(", /[^)]+/, ")", $._qual1_2),
-      seq(kw("INTERVAL"), "(", /[^)]+/, ")", $._qual1_2),
+      seq(kw("CURRENT"), $._datetime_qualifier_range),
+      seq(kw("DATETIME"), "(", /[^)]+/, ")", $._datetime_qualifier_range),
+      seq(kw("INTERVAL"), "(", /[^)]+/, ")", $._datetime_qualifier_range),
     ),
   // 内建字面值
-  buildin: (/** @type {any} */ $) =>
+  builtin: (/** @type {any} */ $) =>
     choice(
       kw("NULL"),
       kw("TODAY"),
@@ -113,12 +113,12 @@ export default {
   basic: (/** @type {any} */ $) =>
     choice(
       // CHAR
-      seq(kw("CHAR"), optional(seq("(", $._scale, ")"))),
+      seq(kw("CHAR"), optional(seq("(", $._length, ")"))),
       //CHARACTER
-      seq(kw("CHARACTER"), optional(seq("(", $._scale, ")"))),
+      seq(kw("CHARACTER"), optional(seq("(", $._length, ")"))),
       seq(
         kw("VARCHAR"),
-        optional(seq("(", $._scale, optional(seq(",", $._scale)), ")")),
+        optional(seq("(", $._length, optional(seq(",", $._length)), ")")),
       ),
       kw("STRING"),
       kw("BIGINT"),
@@ -130,12 +130,16 @@ export default {
       //DECIMAL
       seq(
         kw("DECIMAL"),
-        optional(seq("(", $._scale, optional(seq(",", $._scale)), ")")),
+        optional(
+          seq("(", $._precision, optional(seq(",", $._decimal_scale)), ")"),
+        ),
       ),
       // MONEY
       seq(
         kw("MONEY"),
-        optional(seq("(", $._scale, optional(seq(",", $._scale)), ")")),
+        optional(
+          seq("(", $._precision, optional(seq(",", $._decimal_scale)), ")"),
+        ),
       ),
       kw("DATE"),
       seq(kw("DATETIME"), datetimeQualifier, kw("TO"), datetimeQualifier),
@@ -167,11 +171,11 @@ export default {
     ),
   array: (/** @type {any} */ $) =>
     choice(
-      seq(kw("ARRAY"), "[", commaSep1($._scale), "]", kw("OF"), $.types),
+      seq(kw("ARRAY"), "[", commaSep1($._dimension), "]", kw("OF"), $.types),
       seq(
         kw("DYNAMIC"),
         kw("ARRAY"),
-        optional(seq(kw("WITH"), kw("DIMENSION"), $._scale)),
+        optional(seq(kw("WITH"), kw("DIMENSION"), $._dimension)),
         kw("OF"),
         $.types,
       ),
@@ -223,6 +227,17 @@ export default {
       ),
     ),
   _value: (/** @type {any} */ $) => field("value", $.expression),
-  _scale: (/** @type {any} */ $) =>
+
+  // 数值操作数(变量或数字)的语义化子规则: 取代原先过度重载的 _scale
+  // 长度: CHAR/CHARACTER/VARCHAR(n)
+  _length: (/** @type {any} */ $) => field("length", choice($.variable, $.number)),
+  // 精度: DECIMAL/MONEY(p[,s]) 的整数位数
+  _precision: (/** @type {any} */ $) =>
+    field("precision", choice($.variable, $.number)),
+  // 小数位: DECIMAL/MONEY(p,s) 的小数位数
+  _decimal_scale: (/** @type {any} */ $) =>
     field("scale", choice($.variable, $.number)),
+  // 维度: ARRAY[n] 与 DYNAMIC ARRAY WITH DIMENSION n
+  _dimension: (/** @type {any} */ $) =>
+    field("dimension", choice($.variable, $.number)),
 };

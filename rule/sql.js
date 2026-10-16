@@ -124,8 +124,8 @@ const rules = {
           kw("CURRENT"),
           kw("FIRST"),
           kw("LAST"),
-          seq(kw("ABSOLUTE"), $._scale),
-          seq(kw("RELATIVE"), $._scale),
+          seq(kw("ABSOLUTE"), $._offset),
+          seq(kw("RELATIVE"), $._offset),
         ),
       ),
       $._cid,
@@ -171,7 +171,7 @@ const rules = {
     ),
   begin: (/** @type {any} */ $) => kw("BEGIN WORK"),
   savepoint: (/** @type {any} */ $) =>
-    seq(kw("SAVEPOINT"), $._name, optional(kw("UNQIE"))),
+    seq(kw("SAVEPOINT"), $._name, optional(kw("UNIQUE"))),
   commit: (/** @type {any} */ $) => kw("COMMIT WORK"),
   rollback: (/** @type {any} */ $) =>
     seq(
@@ -196,7 +196,7 @@ const rules = {
       ),
       seq(
         kw("SET LOCK MODE TO"),
-        choice(kw("NOT WAIT"), seq(kw("WAIT"), $._scale)),
+        choice(kw("NOT WAIT"), seq(kw("WAIT"), $._wait_seconds)),
       ),
     ),
   // 基础
@@ -219,7 +219,14 @@ const rules = {
   _table: (/** @type {any} */ $) => field("table", $.identifier),
   _column: (/** @type {any} */ $) => field("column", $.identifier),
   _sqlstring: (/** @type {any} */ $) => field("sql", $.expression),
-  _cid: (/** @type {any} */ $) => field("name", $.identifier),
+  _cid: (/** @type {any} */ $) => field("cursor", $.identifier),
+
+  // 数值操作数(变量或数字)的语义化子规则
+  // 偏移: FETCH ABSOLUTE/RELATIVE n
+  _offset: (/** @type {any} */ $) => field("offset", choice($.variable, $.number)),
+  // 等待秒数: SET LOCK MODE TO WAIT n
+  _wait_seconds: (/** @type {any} */ $) =>
+    field("seconds", choice($.variable, $.number)),
 };
 const externals = (/** @type {any} */ $) => [$.sql_body, $.error_sentinel];
 

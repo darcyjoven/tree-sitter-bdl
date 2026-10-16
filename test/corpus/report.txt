@@ -147,27 +147,27 @@ END REPORT
     name: (identifier)
     (report_output_section
       (report_dimension
-        (expression
+        value: (expression
           (literal
             (number))))
       (report_dimension
-        (expression
+        value: (expression
           (literal
             (number))))
       (report_dimension
-        (expression
+        value: (expression
           (literal
             (number))))
       (report_dimension
-        (expression
+        value: (expression
           (literal
             (number))))
       (report_dimension
-        (expression
+        value: (expression
           (literal
             (number))))
       (report_dimension
-        (expression
+        value: (expression
           (literal
             (number)))))
     (report_format_section)))
@@ -354,10 +354,10 @@ REPORT r_snp()
     (report_format_section
       (report_control_block
         (report_skip
-          scale: (number))
+          lines: (number))
         (report_skip)
         (report_need
-          scale: (number))
+          lines: (number))
         (report_pause
           (string))))))
 

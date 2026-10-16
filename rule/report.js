@@ -63,12 +63,12 @@ export default {
   // 边距/页尺寸(值用表达式,兼容变量与字面量;实码常换行书写,故不用逗号分隔)
   report_dimension: (/** @type {any} */ $) =>
     choice(
-      seq(kw("LEFT MARGIN"), $.expression),
-      seq(kw("RIGHT MARGIN"), $.expression),
-      seq(kw("TOP MARGIN"), $.expression),
-      seq(kw("BOTTOM MARGIN"), $.expression),
-      seq(kw("PAGE LENGTH"), $.expression),
-      seq(kw("TOP OF PAGE"), $.expression),
+      seq(kw("LEFT MARGIN"), field("value", $.expression)),
+      seq(kw("RIGHT MARGIN"), field("value", $.expression)),
+      seq(kw("TOP MARGIN"), field("value", $.expression)),
+      seq(kw("BOTTOM MARGIN"), field("value", $.expression)),
+      seq(kw("PAGE LENGTH"), field("value", $.expression)),
+      seq(kw("TOP OF PAGE"), field("value", $.expression)),
     ),
 
   // ORDER [EXTERNAL] BY var [ASC|DESC][,...]
@@ -160,12 +160,12 @@ export default {
     ),
   report_start_option: (/** @type {any} */ $) =>
     choice(
-      seq(kw("LEFT MARGIN"), optional("="), $.expression),
-      seq(kw("RIGHT MARGIN"), optional("="), $.expression),
-      seq(kw("TOP MARGIN"), optional("="), $.expression),
-      seq(kw("BOTTOM MARGIN"), optional("="), $.expression),
-      seq(kw("PAGE LENGTH"), optional("="), $.expression),
-      seq(kw("TOP OF PAGE"), optional($.expression)),
+      seq(kw("LEFT MARGIN"), optional("="), field("value", $.expression)),
+      seq(kw("RIGHT MARGIN"), optional("="), field("value", $.expression)),
+      seq(kw("TOP MARGIN"), optional("="), field("value", $.expression)),
+      seq(kw("BOTTOM MARGIN"), optional("="), field("value", $.expression)),
+      seq(kw("PAGE LENGTH"), optional("="), field("value", $.expression)),
+      seq(kw("TOP OF PAGE"), optional(field("value", $.expression))),
     ),
 
   report_print: (/** @type {any} */ $) =>
@@ -208,13 +208,13 @@ export default {
     seq(
       kw("SKIP"),
       choice(
-        seq($._scale, choice(kw("LINE"), kw("LINES"))),
+        seq($._line_count, choice(kw("LINE"), kw("LINES"))),
         seq(kw("TO"), kw("TOP OF PAGE")),
       ),
     ),
 
   report_need: (/** @type {any} */ $) =>
-    seq(kw("NEED"), $._scale, choice(kw("LINE"), kw("LINES"))),
+    seq(kw("NEED"), $._line_count, choice(kw("LINE"), kw("LINES"))),
 
   report_pause: (/** @type {any} */ $) =>
     seq(kw("PAUSE"), optional($.string)),
@@ -223,7 +223,7 @@ export default {
   // ASCII(n) / n SPACES(SPACE 为 SPACES 别名): 报表空格操作符
   _report_special_expression: (/** @type {any} */ $) =>
     choice(
-      seq(kw("ASCII"), field("right", $._scale)),
+      seq(kw("ASCII"), $._ascii_arg),
       seq(field("left", $.expression), choice(kw("SPACES"), kw("SPACE"))),
     ),
 
@@ -261,4 +261,12 @@ export default {
 
   report_where: (/** @type {any} */ $) =>
     seq(kw("WHERE"), $.expression),
+
+  // ---- 报表专用数值操作数子规则 ----
+  // 行数: SKIP/NEED n LINE(S)
+  _line_count: (/** @type {any} */ $) =>
+    field("lines", choice($.variable, $.number)),
+  // ASCII 参数: ASCII n
+  _ascii_arg: (/** @type {any} */ $) =>
+    field("argument", choice($.variable, $.number)),
 };
