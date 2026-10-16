@@ -18,9 +18,9 @@ export default {
       $.preproc,
       $.whenever,
       $.try,
-      $.terminate,
-      $.finish,
-      $.output,
+      $.terminate_report,
+      $.finish_report,
+      $.output_to_report,
       $.start_report,
       $.defer,
       $.let,
@@ -84,11 +84,11 @@ export default {
     seq(kw("TRY"), repeat($._statement), optional($.catch), kw("END TRY")),
   catch: (/** @type {any} */ $) => seq(kw("CATCH"), repeat($._statement)),
 
-  terminate: (/** @type {any} */ $) =>
+  terminate_report: (/** @type {any} */ $) =>
     seq(kw("TERMINATE REPORT"), field("report", $.identifier)),
-  finish: (/** @type {any} */ $) =>
+  finish_report: (/** @type {any} */ $) =>
     seq(kw("FINISH REPORT"), field("report", $.identifier)),
-  output: (/** @type {any} */ $) =>
+  output_to_report: (/** @type {any} */ $) =>
     seq(
       kw("OUTPUT TO REPORT"),
       field("report", $.identifier),
@@ -109,7 +109,7 @@ export default {
               $.variable,
               kw("SCREEN"),
               kw("PRINTER"),
-              seq(optional(kw("FILE")), field("filename", $.variable)),
+              seq(optional(kw("FILE")), field("filename", $.expression)),
               seq(
                 kw("PIPE"),
                 optional(choice(kw("IN FORM MODE"), kw("IN LINE MODE"))),

@@ -52,7 +52,7 @@ export default {
     choice(
       kw("SCREEN"),
       kw("PRINTER"),
-      seq(optional(kw("FILE")), field("filename", $.variable)),
+      seq(optional(kw("FILE")), field("filename", $.expression)),
       seq(
         kw("PIPE"),
         optional(choice(kw("IN FORM MODE"), kw("IN LINE MODE"))),

@@ -4641,15 +4641,15 @@
         },
         {
           "type": "SYMBOL",
-          "name": "terminate"
+          "name": "terminate_report"
         },
         {
           "type": "SYMBOL",
-          "name": "finish"
+          "name": "finish_report"
         },
         {
           "type": "SYMBOL",
-          "name": "output"
+          "name": "output_to_report"
         },
         {
           "type": "SYMBOL",
@@ -5342,7 +5342,7 @@
         }
       ]
     },
-    "terminate": {
+    "terminate_report": {
       "type": "SEQ",
       "members": [
         {
@@ -5415,7 +5415,7 @@
         }
       ]
     },
-    "finish": {
+    "finish_report": {
       "type": "SEQ",
       "members": [
         {
@@ -5488,7 +5488,7 @@
         }
       ]
     },
-    "output": {
+    "output_to_report": {
       "type": "SEQ",
       "members": [
         {
@@ -5799,7 +5799,7 @@
                             "name": "filename",
                             "content": {
                               "type": "SYMBOL",
-                              "name": "variable"
+                              "name": "expression"
                             }
                           }
                         ]
@@ -26796,7 +26796,7 @@
               "name": "filename",
               "content": {
                 "type": "SYMBOL",
-                "name": "variable"
+                "name": "expression"
               }
             }
           ]
@@ -29265,6 +29265,10 @@
     [
       "expression",
       "_report_column_pos"
+    ],
+    [
+      "start_report",
+      "expression"
     ]
   ],
   "precedences": [],

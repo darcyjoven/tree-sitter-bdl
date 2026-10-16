@@ -20,14 +20,14 @@ END MAIN
       handler: (expression
         (variable
           (identifier))))
-    (output
+    (output_to_report
       report: (identifier)
       params: (expression
         (variable
           (identifier))))
-    (finish
+    (finish_report
       report: (identifier))
-    (terminate
+    (terminate_report
       report: (identifier))))
 
 ================================================================================

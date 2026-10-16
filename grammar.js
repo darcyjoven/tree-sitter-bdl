@@ -36,6 +36,7 @@ export default grammar({
     [$.report_start_option],
     [$.report_print, $.report_print_empty],
     [$.expression, $._report_column_pos],
+    [$.start_report, $.expression],
   ],
 
   rules: {
