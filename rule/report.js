@@ -241,9 +241,10 @@ export default {
     ),
 
   // ---- 报表专用表达式操作符(加入全局 expression) ----
-  // COUNT(*) / PERCENT(*) 必须识别(函数调用形式不支持裸 * 参数)
-  // SUM|AVG|MIN|MAX 直接作为函数调用解析(避免关键字遮蔽同名变量/函数),
-  // 仅额外支持 GROUP 前缀与可选 WHERE 子句。
+  // 手册 06-reports: [GROUP] COUNT(*) | PERCENT(*) | AVG|SUM|MIN|MAX( var )
+  //                 [ WHERE condition ]  —— GROUP 为可选
+  // 裸 SUM(x) 仍按普通函数调用解析(避免关键字遮蔽同名变量/函数与 GLR 歧义);
+  // 仅当其后紧跟 WHERE 时, 才作为无 GROUP 的聚合表达式。
   report_aggregate: (/** @type {any} */ $) =>
     choice(
       seq(
@@ -254,11 +255,8 @@ export default {
         ")",
         optional($.report_where),
       ),
-      seq(
-        kw("GROUP"),
-        $._function_expression,
-        optional($.report_where),
-      ),
+      seq(kw("GROUP"), $._function_expression, optional($.report_where)),
+      seq($._function_expression, $.report_where),
     ),
 
   report_where: (/** @type {any} */ $) =>

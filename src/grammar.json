@@ -29857,6 +29857,19 @@
               ]
             }
           ]
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "_function_expression"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "report_where"
+            }
+          ]
         }
       ]
     },

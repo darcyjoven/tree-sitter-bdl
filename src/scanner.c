@@ -29,7 +29,13 @@ static const char *BDL_TERMINATORS[] = {
     "MESSAGE", "NEXT",     "OPEN",     "OPEN",     "PREPARE",    "PROMPT",
     "PUT",     "RELEASE",  "RENAME",   "RETURN",   "ROLLBACK",   "SAVEPOINT",
     "SCHEMA",  "SCROLL",   "SELECT",   "SHOW",     "SQL",        "TRY",
-    "UNLOAD",  "UPDATE",   "VALIDATE", "WHENEVER", "WHILE"};
+    "UNLOAD",  "UPDATE",   "VALIDATE", "WHENEVER", "WHILE",
+    // 以下为原表缺失、且不会与 SQL 语句冲突的 BDL 语句起始关键字。
+    // 缺失会导致 sql_body 越过 SQL 语句吞掉后续 BDL 代码
+    // (例如 SELECT ... 后的 DIALOG 被当作 SQL 文本, 使 dialog 结构丢失)。
+    "CONSTRUCT", "DEFER",   "DESCRIBE", "DIALOG",  "DISCONNECT", "FINISH",
+    "NEED",      "OPTIONS", "OUTPUT",   "PAUSE",   "PRINT",      "PRINTX",
+    "RUN",       "SKIP",    "SLEEP",    "START",   "TERMINATE",  "UNLOCK"};
 
 typedef struct {
   const char *first;
