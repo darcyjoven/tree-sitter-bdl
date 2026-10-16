@@ -1,48 +1,53 @@
 # tree-sitter-bdl 待办与待确认清单
 
-> 维护于 2026-10-16（`refactor/grammar`，提交 a00b1e8）
-> 全量基线：topprod 7699 个 `.4gl` → pass 7666 / fail 33 / ERROR 3009 / MISSING 4
-> 验证方式：`tree-sitter test`（corpus 118/118）+ `bdl-lint/validate100.sh`（100/100）
+> 维护于 2026-10-16（`refactor/grammar`，提交 4ecc884）
+> 全量基线：topprod 7699 个 `.4gl` → pass 7671 / fail 28 / ERROR 2980 / MISSING 4
+> 验证方式：`tree-sitter test`（corpus 121/121）+ `bdl-lint/validate100.sh`（100/100）
 
 ## A. 待办（用户已确认语法合法，暂不实现）
 
 | 项 | 示例 | 出现处 | 说明 |
 |---|---|---|---|
-| `GET_FLDBUF(<界面字段名>)` | `LET ps_value = GET_FLDBUF(count)` | asft700_tch3.4gl:483、asft700_tch4.4gl:580 | 参数是**界面字段名**（非字符串/普通表达式），需特殊处理 |
+| `CASE … END CASE` / `END IF` 作 SQL 表达式 | `SELECT …,CASE ta_ecd03 WHEN 'N' THEN 1 ELSE sfbud10 END CASE … INTO` | cws_get_start_works.4gl:215、sapmt720_sub.4gl:7892 | 二者都在 `SELECT <列表> … INTO` 内。扫描器把 `END <块关键字>` 判为 sql_body 终止符，需能识别 SQL 内的 `END CASE` |
 | `SET EXPLAIN ON` | `SET EXPLAIN ON` | cl_ui_init.4gl:243 | 特殊 SQL 语法 |
 | `INTERVAL` 带精度 | `DEFINE l_vnd11 INTERVAL SECOND(5) TO SECOND` | apsi311.4gl:78、apsp500.4gl:307、cimi995.4gl:269（`DAY(5) TO MINUTE`） | 类型限定符 `qual(scale) TO qual` |
 | `java.lang.X.method()` | `java.lang.Byte.valueOf(l_digest.digest()[l_i])` | salmi621.4gl:556、apci060.4gl:2050 | 非限定 java 类调用，结果为 java 数组，再取元素 |
 | `UPDATE STATISTICS` | `UPDATE STATISTICS FOR TABLE sta_file` | asdp010.4gl:103 | 合法 SQL，边界处理 |
 
-## B. 待用户确认（已提供证据）
+> `GET_FLDBUF(<字段名>)` 原为待办项，现已**自然解决**：它此前失败的唯一原因是参数
+> `count` 被 `kw("COUNT")` 抢成关键字；关键字让位修复后 asft700_tch3/tch4 已通过。
+
+## B. 待用户确认
 
 | 项 | 位置 | 证据 / 判断 |
 |---|---|---|
-| **孤立 `END IF`** | cxcq761.4gl:287 | L280 的 `IF ... THEN NEXT FIELD type END IF` 已内联闭合、L284 的 `IF` 在 L286 闭合；L287 的 `END IF` **无对应 IF** → 疑为源文件多余语句 |
-| **`DISPLAY ARRAY x TO s.*(COUNT=…,UNBUFFERED)`** | csft511.4gl:1917 | ERROR 落在 `.`(col40) 与 `COUNT`(col47-51)；`TO rec.*` 后紧跟 `(属性表)` 未被支持 |
-| **`CASE…END CASE` / `END IF` 作 SQL 表达式** | cws_get_start_works.4gl:215、sapmt720_sub.4gl:7892 | 二者都在 `SELECT <列表> … INTO` 内：前者以 `... END CASE`（SQL 应为 `END`）、后者以 `... END IF` 结尾；扫描器把 `END <块关键字>` 判为 sql_body 终止符 |
-| **safi501 `END INPUT`** | INPUT 头 **L7850**，`END INPUT` **L11832** | ⚠️ 非文件错误：树中 `menu` 节点从 **L10806 行尾**起误吞至 L11831（首个子节点是 L10808 `AFTER FIELD sfs930` 被当作 MENU 分支），导致 input 节点延到 L12108、`END INPUT` 失去配对。属 **INPUT 分支 与 MENU 分支的 GLR 歧义**。次生错误 L11918-11919 |
-| **`DECLARE … CURSOR FROM SELECT …`** | sghri056.4gl:194、197 | 手册仅定义 `DECLARE cid CURSOR FROM expr`（expr 为 SQL 字符串）；此处 `FROM` 后直接跟 `SELECT` 语句，疑应为 `FOR`。仅此 1 文件 2 处 |
+| 文件首 `#`/BOM 整文件级 ERROR（4 文件） | ghri0431.4gl、ghri0471.4gl、sapmt540 (3).4gl、saxmt400.4gl | 真实成因：ghri0431 在 **L595 `IF l_n !=0 THEN` 处截断**；ghri0471 **仅 3 字节** `e9 94 98`（U+9518 `锘`）；sapmt540(3) **L19666 `END RECORD,` 尾逗号多余**（其后直接是 `IF`）；saxmt400 **在 L2399 截断** |
+| safi501 残余 4 错 | safi501.4gl:15536 | 补掉缺失的 `END IF` 后仅剩 `WHEN (l_action_flag = "page_list")` 分支体里的 `EXIT DISPLAY` 报错 |
 
-## C. 文件首 `#`/BOM 整文件级 ERROR（请重新确认）
+## C. 已忽略（用户裁定为文件错误 / 非法语法）
 
-| 文件 | 行数 | 现象 |
-|---|---|---|
-| `tiptop/ghr/4gl/ghri0431.4gl` | 595 | 整文件一个 ERROR；文件**在 L595 `IF l_n !=0 THEN` 处截断**（未闭合） |
-| `tiptop/ghr/4gl/ghri0471.4gl` | — | 文件仅 **3 字节** `e9 94 98`（U+9518 `锘`，BOM 乱码残留），无换行 |
-| `tiptop/apm/4gl/sapmt540 (3).4gl` | 19814 | 整文件 ERROR；内部错误点 L19669 `IF g_pmm.pmm18!='Y' THEN` / L19671 `END IF` |
-| `topcust/cxm/4gl/saxmt400.4gl` | 2399 | 整文件 ERROR，无内部 ERROR/MISSING 节点 |
-
-## D. 已忽略（用户裁定）
-
-- `csfi510.4gl:4151` —— L4150 行尾续接逗号被同行 `--` 行注释吞掉，属文件错误。
+- **孤立 `END IF`** — cxcq761.4gl:287。L280 的 IF 已内联闭合、L284 的 IF 在 L286 闭合，L287 的 `END IF` 无对应 IF。
+- **`DISPLAY ARRAY x TO s.*(COUNT=…,UNBUFFERED)`** — csft511.4gl:1917。判为文件错误。
+- **多行字符串赋值缺逗号** — baofei.4gl:3163、findidx.4gl:90。
+- **ghrr104 `CLIPPED` 拼接** — ghrr104.4gl。**无需语法改动**：`CLIPPED` 的优先级(`PREC.ascii=1`)本就高于逗号拼接(`-1`)，探针 `" where ",tm.wc CLIPPED," and …` 通过。真实成因是 **L458 行尾缺逗号**（`" inner join hrao_file e on e.hrat04=e.hrao01"` 后面没有 `,`），实测补上逗号后该文件 0 错误。
+- **safi501.4gl 554 错** — **文件错误：缺一个 `END IF`**。`AFTER FIELD sfs32` 分支内 **L10731 `IF g_sfp.sfp06 MATCHES '[13]' THEN` 未闭合**（IF/END IF 计数 13/13，但其中 L10731 无配对）。在 L10807 后补一个 `END IF` 即从 554 错降到 4 错。树中 `menu [L10806..L11831]` 与 `MISSING "MENU"` 均为 tree-sitter 的**恢复伪影**，非 INPUT/MENU 分支歧义。
+- `csfi510.4gl:4151` —— L4150 行尾续接逗号被同行 `--` 行注释吞掉。
 - `TX_asfi301_1/2/3.4gl` —— 异常文件。
-- `ON ACTION <中文动作名>`（p_formulaedit / p_textedit）——**应报错**，不合法语法。
+- `ON ACTION <中文动作名>`（p_formulaedit / p_textedit）—— 应报错，不合法语法。
 - `&&`（cs_restful.4gl:37）—— 文件错误。
 - `DEFINE x LIKE STRING`（aglr100_test.4gl:597）—— 文件错误。
-- `csfq012.4gl:23` —— `sum_3 LIKE img_file.img10` 行末缺逗号，文件错误。
+- `csfq012.4gl:23` —— `sum_3 LIKE img_file.img10` 行末缺逗号。
 
-## E. 本轮已修复（提交 c66cde8 / a00b1e8）
+## D. 本轮已修复（4ecc884）
+
+- 关键字词可作变量名（`DEFINE count,index …`、`IF count > 36`、`FOR index = 1 TO count`）：
+  `report_aggregate` 的聚合名改由 `identifier` 承接。
+  **关键结论：`kw()` 生成的是单模式 token，其 `prec` 不生效**，无法用低优先级让位给标识符；
+  必须让该关键字**在表达式位置不再是候选 token**。
+- `DISPLAY BY NAME a THRU z` 字段范围（新增 `_field_range`）。
+- `DECLARE c CURSOR FROM <静态SQL>`（动态 SQL 串仍只能用 `FROM`）。
+
+## E. 更早已修复
 
 `SET LOCK MODE TO WAIT`（秒数可选）、`PUT … FROM` 接受字面值、`INTO rec.a THRU rec.z`、
 `TRUNCATE TABLE/TRUNCATE x`、`HIDE/SHOW OPTION`、`EXTEND(dt, qual TO qual)`、
