@@ -19,7 +19,7 @@ export default {
       $.prompt,
     ),
   // 基础属性
-  _help: (/** @type {any} */ $) => seq(kw("HELP"), field("", $.number)),
+  _help: (/** @type {any} */ $) => seq(kw("HELP"), field("line", $.number)),
   _display_attribute: (/** @type {any} */ $) =>
     choice(
       seq(kw("TEXT"), "=", field("value", $.expression)),

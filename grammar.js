@@ -13,6 +13,7 @@ import fglBlock from "./rule/fgl.js";
 import flowBlock from "./rule/flow.js";
 import interfaceBlock from "./rule/interface.js";
 import typeBlock from "./rule/type.js";
+import reportBlock from "./rule/report.js";
 
 export default grammar({
   name: "bdl",
@@ -30,7 +31,11 @@ export default grammar({
     [$.construct],
     [$.prompt],
     [$.exit],
-    [$.start],
+    [$.start_report],
+    [$._special_expression, $.report_where],
+    [$.report_start_option],
+    [$.report_print, $.report_print_empty],
+    [$.expression, $._report_column_pos],
   ],
 
   rules: {
@@ -57,23 +62,13 @@ export default grammar({
         seq(repeat(choice($.constant, $.type, $.define)), repeat($._statement)),
         seq(kw("END"), kw("FUNCTION")),
       ),
-    report: ($) =>
-      seq(
-        optional($.scope),
-        kw("REPORT"),
-        field("name", $.identifier),
-        "(",
-        optional($._param),
-        ")",
-        seq(repeat(choice($.constant, $.type, $.define)), repeat($._statement)),
-        seq(kw("END"), kw("REPORT")),
-      ),
-    // 可以出现在任何位置的语句
-    _statement: ($) => choice($._fgl, $._interface, $._sql),
+    // 可以出现在任何位置的语句(含报表专用语句)
+    _statement: ($) => choice($._fgl, $._interface, $._sql, $._report),
     ...sqlRules,
     ...fglBlock,
     ...flowBlock,
     ...interfaceBlock,
     ...typeBlock,
+    ...reportBlock,
   },
 });

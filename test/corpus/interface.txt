@@ -198,54 +198,54 @@ END MAIN
 (source_file
   (main
     (menu
-      (string)
+      title: (string)
       (branch
-        (identifier)
-        (identifier)
-        (string)
-        (expression
+        key: (identifier)
+        key: (identifier)
+        action: (string)
+        comment: (expression
           (literal
             (string)))
-        : (number)
+        line: (number)
         (call
-          (variable
+          name: (variable
             (identifier))))
       (branch
-        (identifier)
-        (identifier)
-        (string)
-        (expression
+        key: (identifier)
+        key: (identifier)
+        action: (string)
+        comment: (expression
           (literal
             (string)))
-        : (number)
+        line: (number)
         (call
-          (variable
+          name: (variable
             (identifier))))
       (branch
-        (identifier)
-        (identifier)
-        (string)
-        (expression
+        key: (identifier)
+        key: (identifier)
+        action: (string)
+        comment: (expression
           (literal
             (string)))
-        : (number)
+        line: (number)
         (call
-          (variable
+          name: (variable
             (identifier))))
       (branch
-        (string)
+        action: (string)
         (load
-          (string)
+          filename: (string)
           (insert
             (sql_body))))
       (branch
-        (identifier)
-        (identifier)
-        (string)
-        (expression
+        key: (identifier)
+        key: (identifier)
+        action: (string)
+        comment: (expression
           (literal
             (string)))
-        : (number)
+        line: (number)
         (exit)))))
 
 ================================================================================

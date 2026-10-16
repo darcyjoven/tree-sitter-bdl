@@ -21,7 +21,7 @@ export default {
       $.terminate,
       $.finish,
       $.output,
-      $.start,
+      $.start_report,
       $.defer,
       $.let,
       $.locate,
@@ -96,37 +96,42 @@ export default {
       optional($._params),
       ")",
     ),
-  start: (/** @type {any} */ $) =>
+  start_report: (/** @type {any} */ $) =>
     seq(
       kw("START REPORT"),
       field("report", $.identifier),
       optional(
-        field(
-          "clause",
-          choice(
-            $.variable,
-            kw("SCREEN"),
-            kw("PRINTER"),
-            seq(kw("FILE"), field("filename", $.variable)),
-            seq(kw("PIPE"), field("filename", $.variable)),
-            seq(kw("XML HANDLER")),
-            seq(kw("OUTPUT"), field("filename", $.variable)),
+        seq(
+          kw("TO"),
+          field(
+            "destination",
+            choice(
+              $.variable,
+              kw("SCREEN"),
+              kw("PRINTER"),
+              seq(optional(kw("FILE")), field("filename", $.variable)),
+              seq(
+                kw("PIPE"),
+                optional(choice(kw("IN FORM MODE"), kw("IN LINE MODE"))),
+                field("program", $.expression),
+              ),
+              seq(kw("XML HANDLER"), field("handler", $.expression)),
+              seq(kw("OUTPUT"), field("output", $.expression)),
+            ),
           ),
         ),
       ),
-      optional(
-        field(
-          "option",
-          choice(
-            seq(kw("LEFT MARGIN"), $.expression),
-            seq(kw("RIGHT MARGIN"), $.expression),
-            seq(kw("TOP MARGIN"), $.expression),
-            seq(kw("BOTTOM MARGIN"), $.expression),
-            seq(kw("PAGE LENGTH"), $.expression),
-            seq(kw("TOP OF PAGE")),
-          ),
-        ),
-      ),
+      optional(seq(kw("WITH"), commaSep1($.report_start_option))),
+    ),
+
+  report_start_option: (/** @type {any} */ $) =>
+    choice(
+      seq(kw("LEFT MARGIN"), optional("="), $.expression),
+      seq(kw("RIGHT MARGIN"), optional("="), $.expression),
+      seq(kw("TOP MARGIN"), optional("="), $.expression),
+      seq(kw("BOTTOM MARGIN"), optional("="), $.expression),
+      seq(kw("PAGE LENGTH"), optional("="), $.expression),
+      seq(kw("TOP OF PAGE"), optional($.expression)),
     ),
   expression: (/** @type {any} */ $) =>
     choice(
@@ -137,7 +142,9 @@ export default {
       $._string_expression,
       $._function_expression,
       $._special_expression,
+      $.report_aggregate,
     ),
+
   _boolean_expression: (/** @type {any} */ $) =>
     choice(
       prec.left(
@@ -321,7 +328,15 @@ export default {
         ),
       ),
       prec.left(PREC.ascii, seq(field("left", $.expression), kw("CLIPPED"))),
-      prec.left(PREC.ascii, seq(field("left", $.expression), kw("SPACE"))),
+      // WORDWRAP [RIGHT MARGIN expr]: 字符串换行操作符(报表专用)
+      prec.right(
+        PREC.ascii,
+        seq(
+          field("left", $.expression),
+          kw("WORDWRAP"),
+          optional(seq(kw("RIGHT MARGIN"), $.expression)),
+        ),
+      ),
     ),
   _function_expression: (/** @type {any} */ $) =>
     seq($._names, "(", optional($._params), ")"),
@@ -329,7 +344,8 @@ export default {
     choice(
       seq("(", $.expression, ")"),
       seq(kw("ASCII"), field("right", $._scale)),
-      seq(field("left", $._scale), kw("SPACES")),
+      // n SPACES / n SPACE(SPACE 为 SPACES 别名): 报表空格操作符
+      seq(field("left", $.expression), choice(kw("SPACES"), kw("SPACE"))),
     ),
   defer: (/** @type {any} */ $) =>
     seq(kw("DEFER"), choice(kw("INTERRUPT"), kw("QUIT"))),

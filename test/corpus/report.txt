@@ -1,0 +1,403 @@
+================================================================================
+report_drivers
+================================================================================
+
+MAIN
+    START REPORT r_out TO PRINTER
+    START REPORT r_xml TO XML HANDLER h_func
+    OUTPUT TO REPORT r_out (g_x)
+    FINISH REPORT r_out
+    TERMINATE REPORT r_out
+END MAIN
+--------------------------------------------------------------------------------
+
+(source_file
+  (main
+    (start_report
+      report: (identifier))
+    (start_report
+      report: (identifier)
+      handler: (expression
+        (variable
+          (identifier))))
+    (output
+      report: (identifier)
+      params: (expression
+        (variable
+          (identifier))))
+    (finish
+      report: (identifier))
+    (terminate
+      report: (identifier))))
+
+================================================================================
+report_group
+================================================================================
+
+REPORT r_grp(p_code)
+    ORDER BY p_code
+    FORMAT
+    BEFORE GROUP OF p_code
+        PRINT "G:", p_code
+    ON EVERY ROW
+        PRINT p_code, p_amt
+    AFTER GROUP OF p_code
+        PRINT GROUP SUM(p_amt)
+    END REPORT
+--------------------------------------------------------------------------------
+
+(source_file
+  (report
+    name: (identifier)
+    params: (identifier)
+    (report_order_section
+      (report_sort_key
+        variable: (variable
+          (identifier))))
+    (report_format_section
+      (report_control_block
+        group: (variable
+          (identifier))
+        (report_print
+          (report_print_item
+            (expression
+              (literal
+                (string))))
+          (report_print_item
+            (expression
+              (variable
+                (identifier))))))
+      (report_control_block
+        (report_print
+          (report_print_item
+            (expression
+              (variable
+                (identifier))))
+          (report_print_item
+            (expression
+              (variable
+                (identifier))))))
+      (report_control_block
+        group: (variable
+          (identifier))
+        (report_print
+          (report_print_item
+            (expression
+              (report_aggregate
+                name: (variable
+                  (identifier))
+                params: (expression
+                  (variable
+                    (identifier)))))))))))
+
+================================================================================
+report_min
+================================================================================
+
+REPORT r_min()
+    FORMAT EVERY ROW
+END REPORT
+--------------------------------------------------------------------------------
+
+(source_file
+  (report
+    name: (identifier)
+    (report_format_section)))
+
+================================================================================
+report_order
+================================================================================
+
+REPORT r_ord()
+    ORDER EXTERNAL BY p_code DESC, p_date
+    FORMAT EVERY ROW
+END REPORT
+--------------------------------------------------------------------------------
+
+(source_file
+  (report
+    name: (identifier)
+    (report_order_section
+      (report_sort_key
+        variable: (variable
+          (identifier)))
+      (report_sort_key
+        variable: (variable
+          (identifier))))
+    (report_format_section)))
+
+================================================================================
+report_output
+================================================================================
+
+REPORT r_out()
+    OUTPUT
+        LEFT MARGIN 2
+        RIGHT MARGIN 100
+        TOP MARGIN 3
+        BOTTOM MARGIN 3
+        PAGE LENGTH 60
+        TOP OF PAGE 5
+    FORMAT EVERY ROW
+END REPORT
+--------------------------------------------------------------------------------
+
+(source_file
+  (report
+    name: (identifier)
+    (report_output_section
+      (report_dimension
+        (expression
+          (literal
+            (number))))
+      (report_dimension
+        (expression
+          (literal
+            (number))))
+      (report_dimension
+        (expression
+          (literal
+            (number))))
+      (report_dimension
+        (expression
+          (literal
+            (number))))
+      (report_dimension
+        (expression
+          (literal
+            (number))))
+      (report_dimension
+        (expression
+          (literal
+            (number)))))
+    (report_format_section)))
+
+================================================================================
+report_page_blocks
+================================================================================
+
+REPORT r_page()
+    FORMAT
+    FIRST PAGE HEADER
+        PRINT "Title"
+    PAGE HEADER
+        PRINT "Header"
+    PAGE TRAILER
+        PRINT "End"
+    ON EVERY ROW
+        PRINT "row"
+    ON LAST ROW
+        PRINT "last"
+    END REPORT
+--------------------------------------------------------------------------------
+
+(source_file
+  (report
+    name: (identifier)
+    (report_format_section
+      (report_control_block
+        (report_print
+          (report_print_item
+            (expression
+              (literal
+                (string))))))
+      (report_control_block
+        (report_print
+          (report_print_item
+            (expression
+              (literal
+                (string))))))
+      (report_control_block
+        (report_print
+          (report_print_item
+            (expression
+              (literal
+                (string))))))
+      (report_control_block
+        (report_print
+          (report_print_item
+            (expression
+              (literal
+                (string))))))
+      (report_control_block
+        (report_print
+          (report_print_item
+            (expression
+              (literal
+                (string)))))))))
+
+================================================================================
+report_print_column
+================================================================================
+
+REPORT r_pcol()
+    FORMAT
+    ON EVERY ROW
+        PRINT COLUMN 10, g_name,
+              COLUMN 20, g_amt CLIPPED
+    END REPORT
+--------------------------------------------------------------------------------
+
+(source_file
+  (report
+    name: (identifier)
+    (report_format_section
+      (report_control_block
+        (report_print
+          (report_print_item
+            (literal
+              (number))
+            (expression
+              (variable
+                (identifier))))
+          (report_print_item
+            (literal
+              (number))
+            (expression
+              left: (expression
+                (variable
+                  (identifier))))))))))
+
+================================================================================
+report_print_ops
+================================================================================
+
+REPORT r_pops()
+    FORMAT
+    ON EVERY ROW
+        PRINT g_name, pageno USING "&&&&&", 5 SPACES, g_desc WORDWRAP RIGHT MARGIN 80;
+    END REPORT
+--------------------------------------------------------------------------------
+
+(source_file
+  (report
+    name: (identifier)
+    (report_format_section
+      (report_control_block
+        (report_print
+          (report_print_item
+            (expression
+              (variable
+                (identifier))))
+          (report_print_item
+            (expression
+              left: (expression
+                (variable
+                  (identifier)))
+              right: (expression
+                (literal
+                  (string)))))
+          (report_print_item
+            (expression
+              left: (expression
+                (literal
+                  (number)))))
+          (report_print_item
+            (expression
+              left: (expression
+                (variable
+                  (identifier)))
+              (expression
+                (literal
+                  (number))))))))))
+
+================================================================================
+report_printx
+================================================================================
+
+REPORT r_px()
+    FORMAT
+    ON EVERY ROW
+        PRINTX g_user, g_pdate
+        PRINTX NAME = tag1 g_user
+        PRINTX rec.*
+    END REPORT
+--------------------------------------------------------------------------------
+
+(source_file
+  (report
+    name: (identifier)
+    (report_format_section
+      (report_control_block
+        (report_printx
+          (expression
+            (variable
+              (identifier)))
+          (expression
+            (variable
+              (identifier))))
+        (report_printx
+          name: (identifier)
+          (expression
+            (variable
+              (identifier))))
+        (report_printx
+          (identifier))))))
+
+================================================================================
+report_skip_need_pause
+================================================================================
+
+REPORT r_snp()
+    FORMAT
+    ON EVERY ROW
+        SKIP 2 LINES
+        SKIP TO TOP OF PAGE
+        NEED 5 LINES
+        PAUSE "press"
+    END REPORT
+--------------------------------------------------------------------------------
+
+(source_file
+  (report
+    name: (identifier)
+    (report_format_section
+      (report_control_block
+        (report_skip
+          scale: (number))
+        (report_skip)
+        (report_need
+          scale: (number))
+        (report_pause
+          (string))))))
+
+================================================================================
+report_subreport
+================================================================================
+
+REPORT r_sub()
+    FORMAT
+    ON EVERY ROW
+        PRINT g_x
+        CALL sub_report(g_x)
+    AFTER GROUP OF g_key
+        PRINT GROUP COUNT(*)
+        EXIT REPORT
+    END REPORT
+--------------------------------------------------------------------------------
+
+(source_file
+  (report
+    name: (identifier)
+    (report_format_section
+      (report_control_block
+        (report_print
+          (report_print_item
+            (expression
+              (variable
+                (identifier)))))
+        (call
+          name: (variable
+            (identifier))
+          params: (expression
+            (variable
+              (identifier)))))
+      (report_control_block
+        group: (variable
+          (identifier))
+        (report_print
+          (report_print_item
+            (expression
+              (report_aggregate))))
+        (exit)))))
+
