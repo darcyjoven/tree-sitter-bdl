@@ -17,6 +17,7 @@ export default {
       $.construct,
       $.dialog,
       $.prompt,
+      $.hook,
     ),
   // 基础属性
   _help: (/** @type {any} */ $) => seq(kw("HELP"), field("line", $.number)),

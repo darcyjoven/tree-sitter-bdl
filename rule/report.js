@@ -1,6 +1,6 @@
 /// <reference types="tree-sitter-cli/dsl" />
 // @ts-check
-import { commaSep, commaSep1, kw } from "./util.js";
+import { commaSep, commaSep1, kw, PREC } from "./util.js";
 
 /**
  * REPORT 定义体与报表专用语句/表达式
@@ -118,6 +118,56 @@ export default {
       $.report_pause,
     ),
 
+  // ---- 报表驱动语句(自 fgl.js 归位) ----
+  terminate_report: (/** @type {any} */ $) =>
+    seq(kw("TERMINATE REPORT"), field("report", $.identifier)),
+  finish_report: (/** @type {any} */ $) =>
+    seq(kw("FINISH REPORT"), field("report", $.identifier)),
+  output_to_report: (/** @type {any} */ $) =>
+    seq(
+      kw("OUTPUT TO REPORT"),
+      field("report", $.identifier),
+      "(",
+      optional($._params),
+      ")",
+    ),
+  start_report: (/** @type {any} */ $) =>
+    seq(
+      kw("START REPORT"),
+      field("report", $.identifier),
+      optional(
+        seq(
+          kw("TO"),
+          field(
+            "destination",
+            choice(
+              $.variable,
+              kw("SCREEN"),
+              kw("PRINTER"),
+              seq(optional(kw("FILE")), field("filename", $.expression)),
+              seq(
+                kw("PIPE"),
+                optional(choice(kw("IN FORM MODE"), kw("IN LINE MODE"))),
+                field("program", $.expression),
+              ),
+              seq(kw("XML HANDLER"), field("handler", $.expression)),
+              seq(kw("OUTPUT"), field("output", $.expression)),
+            ),
+          ),
+        ),
+      ),
+      optional(seq(kw("WITH"), commaSep1($.report_start_option))),
+    ),
+  report_start_option: (/** @type {any} */ $) =>
+    choice(
+      seq(kw("LEFT MARGIN"), optional("="), $.expression),
+      seq(kw("RIGHT MARGIN"), optional("="), $.expression),
+      seq(kw("TOP MARGIN"), optional("="), $.expression),
+      seq(kw("BOTTOM MARGIN"), optional("="), $.expression),
+      seq(kw("PAGE LENGTH"), optional("="), $.expression),
+      seq(kw("TOP OF PAGE"), optional($.expression)),
+    ),
+
   report_print: (/** @type {any} */ $) =>
     seq(
       kw("PRINT"),
@@ -168,6 +218,25 @@ export default {
 
   report_pause: (/** @type {any} */ $) =>
     seq(kw("PAUSE"), optional($.string)),
+
+  // ---- 报表专用表达式操作符(自 fgl.js 归位) ----
+  // ASCII(n) / n SPACES(SPACE 为 SPACES 别名): 报表空格操作符
+  _report_special_expression: (/** @type {any} */ $) =>
+    choice(
+      seq(kw("ASCII"), field("right", $._scale)),
+      seq(field("left", $.expression), choice(kw("SPACES"), kw("SPACE"))),
+    ),
+
+  // expr WORDWRAP [RIGHT MARGIN expr]: 字符串换行操作符(报表专用)
+  _report_wordwrap: (/** @type {any} */ $) =>
+    prec.right(
+      PREC.ascii,
+      seq(
+        field("left", $.expression),
+        kw("WORDWRAP"),
+        optional(seq(kw("RIGHT MARGIN"), $.expression)),
+      ),
+    ),
 
   // ---- 报表专用表达式操作符(加入全局 expression) ----
   // COUNT(*) / PERCENT(*) 必须识别(函数调用形式不支持裸 * 参数)

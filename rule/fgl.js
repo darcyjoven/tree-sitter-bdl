@@ -30,7 +30,6 @@ export default {
       $.initialize,
       $.options,
       $._flow,
-      $.hook,
     ),
   preproc: (/** @type {any} */ $) =>
     choice(
@@ -84,55 +83,6 @@ export default {
     seq(kw("TRY"), repeat($._statement), optional($.catch), kw("END TRY")),
   catch: (/** @type {any} */ $) => seq(kw("CATCH"), repeat($._statement)),
 
-  terminate_report: (/** @type {any} */ $) =>
-    seq(kw("TERMINATE REPORT"), field("report", $.identifier)),
-  finish_report: (/** @type {any} */ $) =>
-    seq(kw("FINISH REPORT"), field("report", $.identifier)),
-  output_to_report: (/** @type {any} */ $) =>
-    seq(
-      kw("OUTPUT TO REPORT"),
-      field("report", $.identifier),
-      "(",
-      optional($._params),
-      ")",
-    ),
-  start_report: (/** @type {any} */ $) =>
-    seq(
-      kw("START REPORT"),
-      field("report", $.identifier),
-      optional(
-        seq(
-          kw("TO"),
-          field(
-            "destination",
-            choice(
-              $.variable,
-              kw("SCREEN"),
-              kw("PRINTER"),
-              seq(optional(kw("FILE")), field("filename", $.expression)),
-              seq(
-                kw("PIPE"),
-                optional(choice(kw("IN FORM MODE"), kw("IN LINE MODE"))),
-                field("program", $.expression),
-              ),
-              seq(kw("XML HANDLER"), field("handler", $.expression)),
-              seq(kw("OUTPUT"), field("output", $.expression)),
-            ),
-          ),
-        ),
-      ),
-      optional(seq(kw("WITH"), commaSep1($.report_start_option))),
-    ),
-
-  report_start_option: (/** @type {any} */ $) =>
-    choice(
-      seq(kw("LEFT MARGIN"), optional("="), $.expression),
-      seq(kw("RIGHT MARGIN"), optional("="), $.expression),
-      seq(kw("TOP MARGIN"), optional("="), $.expression),
-      seq(kw("BOTTOM MARGIN"), optional("="), $.expression),
-      seq(kw("PAGE LENGTH"), optional("="), $.expression),
-      seq(kw("TOP OF PAGE"), optional($.expression)),
-    ),
   expression: (/** @type {any} */ $) =>
     choice(
       $.literal,
@@ -328,24 +278,16 @@ export default {
         ),
       ),
       prec.left(PREC.ascii, seq(field("left", $.expression), kw("CLIPPED"))),
-      // WORDWRAP [RIGHT MARGIN expr]: 字符串换行操作符(报表专用)
-      prec.right(
-        PREC.ascii,
-        seq(
-          field("left", $.expression),
-          kw("WORDWRAP"),
-          optional(seq(kw("RIGHT MARGIN"), $.expression)),
-        ),
-      ),
+      // WORDWRAP [RIGHT MARGIN expr]: 报表换行操作符(定义已归位 report.js)
+      $._report_wordwrap,
     ),
   _function_expression: (/** @type {any} */ $) =>
     seq($._names, "(", optional($._params), ")"),
   _special_expression: (/** @type {any} */ $) =>
     choice(
       seq("(", $.expression, ")"),
-      seq(kw("ASCII"), field("right", $._scale)),
-      // n SPACES / n SPACE(SPACE 为 SPACES 别名): 报表空格操作符
-      seq(field("left", $.expression), choice(kw("SPACES"), kw("SPACE"))),
+      // ASCII / SPACES 等报表空格操作符(定义已归位 report.js)
+      $._report_special_expression,
     ),
   defer: (/** @type {any} */ $) =>
     seq(kw("DEFER"), choice(kw("INTERRUPT"), kw("QUIT"))),

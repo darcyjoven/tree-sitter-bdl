@@ -32,7 +32,7 @@ export default grammar({
     [$.prompt],
     [$.exit],
     [$.start_report],
-    [$._special_expression, $.report_where],
+    [$._report_special_expression, $.report_where],
     [$.report_start_option],
     [$.report_print, $.report_print_empty],
     [$.expression, $._report_column_pos],

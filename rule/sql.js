@@ -212,6 +212,14 @@ const rules = {
         ),
       ),
     ),
+
+  // SQL 命名助手(自 type.js 归位): 数据库/表/列/游标/SQL 文本
+  _dbname: (/** @type {any} */ $) =>
+    field("dbname", choice($.identifier, $.string)),
+  _table: (/** @type {any} */ $) => field("table", $.identifier),
+  _column: (/** @type {any} */ $) => field("column", $.identifier),
+  _sqlstring: (/** @type {any} */ $) => field("sql", $.expression),
+  _cid: (/** @type {any} */ $) => field("name", $.identifier),
 };
 const externals = (/** @type {any} */ $) => [$.sql_body, $.error_sentinel];
 
