@@ -129,7 +129,8 @@ const rules = {
         seq(kw("FOR"), choice($._static_sql, $._cid)),
         // 括号子查询: DECLARE c CURSOR FOR (SELECT ...)
         seq(kw("FOR"), "(", choice($.select_in_paren, $._cid), ")"),
-        seq(kw("FROM"), $._sqlstring),
+        // 静态 SQL 两种写法皆可(FOR / FROM); 动态 SQL 串只能用 FROM
+        seq(kw("FROM"), choice($._static_sql, $._sqlstring)),
       ),
     ),
   // 括号内子查询体(使用 SQL_BODY_IN_PAREN 外部符号, 遇匹配的右括号结束)

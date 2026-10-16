@@ -1879,8 +1879,17 @@
                   "value": "FROM"
                 },
                 {
-                  "type": "SYMBOL",
-                  "name": "_sqlstring"
+                  "type": "CHOICE",
+                  "members": [
+                    {
+                      "type": "SYMBOL",
+                      "name": "_static_sql"
+                    },
+                    {
+                      "type": "SYMBOL",
+                      "name": "_sqlstring"
+                    }
+                  ]
                 }
               ]
             }
@@ -16369,12 +16378,8 @@
                   "type": "SEQ",
                   "members": [
                     {
-                      "type": "FIELD",
-                      "name": "field",
-                      "content": {
-                        "type": "SYMBOL",
-                        "name": "variable"
-                      }
+                      "type": "SYMBOL",
+                      "name": "_field_range"
                     },
                     {
                       "type": "REPEAT",
@@ -16386,12 +16391,8 @@
                             "value": ","
                           },
                           {
-                            "type": "FIELD",
-                            "name": "field",
-                            "content": {
-                              "type": "SYMBOL",
-                              "name": "variable"
-                            }
+                            "type": "SYMBOL",
+                            "name": "_field_range"
                           }
                         ]
                       }
@@ -18019,6 +18020,77 @@
         {
           "type": "SYMBOL",
           "name": "slice"
+        }
+      ]
+    },
+    "_field_range": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "FIELD",
+              "name": "field",
+              "content": {
+                "type": "SYMBOL",
+                "name": "variable"
+              }
+            },
+            {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "ALIAS",
+                  "content": {
+                    "type": "TOKEN",
+                    "content": {
+                      "type": "PREC",
+                      "value": 10,
+                      "content": {
+                        "type": "PATTERN",
+                        "value": "[tT][hH][rR][uU]"
+                      }
+                    }
+                  },
+                  "named": false,
+                  "value": "THRU"
+                },
+                {
+                  "type": "ALIAS",
+                  "content": {
+                    "type": "TOKEN",
+                    "content": {
+                      "type": "PREC",
+                      "value": 10,
+                      "content": {
+                        "type": "PATTERN",
+                        "value": "[tT][hH][rR][oO][uU][gG][hH]"
+                      }
+                    }
+                  },
+                  "named": false,
+                  "value": "THROUGH"
+                }
+              ]
+            },
+            {
+              "type": "FIELD",
+              "name": "to",
+              "content": {
+                "type": "SYMBOL",
+                "name": "variable"
+              }
+            }
+          ]
+        },
+        {
+          "type": "FIELD",
+          "name": "field",
+          "content": {
+            "type": "SYMBOL",
+            "name": "variable"
+          }
         }
       ]
     },
@@ -25034,41 +25106,12 @@
               ]
             },
             {
-              "type": "CHOICE",
-              "members": [
-                {
-                  "type": "ALIAS",
-                  "content": {
-                    "type": "TOKEN",
-                    "content": {
-                      "type": "PREC",
-                      "value": 10,
-                      "content": {
-                        "type": "PATTERN",
-                        "value": "[cC][oO][uU][nN][tT]"
-                      }
-                    }
-                  },
-                  "named": false,
-                  "value": "COUNT"
-                },
-                {
-                  "type": "ALIAS",
-                  "content": {
-                    "type": "TOKEN",
-                    "content": {
-                      "type": "PREC",
-                      "value": 10,
-                      "content": {
-                        "type": "PATTERN",
-                        "value": "[pP][eE][rR][cC][eE][nN][tT]"
-                      }
-                    }
-                  },
-                  "named": false,
-                  "value": "PERCENT"
-                }
-              ]
+              "type": "FIELD",
+              "name": "name",
+              "content": {
+                "type": "SYMBOL",
+                "name": "identifier"
+              }
             },
             {
               "type": "STRING",
@@ -25270,6 +25313,10 @@
     [
       "start_report",
       "expression"
+    ],
+    [
+      "variable",
+      "report_aggregate"
     ]
   ],
   "precedences": [],

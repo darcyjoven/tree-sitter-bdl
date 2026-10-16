@@ -1701,6 +1701,16 @@
           }
         ]
       },
+      "to": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "variable",
+            "named": true
+          }
+        ]
+      },
       "value": {
         "multiple": false,
         "required": false,
@@ -5726,8 +5736,12 @@
     "fields": {
       "name": {
         "multiple": false,
-        "required": false,
+        "required": true,
         "types": [
+          {
+            "type": "identifier",
+            "named": true
+          },
           {
             "type": "variable",
             "named": true
@@ -9131,10 +9145,6 @@
   },
   {
     "type": "PAUSE",
-    "named": false
-  },
-  {
-    "type": "PERCENT",
     "named": false
   },
   {

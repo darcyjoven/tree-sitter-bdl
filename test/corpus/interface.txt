@@ -1109,3 +1109,38 @@ END MAIN
         (expression
           (variable
             (identifier)))))))
+
+================================================================================
+DISPLAY BY NAME 字段范围 (a THRU z)
+================================================================================
+MAIN
+    DISPLAY BY NAME g.zx01 THRU g.zx09
+    DISPLAY BY NAME g.a, g.b
+END MAIN
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (main
+    (display
+      (variable
+        (object
+          (variable
+            (identifier))
+          (identifier)))
+      (variable
+        (object
+          (variable
+            (identifier))
+          (identifier))))
+    (display
+      (variable
+        (object
+          (variable
+            (identifier))
+          (identifier)))
+      (variable
+        (object
+          (variable
+            (identifier))
+          (identifier))))))

@@ -1038,3 +1038,60 @@ END FUNCTION
       (expression
         (variable
           (identifier))))))
+
+================================================================================
+关键字词作变量名 (count / index)
+================================================================================
+MAIN
+    DEFINE count, index LIKE type_file.num5
+    LET count = 1
+    IF count > 36 THEN
+        DISPLAY count
+    END IF
+    FOR index = 1 TO count
+        DISPLAY index
+    END FOR
+END MAIN
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (main
+    (define
+      (identifier)
+      (identifier)
+      (types
+        (like
+          (identifier)
+          (identifier))))
+    (let
+      (variable
+        (identifier))
+      (expression
+        (literal
+          (number))))
+    (if
+      (expression
+        (expression
+          (variable
+            (identifier)))
+        (expression
+          (literal
+            (number))))
+      (display
+        (expression
+          (variable
+            (identifier)))))
+    (for
+      (variable
+        (identifier))
+      (expression
+        (literal
+          (number)))
+      (expression
+        (variable
+          (identifier)))
+      (display
+        (expression
+          (variable
+            (identifier)))))))

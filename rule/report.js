@@ -249,7 +249,10 @@ export default {
     choice(
       seq(
         optional(kw("GROUP")),
-        choice(kw("COUNT"), kw("PERCENT")),
+        // 聚合名(COUNT / PERCENT ...)以 identifier 承接: 实码存在
+        // `DEFINE count ...` 这类把 COUNT 当变量名的写法, 若用 kw() 会全局
+        // 抢占标识符(单模式 token 的 prec 不生效), 导致变量位置报错。
+        field("name", $.identifier),
         "(",
         "*",
         ")",

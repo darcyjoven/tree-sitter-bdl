@@ -398,6 +398,6 @@ REPORT r_sub()
         (report_print
           (report_print_item
             (expression
-              (report_aggregate))))
+              (report_aggregate
+                name: (identifier)))))
         (exit)))))
-

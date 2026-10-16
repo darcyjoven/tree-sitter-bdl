@@ -228,7 +228,7 @@ export default {
       kw("DISPLAY"),
       choice(
         seq("FORM", $._name),
-        seq(kw("BY NAME"), commaSep1(field("field", $.variable))),
+        seq(kw("BY NAME"), commaSep1($._field_range)),
         seq(
           $._value,
           optional(
@@ -342,6 +342,16 @@ export default {
   // 字段引用: 支持 field 与 tm.field 两种写法(保留裸标识符形态)
   _field_ref: (/** @type {any} */ $) =>
     choice($.identifier, $.object, $.slice),
+  // 字段范围: <field> THRU/THROUGH <field>, 等价于枚举中间全部字段
+  _field_range: (/** @type {any} */ $) =>
+    choice(
+      seq(
+        field("field", $.variable),
+        choice(kw("THRU"), kw("THROUGH")),
+        field("to", $.variable),
+      ),
+      field("field", $.variable),
+    ),
   // 内建函数 INFIELD(<字段>): 判断当前字段是否指定字段
   // (INFIELD 作为关键字后, 函数式写法需单独支持)
   infield_function: (/** @type {any} */ $) =>

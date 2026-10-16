@@ -43,6 +43,8 @@ export default grammar({
     [$.report_print, $.report_print_empty],
     [$.expression, $._report_column_pos],
     [$.start_report, $.expression],
+    // 报表聚合名(COUNT/PERCENT)现在以 identifier 承接, 与函数调用起点重叠
+    [$.variable, $.report_aggregate],
   ],
 
   rules: {

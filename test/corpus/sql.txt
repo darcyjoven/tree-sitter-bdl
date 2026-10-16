@@ -1359,3 +1359,30 @@ END MAIN
       (sql_body))
     (truncate
       (sql_body))))
+
+================================================================================
+DECLARE ... CURSOR FROM/FOR 静态 SQL
+================================================================================
+MAIN
+    DECLARE c1 CURSOR FROM SELECT * FROM t
+    DECLARE c2 CURSOR FOR SELECT * FROM t
+    DECLARE c3 CURSOR FROM l_sql
+END MAIN
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (main
+    (declare
+      (identifier)
+      (select
+        (sql_body)))
+    (declare
+      (identifier)
+      (select
+        (sql_body)))
+    (declare
+      (identifier)
+      (expression
+        (variable
+          (identifier))))))
