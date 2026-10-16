@@ -21,6 +21,9 @@ export default {
     ),
   // 基础属性
   _help: (/** @type {any} */ $) => seq(kw("HELP"), field("line", $.number)),
+  // 界面语句尾部: ATTRIBUTE(...) 与 HELP n 两种顺序在实码中均常见(顺序不限制)
+  _attribute_help: (/** @type {any} */ $) =>
+    repeat1(choice($.attribute, $._help)),
   _display_attribute: (/** @type {any} */ $) =>
     choice(
       seq(kw("TEXT"), "=", field("value", $.expression)),
@@ -232,10 +235,9 @@ export default {
           $._names,
           kw("TO"),
           field("record", seq($.identifier, ".*")),
-          optional($._help),
         ),
       ),
-      optional($.attribute),
+      optional($._attribute_help),
     ),
   display: (/** @type {any} */ $) =>
     seq($._display_head, optional(seq(repeat($.branch), kw("END DISPLAY")))),
@@ -270,8 +272,7 @@ export default {
           field("record", seq($.variable, ".*")),
         ),
       ),
-      optional($.attribute),
-      optional($._help),
+      optional($._attribute_help),
     ),
   input: (/** @type {any} */ $) =>
     seq($._input_head, optional(seq(repeat($.branch), kw("END INPUT")))),
@@ -293,8 +294,7 @@ export default {
           commaSep1(field("field", $.variable)),
         ),
       ),
-      optional($.attribute),
-      optional($._help),
+      optional($._attribute_help),
     ),
   construct: (/** @type {any} */ $) =>
     seq(
@@ -318,8 +318,7 @@ export default {
       kw("FOR"),
       optional(choice(kw("CHAR"), kw("CHARACTER"))),
       field("value", $.variable),
-      optional($._help),
-      optional($.attribute),
+      optional($._attribute_help),
     ),
   prompt: (/** @type {any} */ $) =>
     seq($._prompt_head, optional(seq(repeat($.branch), kw("END PROMPT")))),

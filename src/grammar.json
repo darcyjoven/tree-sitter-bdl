@@ -10802,6 +10802,22 @@
         }
       ]
     },
+    "_attribute_help": {
+      "type": "REPEAT1",
+      "content": {
+        "type": "CHOICE",
+        "members": [
+          {
+            "type": "SYMBOL",
+            "name": "attribute"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "_help"
+          }
+        ]
+      }
+    },
     "_display_attribute": {
       "type": "CHOICE",
       "members": [
@@ -16152,18 +16168,6 @@
                       }
                     ]
                   }
-                },
-                {
-                  "type": "CHOICE",
-                  "members": [
-                    {
-                      "type": "SYMBOL",
-                      "name": "_help"
-                    },
-                    {
-                      "type": "BLANK"
-                    }
-                  ]
                 }
               ]
             }
@@ -16174,7 +16178,7 @@
           "members": [
             {
               "type": "SYMBOL",
-              "name": "attribute"
+              "name": "_attribute_help"
             },
             {
               "type": "BLANK"
@@ -16835,19 +16839,7 @@
           "members": [
             {
               "type": "SYMBOL",
-              "name": "attribute"
-            },
-            {
-              "type": "BLANK"
-            }
-          ]
-        },
-        {
-          "type": "CHOICE",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "_help"
+              "name": "_attribute_help"
             },
             {
               "type": "BLANK"
@@ -17179,19 +17171,7 @@
           "members": [
             {
               "type": "SYMBOL",
-              "name": "attribute"
-            },
-            {
-              "type": "BLANK"
-            }
-          ]
-        },
-        {
-          "type": "CHOICE",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "_help"
+              "name": "_attribute_help"
             },
             {
               "type": "BLANK"
@@ -17494,19 +17474,7 @@
           "members": [
             {
               "type": "SYMBOL",
-              "name": "_help"
-            },
-            {
-              "type": "BLANK"
-            }
-          ]
-        },
-        {
-          "type": "CHOICE",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "attribute"
+              "name": "_attribute_help"
             },
             {
               "type": "BLANK"

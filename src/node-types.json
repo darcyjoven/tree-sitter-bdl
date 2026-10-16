@@ -1275,7 +1275,7 @@
         ]
       },
       "line": {
-        "multiple": false,
+        "multiple": true,
         "required": false,
         "types": [
           {
@@ -1632,7 +1632,7 @@
         ]
       },
       "line": {
-        "multiple": false,
+        "multiple": true,
         "required": false,
         "types": [
           {
@@ -3944,7 +3944,7 @@
         ]
       },
       "line": {
-        "multiple": false,
+        "multiple": true,
         "required": false,
         "types": [
           {
@@ -5171,7 +5171,7 @@
         ]
       },
       "line": {
-        "multiple": false,
+        "multiple": true,
         "required": false,
         "types": [
           {
