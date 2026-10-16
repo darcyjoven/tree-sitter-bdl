@@ -48,8 +48,20 @@ export default grammar({
   rules: {
     source_file: ($) =>
       seq(
-        repeat(choice($.options, $.import, $.schema, $.preproc)),
-        repeat(choice($.globals, $.constant, $.type, $.define)),
+        // 顶层声明/指令不限制先后顺序: 实码常见 GLOBALS "<file>"
+        // 与 DATABASE/SCHEMA 交错出现
+        repeat(
+          choice(
+            $.options,
+            $.import,
+            $.schema,
+            $.preproc,
+            $.globals,
+            $.constant,
+            $.type,
+            $.define,
+          ),
+        ),
         repeat(choice($.main, $.function, $.report)),
       ),
     main: ($) =>

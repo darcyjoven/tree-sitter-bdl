@@ -142,7 +142,12 @@ export default {
         ),
         seq(kw("COMMAND"), seq(kw("KEY"), "(", $._key, ")")),
         seq(kw("ON KEY"), "(", $._key, ")"),
-        seq(kw("ON ACTION"), field("action", choice($.identifier, $.string))),
+        seq(
+          kw("ON ACTION"),
+          field("action", choice($.identifier, $.string)),
+          // ON ACTION <action> INFIELD <field>: 限定该 action 作用于指定字段
+          optional(seq(kw("INFIELD"), field("field", $._field_ref))),
+        ),
         seq(kw("ON IDLE"), field("idle", $.expression)),
         seq(kw("BEFORE MENU")),
         seq(kw("BEFORE INPUT")),
@@ -330,4 +335,8 @@ export default {
   // 字段引用: 支持 field 与 tm.field 两种写法(保留裸标识符形态)
   _field_ref: (/** @type {any} */ $) =>
     choice($.identifier, $.object, $.slice),
+  // 内建函数 INFIELD(<字段>): 判断当前字段是否指定字段
+  // (INFIELD 作为关键字后, 函数式写法需单独支持)
+  infield_function: (/** @type {any} */ $) =>
+    seq(kw("INFIELD"), "(", optional($._params), ")"),
 };

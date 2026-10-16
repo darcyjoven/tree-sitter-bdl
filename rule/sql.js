@@ -33,6 +33,7 @@ const rules = {
       $.rollback,
       $.release,
       $.set,
+      $.lock,
     ),
   schema: (/** @type {any} */ $) =>
     choice(
@@ -66,6 +67,9 @@ const rules = {
       seq(kw("SET CONNECTION"), $._dbname, optional(kw("DORMANT"))),
     ),
   select: (/** @type {any} */ $) => seq(kw("SELECT"), $.sql_body),
+  // LOCK TABLE t IN {SHARE|EXCLUSIVE} MODE
+  // 仅关心语句边界, 细节交由 sql_body 外部扫描器(同 CREATE TABLE 的处理)
+  lock: (/** @type {any} */ $) => seq(kw("LOCK TABLE"), $.sql_body),
   insert: (/** @type {any} */ $) => seq(kw("INSERT"), $.sql_body),
   delete: (/** @type {any} */ $) => seq(kw("DELETE"), $.sql_body),
   update: (/** @type {any} */ $) => seq(kw("UPDATE"), $.sql_body),

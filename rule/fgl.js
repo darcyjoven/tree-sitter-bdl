@@ -97,6 +97,7 @@ export default {
       $._number_expression,
       $._string_expression,
       $._function_expression,
+      $.infield_function,
       $._special_expression,
       $.report_aggregate,
     ),

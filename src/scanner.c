@@ -35,7 +35,8 @@ static const char *BDL_TERMINATORS[] = {
     // (例如 SELECT ... 后的 DIALOG 被当作 SQL 文本, 使 dialog 结构丢失)。
     "CONSTRUCT", "DEFER",   "DESCRIBE", "DIALOG",  "DISCONNECT", "FINISH",
     "NEED",      "OPTIONS", "OUTPUT",   "PAUSE",   "PRINT",      "PRINTX",
-    "RUN",       "SKIP",    "SLEEP",    "START",   "TERMINATE",  "UNLOCK"};
+    "RUN",       "SKIP",    "SLEEP",    "START",   "TERMINATE",  "UNLOCK",
+    "LOCK"};
 
 typedef struct {
   const char *first;
