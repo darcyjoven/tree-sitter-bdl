@@ -39,7 +39,7 @@ const rules = {
       seq(
         kw("CONNECT TO"),
         $._dbname,
-        optional(seq(kw("AS"), $._name)),
+        optional(seq(kw("AS"), field("name", choice($.identifier, $.string)))),
         optional(
           seq(
             kw("USER"),
@@ -54,14 +54,16 @@ const rules = {
         optional(kw("DESCRIBE")),
         kw("DATABASE"),
         seq(
-          $._dbname,
+          // 数据库名可为标识符/字符串/变量(实码含 DATABASE a[i].col 形式)
+          field("dbname", choice($.identifier, $.object, $.slice, $.string)),
           optional(seq("@", field("dbserver", choice($.variable, $.string)))),
         ),
         optional(kw("EXCLUSIVE")),
       ),
       seq(kw("SCHEMA"), $._dbname),
       seq(kw("DISCONNECT"), $._dbname),
-      seq(kw("SET CONNECTION"), seq($._dbname, kw("DORMANT"))),
+      // DORMANT 可选(实码 SET CONNECTION "MAIN" 无 DORMANT)
+      seq(kw("SET CONNECTION"), $._dbname, optional(kw("DORMANT"))),
     ),
   select: (/** @type {any} */ $) => seq(kw("SELECT"), $.sql_body),
   insert: (/** @type {any} */ $) => seq(kw("INSERT"), $.sql_body),

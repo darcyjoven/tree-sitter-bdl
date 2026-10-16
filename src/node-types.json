@@ -396,6 +396,14 @@
           {
             "type": "identifier",
             "named": true
+          },
+          {
+            "type": "object",
+            "named": true
+          },
+          {
+            "type": "slice",
+            "named": true
           }
         ]
       },
@@ -3412,6 +3420,16 @@
             "named": true
           }
         ]
+      },
+      "option": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "expression",
+            "named": true
+          }
+        ]
       }
     }
   },
@@ -3786,7 +3804,7 @@
         ]
       },
       "name": {
-        "multiple": false,
+        "multiple": true,
         "required": true,
         "types": [
           {
@@ -5992,6 +6010,14 @@
             "named": true
           },
           {
+            "type": "object",
+            "named": true
+          },
+          {
+            "type": "slice",
+            "named": true
+          },
+          {
             "type": "string",
             "named": true
           }
@@ -8002,6 +8028,10 @@
     "named": false
   },
   {
+    "type": "DEC",
+    "named": false
+  },
+  {
     "type": "DECIMAL",
     "named": false
   },
@@ -8474,6 +8504,10 @@
     "named": false
   },
   {
+    "type": "OPTION",
+    "named": false
+  },
+  {
     "type": "OPTIONS",
     "named": false
   },
@@ -8925,6 +8959,11 @@
   {
     "type": "number",
     "named": true
+  },
+  {
+    "type": "preproc_directive",
+    "named": true,
+    "extra": true
   },
   {
     "type": "sql_body",

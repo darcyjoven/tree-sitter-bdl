@@ -134,6 +134,13 @@ export default {
           seq("(", $._precision, optional(seq(",", $._decimal_scale)), ")"),
         ),
       ),
+      // DEC: DECIMAL 的同义简写
+      seq(
+        kw("DEC"),
+        optional(
+          seq("(", $._precision, optional(seq(",", $._decimal_scale)), ")"),
+        ),
+      ),
       // MONEY
       seq(
         kw("MONEY"),

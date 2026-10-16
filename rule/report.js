@@ -220,10 +220,12 @@ export default {
     seq(kw("PAUSE"), optional($.string)),
 
   // ---- 报表专用表达式操作符(自 fgl.js 归位) ----
-  // ASCII(n) / n SPACES(SPACE 为 SPACES 别名): 报表空格操作符
+  // ASCII(n)(空格操作符) / ASCII(expr)(函数式, 返回首字符编码) /
+  // n SPACES(SPACE 为 SPACES 别名): 报表空格操作符
   _report_special_expression: (/** @type {any} */ $) =>
     choice(
       seq(kw("ASCII"), $._ascii_arg),
+      seq(kw("ASCII"), "(", $.expression, ")"),
       seq(field("left", $.expression), choice(kw("SPACES"), kw("SPACE"))),
     ),
 

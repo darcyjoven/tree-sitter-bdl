@@ -146,3 +146,34 @@ DATABASE 'dbname"'
     (string))
   (schema
     (string)))
+
+================================================================================
+预处理器条件指令
+================================================================================
+
+&ifdef SLK
+MAIN
+  DEFINE a INTEGER
+&else
+  DEFINE b INTEGER
+&endif
+END MAIN
+&endif
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (preproc_directive)
+  (main
+    (define
+      name: (identifier)
+      types: (types
+        (basic)))
+    (preproc_directive)
+    (define
+      name: (identifier)
+      types: (types
+        (basic)))
+    (preproc_directive))
+  (preproc_directive))
+

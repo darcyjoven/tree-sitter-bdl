@@ -43,6 +43,12 @@ export default {
         field("value", $._preproc_value),
       ),
     ),
+  // 预处理器条件指令: 由 Genero 预处理阶段处理, 对语法透明
+  // (&ifdef/&ifndef/&elif/&else/&endif/&undef 可出现在任意位置, 含 DEFINE 列表中间)
+  preproc_directive: (/** @type {any} */ $) =>
+    token(
+      seq("&", choice("ifdef", "ifndef", "elif", "else", "endif", "undef"), /.*/),
+    ),
   _preproc_value: (/** @type {any} */ $) =>
     seq(
       repeat(
@@ -314,7 +320,7 @@ export default {
   initialize: (/** @type {any} */ $) =>
     seq(
       kw("INITIALIZE"),
-      $._names,
+      commaSep1(field("name", $.variable)),
       choice(
         kw("TO NULL"),
         seq(

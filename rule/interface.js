@@ -103,8 +103,11 @@ export default {
         seq(kw("CANCEL"), kw("DELETE")),
         seq(kw("CANCEL"), kw("INSERT")),
         seq(kw("ACCEPT"), kw("DIALOG")),
+        seq(kw("ACCEPT"), kw("CONSTRUCT")),
         seq(kw("NEXT"), kw("DIALOG")),
         seq(kw("ACCEPT"), kw("DISPLAY")),
+        // NEXT OPTION "label": MENU 中跳到下一个选项
+        seq(kw("NEXT OPTION"), field("option", $.expression)),
       ),
     ),
   branch: (/** @type {any} */ $) =>
@@ -138,14 +141,16 @@ export default {
           optional($._help),
         ),
         seq(kw("COMMAND"), seq(kw("KEY"), "(", $._key, ")")),
+        seq(kw("ON KEY"), "(", $._key, ")"),
         seq(kw("ON ACTION"), field("action", choice($.identifier, $.string))),
         seq(kw("ON IDLE"), field("idle", $.expression)),
         seq(kw("BEFORE MENU")),
         seq(kw("BEFORE INPUT")),
         seq(kw("AFTER INPUT")),
-        seq(kw("BEFORE FIELD"), commaSep1(field("field", $.identifier))),
-        seq(kw("AFTER FIELD"), commaSep1(field("field", $.identifier))),
-        seq(kw("ON CHANGE"), commaSep1(field("field", $.identifier))),
+        // 字段名可为 tm.yy 形式, 故允许 标识符/对象/切片
+        seq(kw("BEFORE FIELD"), commaSep1(field("field", $._field_ref))),
+        seq(kw("AFTER FIELD"), commaSep1(field("field", $._field_ref))),
+        seq(kw("ON CHANGE"), commaSep1(field("field", $._field_ref))),
         kw("BEFORE DELETE"),
         kw("AFTER DELETE"),
         kw("BEFORE ROW"),
@@ -171,7 +176,7 @@ export default {
           kw("WITH"),
           choice(
             seq(kw("FORM"), field("form", choice($.variable, $.string))),
-            seq($._rows, kw("ROWS"), $._columns, kw("COLUMNS")),
+            seq($._rows, kw("ROWS"), optional(","), $._columns, kw("COLUMNS")),
           ),
         ),
         optional($.attribute),
@@ -322,4 +327,7 @@ export default {
   _rows: (/** @type {any} */ $) => field("rows", choice($.variable, $.number)),
   _columns: (/** @type {any} */ $) =>
     field("columns", choice($.variable, $.number)),
+  // 字段引用: 支持 field 与 tm.field 两种写法(保留裸标识符形态)
+  _field_ref: (/** @type {any} */ $) =>
+    choice($.identifier, $.object, $.slice),
 };
