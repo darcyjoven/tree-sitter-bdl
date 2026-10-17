@@ -4354,7 +4354,7 @@
     "fields": {
       "column": {
         "multiple": false,
-        "required": true,
+        "required": false,
         "types": [
           {
             "type": "identifier",
@@ -4378,7 +4378,7 @@
       },
       "table": {
         "multiple": false,
-        "required": true,
+        "required": false,
         "types": [
           {
             "type": "identifier",
@@ -4386,6 +4386,16 @@
           }
         ]
       }
+    },
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "basic",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -8355,6 +8365,10 @@
     "named": false
   },
   {
+    "type": "&&",
+    "named": false
+  },
+  {
     "type": "&define",
     "named": false
   },
@@ -8809,6 +8823,10 @@
   },
   {
     "type": "EXPAND",
+    "named": false
+  },
+  {
+    "type": "EXPLAIN",
     "named": false
   },
   {

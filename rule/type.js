@@ -188,7 +188,11 @@ export default {
   like: (/** @type {any} */ $) =>
     seq(
       kw("LIKE"),
-      seq(optional(seq($._dbname, ":")), $._table, ".", $._column),
+      choice(
+        seq(optional(seq($._dbname, ":")), $._table, ".", $._column),
+        // LIKE 内建类型：DEFINE x LIKE STRING（GG-32）
+        $.basic,
+      ),
     ),
   _variable_list: (/** @type {any} */ $) =>
     commaSep1(

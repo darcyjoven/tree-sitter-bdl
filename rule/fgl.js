@@ -113,6 +113,15 @@ export default {
           field("right", $.expression),
         ),
       ),
+      // C 风格逻辑与 &&（GG-28）
+      prec.left(
+        PREC.and,
+        seq(
+          field("left", $.expression),
+          "&&",
+          field("right", $.expression),
+        ),
+      ),
       prec.left(
         PREC.or,
         seq(

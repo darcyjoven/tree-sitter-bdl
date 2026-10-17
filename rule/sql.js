@@ -226,6 +226,8 @@ const rules = {
         // 秒数可省略: SET LOCK MODE TO WAIT 与 SET LOCK MODE TO WAIT 5 均合法
         choice(kw("NOT WAIT"), seq(kw("WAIT"), optional($._wait_seconds))),
       ),
+      // SET EXPLAIN ON|OFF（GG-25）
+      seq(kw("SET EXPLAIN"), choice(kw("ON"), kw("OFF"))),
     ),
   // 基础
   _into: (/** @type {any} */ $) =>
