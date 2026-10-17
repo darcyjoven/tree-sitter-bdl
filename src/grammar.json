@@ -4958,6 +4958,10 @@
         {
           "type": "SYMBOL",
           "name": "report_aggregate"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "string_concat"
         }
       ]
     },
@@ -6314,6 +6318,26 @@
           "name": "_report_wordwrap"
         }
       ]
+    },
+    "string_concat": {
+      "type": "PREC_LEFT",
+      "value": 8,
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "SYMBOL",
+            "name": "string"
+          },
+          {
+            "type": "REPEAT1",
+            "content": {
+              "type": "SYMBOL",
+              "name": "string"
+            }
+          }
+        ]
+      }
     },
     "_function_expression": {
       "type": "SEQ",

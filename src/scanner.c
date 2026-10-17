@@ -137,6 +137,10 @@ static bool match_terminator(TSLexer *lexer, const char *word1) {
     scan_word(lexer, next_word);
     if (strcmp(next_word, "UPDATE") == 0)
       return false;
+    // UPDATE STATISTICS FOR TABLE|INDEX|PROCEDURE：FOR 不是语句终止符（GG-26）
+    if (strcmp(next_word, "TABLE") == 0 || strcmp(next_word, "INDEX") == 0 ||
+        strcmp(next_word, "PROCEDURE") == 0)
+      return false;
   }
 
   return true;

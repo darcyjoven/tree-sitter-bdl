@@ -2323,6 +2323,10 @@
           "named": true
         },
         {
+          "type": "string_concat",
+          "named": true
+        },
+        {
           "type": "variable",
           "named": true
         }
@@ -6957,6 +6961,21 @@
     "type": "string",
     "named": true,
     "fields": {}
+  },
+  {
+    "type": "string_concat",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "string",
+          "named": true
+        }
+      ]
+    }
   },
   {
     "type": "terminate_report",

@@ -101,6 +101,7 @@ export default {
       $.infield_function,
       $._special_expression,
       $.report_aggregate,
+      $.string_concat,
     ),
 
   _boolean_expression: (/** @type {any} */ $) =>
@@ -298,6 +299,9 @@ export default {
       // WORDWRAP [RIGHT MARGIN expr]: 报表换行操作符(定义已归位 report.js)
       $._report_wordwrap,
     ),
+  // 相邻字符串字面值隐式拼接："a" "b"（可跨行，GG-21）
+  string_concat: (/** @type {any} */ $) =>
+    prec.left(PREC.concatenation, seq($.string, repeat1($.string))),
   _function_expression: (/** @type {any} */ $) =>
     seq($._names, "(", optional($._params), ")"),
   // EXTEND(dt-expr, qual1 TO qual2[(scale)]): 第二参数是日期格式限定符, 非普通表达式
