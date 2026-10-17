@@ -1639,6 +1639,200 @@
     "type": "display",
     "named": true,
     "fields": {
+      "attribute": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "=",
+            "named": false
+          },
+          {
+            "type": "ACCEPT",
+            "named": false
+          },
+          {
+            "type": "APPEND",
+            "named": false
+          },
+          {
+            "type": "AUTO",
+            "named": false
+          },
+          {
+            "type": "BLACK",
+            "named": false
+          },
+          {
+            "type": "BLINK",
+            "named": false
+          },
+          {
+            "type": "BLUE",
+            "named": false
+          },
+          {
+            "type": "BOLD",
+            "named": false
+          },
+          {
+            "type": "BORDER",
+            "named": false
+          },
+          {
+            "type": "CANCEL",
+            "named": false
+          },
+          {
+            "type": "COMMENT",
+            "named": false
+          },
+          {
+            "type": "COUNT",
+            "named": false
+          },
+          {
+            "type": "CURRENT",
+            "named": false
+          },
+          {
+            "type": "CYAN",
+            "named": false
+          },
+          {
+            "type": "DEFAULTS",
+            "named": false
+          },
+          {
+            "type": "DELETE",
+            "named": false
+          },
+          {
+            "type": "DIM",
+            "named": false
+          },
+          {
+            "type": "ERROR",
+            "named": false
+          },
+          {
+            "type": "FIELD",
+            "named": false
+          },
+          {
+            "type": "FORM",
+            "named": false
+          },
+          {
+            "type": "GREEN",
+            "named": false
+          },
+          {
+            "type": "HELP",
+            "named": false
+          },
+          {
+            "type": "IMAGE",
+            "named": false
+          },
+          {
+            "type": "INSERT",
+            "named": false
+          },
+          {
+            "type": "INVISIBLE",
+            "named": false
+          },
+          {
+            "type": "KEEP",
+            "named": false
+          },
+          {
+            "type": "LINE",
+            "named": false
+          },
+          {
+            "type": "MAGENTA",
+            "named": false
+          },
+          {
+            "type": "MAXCOUNT",
+            "named": false
+          },
+          {
+            "type": "MENU",
+            "named": false
+          },
+          {
+            "type": "MESSAGE",
+            "named": false
+          },
+          {
+            "type": "NORMAL",
+            "named": false
+          },
+          {
+            "type": "OFF",
+            "named": false
+          },
+          {
+            "type": "ORDER",
+            "named": false
+          },
+          {
+            "type": "PROMPT",
+            "named": false
+          },
+          {
+            "type": "RED",
+            "named": false
+          },
+          {
+            "type": "REVERSE",
+            "named": false
+          },
+          {
+            "type": "ROW",
+            "named": false
+          },
+          {
+            "type": "STYLE",
+            "named": false
+          },
+          {
+            "type": "TEXT",
+            "named": false
+          },
+          {
+            "type": "UNBUFFERED",
+            "named": false
+          },
+          {
+            "type": "UNDERLINE",
+            "named": false
+          },
+          {
+            "type": "WHITE",
+            "named": false
+          },
+          {
+            "type": "WINDOW",
+            "named": false
+          },
+          {
+            "type": "WITHOUT",
+            "named": false
+          },
+          {
+            "type": "YELLOW",
+            "named": false
+          },
+          {
+            "type": "expression",
+            "named": true
+          }
+        ]
+      },
       "coordinate": {
         "multiple": true,
         "required": false,
@@ -1692,8 +1886,208 @@
         "required": false,
         "types": [
           {
+            "type": "(",
+            "named": false
+          },
+          {
+            "type": ")",
+            "named": false
+          },
+          {
+            "type": ",",
+            "named": false
+          },
+          {
             "type": ".*",
             "named": false
+          },
+          {
+            "type": "=",
+            "named": false
+          },
+          {
+            "type": "ACCEPT",
+            "named": false
+          },
+          {
+            "type": "APPEND",
+            "named": false
+          },
+          {
+            "type": "AUTO",
+            "named": false
+          },
+          {
+            "type": "BLACK",
+            "named": false
+          },
+          {
+            "type": "BLINK",
+            "named": false
+          },
+          {
+            "type": "BLUE",
+            "named": false
+          },
+          {
+            "type": "BOLD",
+            "named": false
+          },
+          {
+            "type": "BORDER",
+            "named": false
+          },
+          {
+            "type": "CANCEL",
+            "named": false
+          },
+          {
+            "type": "COMMENT",
+            "named": false
+          },
+          {
+            "type": "COUNT",
+            "named": false
+          },
+          {
+            "type": "CURRENT",
+            "named": false
+          },
+          {
+            "type": "CYAN",
+            "named": false
+          },
+          {
+            "type": "DEFAULTS",
+            "named": false
+          },
+          {
+            "type": "DELETE",
+            "named": false
+          },
+          {
+            "type": "DIM",
+            "named": false
+          },
+          {
+            "type": "ERROR",
+            "named": false
+          },
+          {
+            "type": "FIELD",
+            "named": false
+          },
+          {
+            "type": "FORM",
+            "named": false
+          },
+          {
+            "type": "GREEN",
+            "named": false
+          },
+          {
+            "type": "HELP",
+            "named": false
+          },
+          {
+            "type": "IMAGE",
+            "named": false
+          },
+          {
+            "type": "INSERT",
+            "named": false
+          },
+          {
+            "type": "INVISIBLE",
+            "named": false
+          },
+          {
+            "type": "KEEP",
+            "named": false
+          },
+          {
+            "type": "LINE",
+            "named": false
+          },
+          {
+            "type": "MAGENTA",
+            "named": false
+          },
+          {
+            "type": "MAXCOUNT",
+            "named": false
+          },
+          {
+            "type": "MENU",
+            "named": false
+          },
+          {
+            "type": "MESSAGE",
+            "named": false
+          },
+          {
+            "type": "NORMAL",
+            "named": false
+          },
+          {
+            "type": "OFF",
+            "named": false
+          },
+          {
+            "type": "ORDER",
+            "named": false
+          },
+          {
+            "type": "PROMPT",
+            "named": false
+          },
+          {
+            "type": "RED",
+            "named": false
+          },
+          {
+            "type": "REVERSE",
+            "named": false
+          },
+          {
+            "type": "ROW",
+            "named": false
+          },
+          {
+            "type": "STYLE",
+            "named": false
+          },
+          {
+            "type": "TEXT",
+            "named": false
+          },
+          {
+            "type": "UNBUFFERED",
+            "named": false
+          },
+          {
+            "type": "UNDERLINE",
+            "named": false
+          },
+          {
+            "type": "WHITE",
+            "named": false
+          },
+          {
+            "type": "WINDOW",
+            "named": false
+          },
+          {
+            "type": "WITHOUT",
+            "named": false
+          },
+          {
+            "type": "YELLOW",
+            "named": false
+          },
+          {
+            "type": "expression",
+            "named": true
           },
           {
             "type": "identifier",
@@ -1712,7 +2106,7 @@
         ]
       },
       "value": {
-        "multiple": false,
+        "multiple": true,
         "required": false,
         "types": [
           {

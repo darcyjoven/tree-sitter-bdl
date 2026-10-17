@@ -242,7 +242,26 @@ export default {
           kw("ARRAY"),
           $._names,
           kw("TO"),
-          field("record", seq($.identifier, ".*")),
+          field(
+            "record",
+            seq(
+              $.identifier,
+              ".*",
+              // 属性可直接跟在 .* 后：DISPLAY ARRAY a TO s.*(COUNT=1,UNBUFFERED)（GG-27）
+              optional(
+                seq(
+                  "(",
+                  commaSep1(
+                    field(
+                      "attribute",
+                      choice($._display_attribute, $._ctrl_attribute),
+                    ),
+                  ),
+                  ")",
+                ),
+              ),
+            ),
+          ),
         ),
       ),
       optional($._attribute_help),
