@@ -257,6 +257,9 @@ bool tree_sitter_bdl_external_scanner_scan(void *payload, TSLexer *lexer,
   bool in_d_quote = false;
   bool last_was_whitespace = true;
   bool pending_case_end = false;
+  // 记录 sql_body 的首个词，用于识别 CREATE SYNONYM 的 FOR（GG-16）
+  char first_word[64] = {0};
+  bool have_first = false;
 
   while (!lexer->eof(lexer)) {
     // 只有在非嵌套（包含 CASE 的非嵌套）时才更新物理游标。
@@ -341,6 +344,12 @@ bool tree_sitter_bdl_external_scanner_scan(void *payload, TSLexer *lexer,
         scan_word(lexer, word1);
         last_was_whitespace = false;
 
+        // 记录首个词（用于 CREATE SYNONYM x FOR y，GG-16）
+        if (!have_first) {
+          snprintf(first_word, sizeof(first_word), "%s", word1);
+          have_first = true;
+        }
+
         // --- 追踪 CASE 层级 ---
         if (strcmp(word1, "CASE") == 0) {
           if (case_top < MAX_CASE_DEPTH) {
@@ -352,9 +361,13 @@ bool tree_sitter_bdl_external_scanner_scan(void *payload, TSLexer *lexer,
           pending_case_end = true;
         }
 
+        // CREATE SYNONYM x FOR y：FOR 是语法组成部分，不能当语句终止符（GG-16）
+        bool synonym_for = (strcmp(word1, "FOR") == 0 && have_first &&
+                            strcmp(first_word, "SYNONYM") == 0);
+
         // --- 常规 SQL_BODY 终止符判定 ---
-        if (can_be_terminator && paren_depth == base_depth && case_top == 0 &&
-            !pending_case_end) {
+        if (!synonym_for && can_be_terminator && paren_depth == base_depth &&
+            case_top == 0 && !pending_case_end) {
           if (match_terminator(lexer, word1)) {
             lexer->result_symbol = out_symbol;
             return true;

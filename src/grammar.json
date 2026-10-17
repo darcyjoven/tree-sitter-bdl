@@ -24002,6 +24002,143 @@
                               "type": "SYMBOL",
                               "name": "expression"
                             }
+                          },
+                          {
+                            "type": "CHOICE",
+                            "members": [
+                              {
+                                "type": "CHOICE",
+                                "members": [
+                                  {
+                                    "type": "ALIAS",
+                                    "content": {
+                                      "type": "PREC",
+                                      "value": 10,
+                                      "content": {
+                                        "type": "SEQ",
+                                        "members": [
+                                          {
+                                            "type": "ALIAS",
+                                            "content": {
+                                              "type": "TOKEN",
+                                              "content": {
+                                                "type": "PREC",
+                                                "value": 10,
+                                                "content": {
+                                                  "type": "PATTERN",
+                                                  "value": "[iI][nN]"
+                                                }
+                                              }
+                                            },
+                                            "named": false,
+                                            "value": "IN"
+                                          },
+                                          {
+                                            "type": "ALIAS",
+                                            "content": {
+                                              "type": "TOKEN",
+                                              "content": {
+                                                "type": "PREC",
+                                                "value": 10,
+                                                "content": {
+                                                  "type": "PATTERN",
+                                                  "value": "[fF][oO][rR][mM]"
+                                                }
+                                              }
+                                            },
+                                            "named": false,
+                                            "value": "FORM"
+                                          },
+                                          {
+                                            "type": "ALIAS",
+                                            "content": {
+                                              "type": "TOKEN",
+                                              "content": {
+                                                "type": "PREC",
+                                                "value": 10,
+                                                "content": {
+                                                  "type": "PATTERN",
+                                                  "value": "[mM][oO][dD][eE]"
+                                                }
+                                              }
+                                            },
+                                            "named": false,
+                                            "value": "MODE"
+                                          }
+                                        ]
+                                      }
+                                    },
+                                    "named": false,
+                                    "value": "IN_FORM_MODE"
+                                  },
+                                  {
+                                    "type": "ALIAS",
+                                    "content": {
+                                      "type": "PREC",
+                                      "value": 10,
+                                      "content": {
+                                        "type": "SEQ",
+                                        "members": [
+                                          {
+                                            "type": "ALIAS",
+                                            "content": {
+                                              "type": "TOKEN",
+                                              "content": {
+                                                "type": "PREC",
+                                                "value": 10,
+                                                "content": {
+                                                  "type": "PATTERN",
+                                                  "value": "[iI][nN]"
+                                                }
+                                              }
+                                            },
+                                            "named": false,
+                                            "value": "IN"
+                                          },
+                                          {
+                                            "type": "ALIAS",
+                                            "content": {
+                                              "type": "TOKEN",
+                                              "content": {
+                                                "type": "PREC",
+                                                "value": 10,
+                                                "content": {
+                                                  "type": "PATTERN",
+                                                  "value": "[lL][iI][nN][eE]"
+                                                }
+                                              }
+                                            },
+                                            "named": false,
+                                            "value": "LINE"
+                                          },
+                                          {
+                                            "type": "ALIAS",
+                                            "content": {
+                                              "type": "TOKEN",
+                                              "content": {
+                                                "type": "PREC",
+                                                "value": 10,
+                                                "content": {
+                                                  "type": "PATTERN",
+                                                  "value": "[mM][oO][dD][eE]"
+                                                }
+                                              }
+                                            },
+                                            "named": false,
+                                            "value": "MODE"
+                                          }
+                                        ]
+                                      }
+                                    },
+                                    "named": false,
+                                    "value": "IN_LINE_MODE"
+                                  }
+                                ]
+                              },
+                              {
+                                "type": "BLANK"
+                              }
+                            ]
                           }
                         ]
                       },
@@ -24090,6 +24227,52 @@
                               "type": "SYMBOL",
                               "name": "expression"
                             }
+                          },
+                          {
+                            "type": "CHOICE",
+                            "members": [
+                              {
+                                "type": "SEQ",
+                                "members": [
+                                  {
+                                    "type": "ALIAS",
+                                    "content": {
+                                      "type": "TOKEN",
+                                      "content": {
+                                        "type": "PREC",
+                                        "value": 10,
+                                        "content": {
+                                          "type": "PATTERN",
+                                          "value": "[dD][eE][sS][tT][iI][nN][aA][tT][iI][oO][nN]"
+                                        }
+                                      }
+                                    },
+                                    "named": false,
+                                    "value": "DESTINATION"
+                                  },
+                                  {
+                                    "type": "FIELD",
+                                    "name": "destination",
+                                    "content": {
+                                      "type": "CHOICE",
+                                      "members": [
+                                        {
+                                          "type": "SYMBOL",
+                                          "name": "identifier"
+                                        },
+                                        {
+                                          "type": "SYMBOL",
+                                          "name": "string"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                ]
+                              },
+                              {
+                                "type": "BLANK"
+                              }
+                            ]
                           }
                         ]
                       }
@@ -24838,6 +25021,18 @@
                     "type": "SYMBOL",
                     "name": "identifier"
                   }
+                },
+                {
+                  "type": "CHOICE",
+                  "members": [
+                    {
+                      "type": "STRING",
+                      "value": ","
+                    },
+                    {
+                      "type": "BLANK"
+                    }
+                  ]
                 }
               ]
             },

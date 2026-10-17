@@ -145,13 +145,25 @@ export default {
               kw("SCREEN"),
               kw("PRINTER"),
               seq(optional(kw("FILE")), field("filename", $.expression)),
+              // PIPE 的 mode 可在程序前或后（GG-20）
               seq(
                 kw("PIPE"),
                 optional(choice(kw("IN FORM MODE"), kw("IN LINE MODE"))),
                 field("program", $.expression),
+                optional(choice(kw("IN FORM MODE"), kw("IN LINE MODE"))),
               ),
               seq(kw("XML HANDLER"), field("handler", $.expression)),
-              seq(kw("OUTPUT"), field("output", $.expression)),
+              // OUTPUT 后可跟 DESTINATION prog|file（GG-19）
+              seq(
+                kw("OUTPUT"),
+                field("output", $.expression),
+                optional(
+                  seq(
+                    kw("DESTINATION"),
+                    field("destination", choice($.identifier, $.string)),
+                  ),
+                ),
+              ),
             ),
           ),
         ),
@@ -200,7 +212,8 @@ export default {
   report_printx: (/** @type {any} */ $) =>
     seq(
       kw("PRINTX"),
-      optional(seq(kw("NAME"), "=", field("name", $.identifier))),
+      // NAME = id 后允许紧跟逗号：PRINTX NAME = id, expr（GG-18）
+      optional(seq(kw("NAME"), "=", field("name", $.identifier), optional(","))),
       commaSep1(choice($.expression, seq($.identifier, ".*"))),
     ),
 

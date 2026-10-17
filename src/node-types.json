@@ -7240,6 +7240,10 @@
         "required": false,
         "types": [
           {
+            "type": "DESTINATION",
+            "named": false
+          },
+          {
             "type": "FILE",
             "named": false
           },
@@ -7282,6 +7286,14 @@
           {
             "type": "XML",
             "named": false
+          },
+          {
+            "type": "identifier",
+            "named": true
+          },
+          {
+            "type": "string",
+            "named": true
           },
           {
             "type": "variable",
@@ -9144,6 +9156,10 @@
   },
   {
     "type": "DESCRIBE",
+    "named": false
+  },
+  {
+    "type": "DESTINATION",
     "named": false
   },
   {
