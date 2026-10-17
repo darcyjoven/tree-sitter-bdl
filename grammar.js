@@ -45,6 +45,9 @@ export default grammar({
     [$.start_report, $.expression],
     // 报表聚合名(COUNT/PERCENT)现在以 identifier 承接, 与函数调用起点重叠
     [$.variable, $.report_aggregate],
+    // 函数调用结果可作下标对象(f()[i])后, LOAD/UNLOAD 分支与 _names 在 variable '(' 处歧义
+    [$.load, $._names],
+    [$.unload, $._names],
   ],
 
   rules: {

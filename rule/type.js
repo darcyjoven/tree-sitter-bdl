@@ -20,7 +20,8 @@ export default {
     token(
       choice(
         prec(11, keywordPrefixedIdentifier()),
-        /[a-zA-Z_][a-zA-Z0-9_]*/,
+        // 允许 CJK 统一表意文字作标识符首字符/后续字符（GG-01）
+        /[a-zA-Z_\u4E00-\u9FFF][a-zA-Z0-9_\u4E00-\u9FFF]*/,
       ),
     ),
   // 字面值
@@ -111,7 +112,13 @@ export default {
   slice: (/** @type {any} */ $) =>
     prec.left(
       2,
-      seq(field("object", $.variable), "[", commaSep1($.expression), "]"),
+      seq(
+        // 下标对象可为变量，也可为函数调用结果（digest()[i]，见 GG-29）
+        field("object", choice($.variable, $._function_expression)),
+        "[",
+        commaSep1($.expression),
+        "]",
+      ),
     ),
   // 类型的定义
   types: (/** @type {any} */ $) =>
@@ -159,8 +166,21 @@ export default {
         ),
       ),
       kw("DATE"),
-      seq(kw("DATETIME"), datetimeQualifier, kw("TO"), datetimeQualifier),
-      seq(kw("INTERVAL"), datetimeQualifier, kw("TO"), datetimeQualifier),
+      // 首个限定词可带精度：DATETIME YEAR(4) TO SECOND / INTERVAL SECOND(5) TO SECOND（GG-07）
+      seq(
+        kw("DATETIME"),
+        datetimeQualifier,
+        optional(seq("(", $._precision, ")")),
+        kw("TO"),
+        datetimeQualifier,
+      ),
+      seq(
+        kw("INTERVAL"),
+        datetimeQualifier,
+        optional(seq("(", $._precision, ")")),
+        kw("TO"),
+        datetimeQualifier,
+      ),
       kw("BYTE"),
       kw("TEXT"),
       kw("BOOLEAN"),

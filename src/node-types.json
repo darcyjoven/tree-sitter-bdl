@@ -6689,12 +6689,68 @@
     "type": "slice",
     "named": true,
     "fields": {
-      "object": {
+      "name": {
         "multiple": false,
-        "required": true,
+        "required": false,
         "types": [
           {
             "type": "variable",
+            "named": true
+          }
+        ]
+      },
+      "object": {
+        "multiple": true,
+        "required": true,
+        "types": [
+          {
+            "type": "(",
+            "named": false
+          },
+          {
+            "type": ")",
+            "named": false
+          },
+          {
+            "type": ",",
+            "named": false
+          },
+          {
+            "type": "[",
+            "named": false
+          },
+          {
+            "type": "]",
+            "named": false
+          },
+          {
+            "type": "expression",
+            "named": true
+          },
+          {
+            "type": "variable",
+            "named": true
+          }
+        ]
+      },
+      "params": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": ",",
+            "named": false
+          },
+          {
+            "type": "[",
+            "named": false
+          },
+          {
+            "type": "]",
+            "named": false
+          },
+          {
+            "type": "expression",
             "named": true
           }
         ]
