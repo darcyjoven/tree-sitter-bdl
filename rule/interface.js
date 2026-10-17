@@ -227,7 +227,7 @@ export default {
     seq(
       kw("DISPLAY"),
       choice(
-        seq("FORM", $._name),
+        seq(kw("FORM"), $._name),
         seq(kw("BY NAME"), commaSep1($._field_range)),
         seq(
           $._value,
