@@ -346,7 +346,12 @@ bool tree_sitter_bdl_external_scanner_scan(void *payload, TSLexer *lexer,
 
         // 记录首个词（用于 CREATE SYNONYM x FOR y，GG-16）
         if (!have_first) {
-          snprintf(first_word, sizeof(first_word), "%s", word1);
+          size_t i = 0;
+          while (i < sizeof(first_word) - 1 && word1[i] != '\0') {
+              first_word[i] = word1[i];
+              i++;
+          }
+          first_word[i] = '\0';
           have_first = true;
         }
 
