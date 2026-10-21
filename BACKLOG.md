@@ -17,6 +17,25 @@
 > `GET_FLDBUF(<字段名>)` 原为待办项，现已**自然解决**：它此前失败的唯一原因是参数
 > `count` 被 `kw("COUNT")` 抢成关键字；关键字让位修复后 asft700_tch3/tch4 已通过。
 
+### A-1. 2026-10-21 全语料复测（P7-C-2，来自 bdl-lsp 的 `make grammar-audit`）
+
+topprod + topcust **15108 个文件（.4gl/.global/.per）**：**18 个解析失败、266 个
+ERROR 节点、12 个 MISSING**。逐个确认后 17 个是语料自身问题（拼写 `END TUNCTION`
+/ 赋值漏 `LET` / `DEFINE` 漏逗号 / 字符串截断 / 文件截断 / 两个程序拼在一个文件 /
+`.per` 尾部文档附录的全角标点 / 乱码 BOM），**唯一真实的语法缺口就是上表的
+`CASE … END CASE` SQL 表达式**（实际只影响 `cws_get_start_works.4gl` 一个文件）。
+
+扫描器侧试过三种消歧规则，都被语料否掉（详见 bdl-lsp `docs/PLAN-P7.md` §10.10）：
+
+1. 一律把 `END CASE` 当 SQL 表达式结束 → 20 文件 / 279 节点（3 个回归）；
+2. "行首 CASE = BDL 语句、行内 = SQL 表达式" → 回归更多（`cws` 那行的 CASE 也在行首）；
+3. 再看 `END CASE` 之后的词是否 SQL 续接 → tree-sitter lexer 不能回退，为了看这个词
+   必须消费，消费后无法重扫 → **222 文件 / 16342 节点**。
+
+所以要动这条，正确位置在**语法层**（给 `select` 增加 `sql_body END CASE …` 的备选，
+或引入外部 scanner 的 `scan` 之外的状态接口），不要在 `src/scanner.c` 里继续猜。
+改动后务必用 bdl-lsp 的 `TestCorpusGrammarBaseline` 逐文件 diff，别只看总数。
+
 ## B. 待用户确认
 
 | 项 | 位置 | 证据 / 判断 |
